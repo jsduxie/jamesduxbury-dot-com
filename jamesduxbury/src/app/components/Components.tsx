@@ -1,11 +1,12 @@
 import React from "react";
 import { useState, useEffect } from "react";
+import Image from 'next/image';
 
 
 export function NavLinks() {
   return (
     <>
-      <a href="#" className="text-xl text-white hover:text-accent transition">About</a>
+      <a href="#about" className="text-xl text-white hover:text-accent transition">About</a>
       <a href="#" className="text-xl text-white hover:text-accent transition">Skills</a>
       <a href="#" className="text-xl text-white hover:text-accent transition">Projects</a>
       <a href="#" className="text-xl text-white hover:text-accent transition">CV</a>
@@ -91,3 +92,26 @@ export default function NavBar() {
     </>
   );
 }
+
+export function HeroBanner() {
+    return (
+        <section className="w-full flex flex-col lg:flex-row items-center justify-center text-white p-10 pt-40">
+            <div className="lg:w-3/5 text-center lg:text-left space-y-3 p-4">
+                <h2 className="text-2xl lg:text-3xl text-gray-300">Hello, I am</h2>
+                <h1 className="text-4xl lg:text-6xl font-bold text-accent drop-shadow-[0_0_10px_#00D9D9]">James Duxbury</h1>
+                <p className="text-lg lg:text-xl text-gray-300 mb-5">
+                    I am a third-year Computer Science MEng Student at Durham University. An aspiring software engineer with a passion for solving real-world problems and leveraging technology. 
+                </p>
+                <CTAButton name='Download my CV!' link='#' onClick={() => alert("CV button clicked")} />
+            </div>
+
+            <div className="lg:w-2/5 flex justify-center mt-6 lg:mt-0">
+                <Image src="/images/profile-picture.png" alt="James Duxbury" width={300} height={300} className="border-2 border-accent shadow-[0_0_20px_#00D9D9]" />
+            </div>
+
+
+
+        </section>
+    )
+}
+
