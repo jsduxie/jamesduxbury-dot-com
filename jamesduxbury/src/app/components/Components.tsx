@@ -118,9 +118,10 @@ export function HeroBanner() {
     )
 }
 
+
 export function About() {
     return (
-        <section className="relative w-full bg-background py-12 text-white shadow-[0_0_15px_#00D9D9] " id="#about">
+        <section className="relative w-full bg-background py-12 text-white shadow-[0_0_15px_#00D9D9]" id="about">
             <div className="absolute w-[200px] h-[200px] border-5 border-accent bg-[#00D9D9] rounded-full blur-[100px] bottom-[15%] left-[0%] top-1/2 right-1/2 z-[1]"></div>
             <div className="max-w-7xl mx-auto px-6">
                 <h2 className="text-3xl font-bold text-accent mb-6">About Me</h2>
@@ -154,7 +155,7 @@ export function About() {
 
 export function Skills() {
     return (
-        <section className="w-full bg-background py-12 text-white shadow-[0_0_15px_#00D9D9] relative" id="#skills">
+        <section className="w-full bg-background py-12 text-white shadow-[0_0_15px_#00D9D9] relative" id="skills">
             <div className="absolute w-[200px] h-[200px] border-5 border-accent bg-[#00D9D9] rounded-full blur-[100px] top-[15%] right-[0%]"></div>
             <div className="absolute w-[200px] h-[200px] border-5 border-accent bg-[#00D9D9] rounded-full blur-[100px] bottom-[15%] left-[0%] z-[0]"></div>
             <div className="max-w-7xl mx-auto px-4">

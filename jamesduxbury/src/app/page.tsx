@@ -2,7 +2,7 @@
 import Image from "next/image";
 import React from "react";
 import { useState, useEffect } from "react";
-import NavBar, { HeroBanner, About, Skills } from "./components/Components.tsx";
+import NavBar, { HeroBanner, About, Skills } from "./components/Components";
 
 
 
