@@ -1,0 +1,32 @@
+[
+    {
+        "name": "Microsoft Azure AI Fundamentals",
+        "imgPath": "/images/microsoft-certified-azure-ai-fundamentals.png",
+        "certificationLink": "https://www.credly.com/badges/8839de8b-befc-4eb9-a76a-c0ba585209d5/public_url"
+    },
+    {
+        "name": "Journey to Cloud: Envisioning Your Solution",
+        "imgPath": "/images/journey-to-cloud-envisioning-your-solution.2.png",
+        "certificationLink": "https://www.credly.com/badges/c34f7fd2-ea25-4aa8-92a0-04501f341bbf/public_url"
+    },
+    {
+        "name": "Enterprise Design Thinking Practitioner",
+        "imgPath": "/images/enterprise-design-thinking-practitioner.png",
+        "certificationLink": "https://www.credly.com/badges/5ae35ca4-9988-47ae-adfe-2988903b2fba/public_url"
+    },
+    {
+        "name": "Getting Started with Enterprise Data Science",
+        "imgPath": "/images/getting-started-with-enterprise-data-science.2.png",
+        "certificationLink": "https://www.credly.com/badges/1de318f0-f1a6-40b3-aae0-f1d16471d0fd/public_url"
+    },
+    {
+        "name": "Enterprise Data Science in Practice",
+        "imgPath": "/images/enterprise-data-science-in-practice.1.png",
+        "certificationLink": "https://www.credly.com/badges/9d5c8f4d-78f6-4c92-a106-38c6df8dd8b1/public_url"
+    },
+    {
+        "name": "ITIL 4 Foundation",
+        "imgPath": "/images/itil-4-foundation.png",
+        "certificationLink": "https://www.axelos.com/successful-candidates-register"
+    }
+]

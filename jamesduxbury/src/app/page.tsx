@@ -4,6 +4,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import NavBar, { HeroBanner, About, Skills } from "../components/Components";
 import { Projects } from "../components/Projects";
+import Education from "@/components/Education";
 
 
 
@@ -18,6 +19,9 @@ export default function Home() {
       <About />
       <Skills />
       <Projects />
+      <Education />
+
+      
 
     </main>
   );

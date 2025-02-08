@@ -10,6 +10,7 @@ export function NavLinks() {
       <a href="#skills" className="text-xl text-white hover:text-accent transition">Skills</a>
       <a href="#projects" className="text-xl text-white hover:text-accent transition">Projects</a>
       <a href="#" className="text-xl text-white hover:text-accent transition">Education</a>
+      <a href="#" className="text-xl text-white hover:text-accent transition">Experience</a>
       <a href="#" className="text-xl text-white hover:text-accent transition">CV</a>
       <CTAButton link="#" name="Contact" onClick={() => alert("Contact button clicked")} />
     </>
