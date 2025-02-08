@@ -1,9 +1,12 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import Image from 'next/image';
+import ContactModal from "./Contact";
 
 
 export function NavLinks() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
     <>
       <a href="#about" className="text-xl text-white hover:text-accent transition">About</a>
@@ -12,7 +15,7 @@ export function NavLinks() {
       <a href="#education" className="text-xl text-white hover:text-accent transition">Education</a>
       <a href="#experience" className="text-xl text-white hover:text-accent transition">Experience</a>
       <a href="#" className="text-xl text-white hover:text-accent transition">CV</a>
-      <CTAButton link="#" name="Contact" onClick={() => alert("Contact button clicked")} />
+      <ContactModal open={isModalOpen} setOpen={setIsModalOpen} />
     </>
   );
 }
@@ -40,7 +43,7 @@ export function CTAButton({ name, link, onClick, icon, isMenuButton }: CTAButton
       className={`inline-flex items-center px-4 py-2 rounded 
         ${isMenuButton 
           ? "border-none text-teal-200 hover:text-white" 
-          : "border text-accent border-accent hover:border-transparent hover:text-black hover:bg-accent transition duration-300 hover:shadow-[0_0_15px_#00D9D9] text-xl"
+          : "border text-accent border-accent hover:border-transparent hover:text-black hover:bg-accent transition duration-300 hover:shadow-[0_0_15px_#3182ce] text-xl"
         }`
       }
     >
@@ -97,11 +100,11 @@ export default function NavBar() {
 
 export function HeroBanner() {
     return (
-        <section className="w-full flex flex-col lg:flex-row items-center justify-center text-white p-10 pt-40">
+        <section className="w-full flex flex-col lg:flex-row items-center justify-center text-white p-10 pt-40 bg-background">
             
             <div className="lg:w-3/5 text-center lg:text-left space-y-3 p-4 px-10">
                 <h2 className="text-2xl lg:text-3xl text-gray-300">Hello, I am</h2>
-                <h1 className="text-4xl lg:text-6xl font-bold drop-shadow-[0_0_10px_#00D9D9] glitch">James Duxbury</h1>
+                <h1 className="text-4xl lg:text-6xl font-bold drop-shadow-[0_0_10px_#3182ce] glitch">James Duxbury</h1>
                 <p className="text-lg lg:text-xl text-gray-300 mb-5">
                     I am a third-year Computer Science MEng Student at Durham University. An aspiring software engineer with a passion for solving real-world problems and leveraging technology. 
                 </p>
@@ -109,9 +112,9 @@ export function HeroBanner() {
             </div>
 
             <div className="lg:w-2/5 flex justify-center mt-6 lg:mt-0 relative">
-                <div className="absolute w-[280px] h-[280px] bg-[#00D9D9] rounded-full blur-[120px] opacity-50 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0"></div>
+                <div className="absolute w-[280px] h-[280px] bg-[#3182ce] rounded-full blur-[120px] opacity-50 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0"></div>
 
-                <Image src="/images/profile-picture.png" alt="James Duxbury" width={300} height={300} className="border-2 border-accent shadow-[0_0_20px_#00D9D9] z-[2]" />
+                <Image src="/images/profile-picture.png" alt="James Duxbury" width={300} height={300} className="border-2 border-accent shadow-[0_0_20px_#3182ce] z-[2]" />
             </div>
 
 
@@ -123,8 +126,8 @@ export function HeroBanner() {
 
 export function About() {
     return (
-        <section className="relative w-full bg-background py-12 text-white shadow-[0_0_15px_#00D9D9]" id="about">
-            <div className="absolute w-[200px] h-[200px] border-5 border-accent bg-[#00D9D9] rounded-full blur-[100px] bottom-[15%] left-[0%] top-1/2 right-1/2 z-[1]"></div>
+        <section className="relative w-full bg-background py-12 text-white shadow-[0_0_15px_#3182ce]" id="about">
+            <div className="absolute w-[200px] h-[200px] border-5 border-accent bg-[#3182ce] rounded-full blur-[100px] bottom-[15%] left-[0%] top-1/2 right-1/2 z-[1]"></div>
             <div className="max-w-7xl mx-auto px-6">
                 <h2 className="text-3xl font-bold text-accent mb-6">About Me</h2>
                 <div className="lg:flex justify-between items-center space-y-6 lg:space-y-0">
@@ -157,9 +160,9 @@ export function About() {
 
 export function Skills() {
     return (
-        <section className="w-full bg-background py-12 text-white shadow-[0_0_15px_#00D9D9] relative" id="skills">
-            <div className="absolute w-[200px] h-[200px] border-5 border-accent bg-[#00D9D9] rounded-full blur-[100px] top-[15%] right-[0%]"></div>
-            <div className="absolute w-[200px] h-[200px] border-5 border-accent bg-[#00D9D9] rounded-full blur-[100px] bottom-[15%] left-[0%] z-[0]"></div>
+        <section className="w-full bg-background py-12 text-white shadow-[0_0_15px_#3182ce] relative" id="skills">
+            <div className="absolute w-[200px] h-[200px] border-5 border-accent bg-[#3182ce] rounded-full blur-[100px] top-[15%] right-[0%]"></div>
+            <div className="absolute w-[200px] h-[200px] border-5 border-accent bg-[#3182ce] rounded-full blur-[100px] bottom-[15%] left-[0%] z-[0]"></div>
             <div className="max-w-7xl mx-auto px-4">
                 <h2 className="text-3xl font-bold text-accent mb-6">Skills</h2>
                 
