@@ -13,11 +13,29 @@ const ContactModal: React.FC<ContactModalProps> = ({open, setOpen}) => {
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
 
-    const handleChange = (e) => {
+    interface FormData {
+        name: string;
+        email: string;
+        mobile: string;
+        message: string;
+    }
+
+    interface ChangeEvent {
+        target: {
+            name: string;
+            value: string;
+        };
+    }
+
+    interface FormEvent {
+        preventDefault: () => void;
+    }
+
+    const handleChange = (e: ChangeEvent) => {
         setFormData({...formData, [e.target.name]: e.target.value});
     }
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         const response = await fetch("/api/contact", {
             method: "POST",
