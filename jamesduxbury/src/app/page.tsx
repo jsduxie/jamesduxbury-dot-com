@@ -10,7 +10,7 @@ export default function Home() {
 
   
   return (
-    <main className="bg-background text-white flex flex-col items-center justify-center pt-20 backdrop-blur-lg">
+    <main className="text-white flex flex-col items-center justify-center pt-20 backdrop-blur-lg">
       <NavBar />
       <HeroBanner />
       <hr className="border-t-2 border-accent my-6" />

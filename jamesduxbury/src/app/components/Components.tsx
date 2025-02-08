@@ -96,6 +96,7 @@ export default function NavBar() {
 export function HeroBanner() {
     return (
         <section className="w-full flex flex-col lg:flex-row items-center justify-center text-white p-10 pt-40">
+            
             <div className="lg:w-3/5 text-center lg:text-left space-y-3 p-4 px-10">
                 <h2 className="text-2xl lg:text-3xl text-gray-300">Hello, I am</h2>
                 <h1 className="text-4xl lg:text-6xl font-bold drop-shadow-[0_0_10px_#00D9D9] glitch">James Duxbury</h1>
@@ -105,8 +106,10 @@ export function HeroBanner() {
                 <CTAButton name='Download my CV!' link='#' onClick={() => alert("CV button clicked")} />
             </div>
 
-            <div className="lg:w-2/5 flex justify-center mt-6 lg:mt-0">
-                <Image src="/images/profile-picture.png" alt="James Duxbury" width={300} height={300} className="border-2 border-accent shadow-[0_0_20px_#00D9D9]" />
+            <div className="lg:w-2/5 flex justify-center mt-6 lg:mt-0 relative">
+                <div className="absolute w-[280px] h-[280px] bg-[#00D9D9] rounded-full blur-[120px] opacity-50 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0"></div>
+
+                <Image src="/images/profile-picture.png" alt="James Duxbury" width={300} height={300} className="border-2 border-accent shadow-[0_0_20px_#00D9D9] z-[2]" />
             </div>
 
 
@@ -117,13 +120,26 @@ export function HeroBanner() {
 
 export function About() {
     return (
-        <section className="w-full bg-background py-12 text-white shadow-[0_0_15px_#00D9D9] " id="#about">
+        <section className="relative w-full bg-background py-12 text-white shadow-[0_0_15px_#00D9D9] " id="#about">
+            <div className="absolute w-[200px] h-[200px] border-5 border-accent bg-[#00D9D9] rounded-full blur-[100px] bottom-[15%] left-[0%] top-1/2 right-1/2 z-[1]"></div>
             <div className="max-w-7xl mx-auto px-6">
                 <h2 className="text-3xl font-bold text-accent mb-6">About Me</h2>
                 <div className="lg:flex justify-between items-center space-y-6 lg:space-y-0">
 
                     <div className="lg:w-2/3 space-y-6">
                         <p className="text-lg lg:text-xl text-gray-300">
+                        I have always had a function for learning about, breaking and fixing technology. I am a huge advocate for Rapid Continuous Improvement (RCI) initiatives.
+
+                        I have always had a function for learning about, breaking and fixing technology. I am a huge advocate for Rapid Continuous Improvement (RCI) initiatives
+
+                        I have always had a function for learning about, breaking and fixing technology. I am a huge advocate for Rapid Continuous Improvement (RCI) initiatives
+
+                        I have always had a function for learning about, breaking and fixing technology. I am a huge advocate for Rapid Continuous Improvement (RCI) initiatives
+
+                        I have always had a function for learning about, breaking and fixing technology. I am a huge advocate for Rapid Continuous Improvement (RCI) initiatives
+
+                        I have always had a function for learning about, breaking and fixing technology. I am a huge advocate for Rapid Continuous Improvement (RCI) initiatives
+
                         I have always had a function for learning about, breaking and fixing technology. I am a huge advocate for Rapid Continuous Improvement (RCI) initiatives
                         </p>
                     </div>
@@ -138,7 +154,9 @@ export function About() {
 
 export function Skills() {
     return (
-        <section className="w-full bg-background py-12 text-white shadow-[0_0_15px_#00D9D9] " id="#skills">
+        <section className="w-full bg-background py-12 text-white shadow-[0_0_15px_#00D9D9] relative" id="#skills">
+            <div className="absolute w-[200px] h-[200px] border-5 border-accent bg-[#00D9D9] rounded-full blur-[100px] top-[15%] right-[0%]"></div>
+            <div className="absolute w-[200px] h-[200px] border-5 border-accent bg-[#00D9D9] rounded-full blur-[100px] bottom-[15%] left-[0%] z-[0]"></div>
             <div className="max-w-7xl mx-auto px-4">
                 <h2 className="text-3xl font-bold text-accent mb-6">Skills</h2>
                 
