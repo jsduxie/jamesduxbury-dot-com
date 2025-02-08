@@ -2,9 +2,10 @@
 import Image from "next/image";
 import React from "react";
 import { useState, useEffect } from "react";
-import NavBar, { HeroBanner, About, Skills } from "../components/Components";
-import { Projects } from "../components/Projects";
+import NavBar, { HeroBanner, About, Skills } from "@/components/Components";
+import { Projects } from "@/components/Projects";
 import Education from "@/components/Education";
+import Experience from "@/components/Experience";
 
 
 
@@ -20,7 +21,7 @@ export default function Home() {
       <Skills />
       <Projects />
       <Education />
-
+      <Experience />
       
 
     </main>

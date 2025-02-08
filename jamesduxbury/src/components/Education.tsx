@@ -1,7 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import Image from 'next/image';
-import { CTAButton } from "./Components";
 
 interface Certification {
     name: string;
@@ -58,18 +57,18 @@ const Education: React.FC = () => {
                 <div className="absolute left-0 top-0 bottom-0 w-1 bg-accent shadow-[0_0_15px_#00D9D9]"></div>
                 <div className="space-y-8 pl-10">
                     <div>
-                        <h3 className="text-xl font-semibold">2026 - MEng Computer Science</h3>
-                        <p className="text-lg">Durham University</p>
+                        <h3 className="text-xl font-semibold">MEng Computer Science</h3>
+                        <p className="text-lg">Durham University | 2026 (Expected)</p>
                         <p className="text-md text-gray-300">On track for a First-Class overall classification</p>
                     </div>
                     <div>
-                        <h3 className="text-xl font-semibold">2021 - A-Levels</h3>
-                        <p className="text-lg">Mark Rutherford School</p>
+                        <h3 className="text-xl font-semibold">A-Levels</h3>
+                        <p className="text-lg">Mark Rutherford School | 2021</p>
                         <p className="text-md text-gray-300">A* in Mathematics, Further Mathematics, Physics and Drama at A-level. A at AS-level in Computer Science. A* in the CyberEPQ. </p>
                     </div>
                     <div>
-                        <h3 className="text-xl font-semibold">2019 - GCSEs</h3>
-                        <p className="text-lg">Mark Rutherford School</p>
+                        <h3 className="text-xl font-semibold">GCSEs</h3>
+                        <p className="text-lg">Mark Rutherford School | 2019</p>
                         <p className="text-md text-gray-300">9 (A**) in Mathematics, Biology, Physics, Computer Science and Drama. 8 (A*) in Chemistry, English Literature and History. 7 (A) in English Language, French and Religious Studies. </p>
                     </div>
                 </div>
