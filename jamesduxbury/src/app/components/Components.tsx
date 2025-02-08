@@ -7,7 +7,7 @@ export function NavLinks() {
   return (
     <>
       <a href="#about" className="text-xl text-white hover:text-accent transition">About</a>
-      <a href="#" className="text-xl text-white hover:text-accent transition">Skills</a>
+      <a href="#skills" className="text-xl text-white hover:text-accent transition">Skills</a>
       <a href="#" className="text-xl text-white hover:text-accent transition">Projects</a>
       <a href="#" className="text-xl text-white hover:text-accent transition">CV</a>
       <CTAButton link="#" name="Contact" onClick={() => alert("Contact button clicked")} />
@@ -96,9 +96,9 @@ export default function NavBar() {
 export function HeroBanner() {
     return (
         <section className="w-full flex flex-col lg:flex-row items-center justify-center text-white p-10 pt-40">
-            <div className="lg:w-3/5 text-center lg:text-left space-y-3 p-4">
+            <div className="lg:w-3/5 text-center lg:text-left space-y-3 p-4 px-10">
                 <h2 className="text-2xl lg:text-3xl text-gray-300">Hello, I am</h2>
-                <h1 className="text-4xl lg:text-6xl font-bold text-accent drop-shadow-[0_0_10px_#00D9D9]">James Duxbury</h1>
+                <h1 className="text-4xl lg:text-6xl font-bold drop-shadow-[0_0_10px_#00D9D9] glitch">James Duxbury</h1>
                 <p className="text-lg lg:text-xl text-gray-300 mb-5">
                     I am a third-year Computer Science MEng Student at Durham University. An aspiring software engineer with a passion for solving real-world problems and leveraging technology. 
                 </p>
@@ -115,3 +115,100 @@ export function HeroBanner() {
     )
 }
 
+export function About() {
+    return (
+        <section className="w-full bg-background py-12 text-white shadow-[0_0_15px_#00D9D9] " id="#about">
+            <div className="max-w-7xl mx-auto px-6">
+                <h2 className="text-3xl font-bold text-accent mb-6">About Me</h2>
+                <div className="lg:flex justify-between items-center space-y-6 lg:space-y-0">
+
+                    <div className="lg:w-2/3 space-y-6">
+                        <p className="text-lg lg:text-xl text-gray-300">
+                        I have always had a function for learning about, breaking and fixing technology. I am a huge advocate for Rapid Continuous Improvement (RCI) initiatives
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </section>
+    )
+}
+
+export function Skills() {
+    return (
+        <section className="w-full bg-background py-12 text-white shadow-[0_0_15px_#00D9D9] " id="#skills">
+            <div className="max-w-7xl mx-auto px-4">
+                <h2 className="text-3xl font-bold text-accent mb-6">Skills</h2>
+                
+                <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-8">
+                    <div>
+                        <h3 className="text-2xl font-semibold text-white mb-5">Programming Languages</h3>
+                        <div className="flex flex-wrap gap-10">
+                        {["Python", "JavaScript", "C", "C++", "C#"].map((skill) => (
+                            <span key={skill} className="skill-badge mb-10">
+                            {skill}
+                            </span>
+                        ))}
+                        </div>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-8">
+                    <div>
+                        <h3 className="text-2xl font-semibold text-white mb-5">Artificial Intelligence</h3>
+                        <div className="flex flex-wrap gap-10">
+                        {["PyTorch", "Scikit Learn"].map((skill) => (
+                            <span key={skill} className="skill-badge mb-10">
+                            {skill}
+                            </span>
+                        ))}
+                        </div>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-8">
+                    <div>
+                        <h3 className="text-2xl font-semibold text-white mb-5">Web Development</h3>
+                        <div className="flex flex-wrap gap-10">
+                        {["HTML", "CSS", "React", "Node.js", "Tailwind", "D3.js"].map((skill) => (
+                            <span key={skill} className="skill-badge mb-10">
+                            {skill}
+                            </span>
+                        ))}
+                        </div>
+                    </div>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-8">
+                    <div>
+                        <h3 className="text-2xl font-semibold text-white mb-5">Dev Tools</h3>
+                        <div className="flex flex-wrap gap-10">
+                        {["Git", "GitHub", "Visual Studio Code", "IBM Cloud"].map((skill) => (
+                            <span key={skill} className="skill-badge mb-10">
+                            {skill}
+                            </span>
+                        ))}
+                        </div>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-8">
+                    <div>
+                        <h3 className="text-2xl font-semibold text-white mb-5">Python Libraries</h3>
+                        <div className="flex flex-wrap gap-10">
+                        {["Pandas", "NumPy", "Matplotlib", "OpenCV"].map((skill) => (
+                            <span key={skill} className="skill-badge mb-10">
+                            {skill}
+                            </span>
+                        ))}
+                        </div>
+                    </div>
+                </div>
+                    
+            </div>
+
+        </section>
+    )
+}

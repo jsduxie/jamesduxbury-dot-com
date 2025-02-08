@@ -19,3 +19,31 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@layer components {
+  .skill-badge {
+    @apply bg-gray-800 text-accent border border-accent px-4 py-2 rounded-lg 
+           text-lg font-semibold shadow-[0_0_15px_#00D9D9] 
+           transition duration-300 hover:bg-accent hover:text-black hover:shadow-[0_0_20px_#00D9D9];
+  }
+}
+
+.glitch {
+  position: relative;
+  color: white;
+  animation: glitch 20s infinite linear alternate;
+}
+
+@keyframes glitch {
+  0% { text-shadow: 2px 2px #00D9D9; transform: translate(1px, -1px) rotate(0.5deg); }
+  10% { text-shadow: -3px -3px #00D9D9; transform: translate(-2px, 2px) rotate(-0.5deg); }
+  20% { text-shadow: 4px -4px #00D9D9; transform: translate(3px, 1px) rotate(0.2deg); }
+  30% { text-shadow: -5px 5px #00D9D9; transform: translate(-1px, -3px) rotate(-0.3deg); }
+  40% { text-shadow: 3px -3px #00D9D9; transform: translate(2px, 3px) rotate(0.1deg); }
+  50% { text-shadow: 0px 0px #00D9D9; transform: translate(0px, 0px) rotate(0deg); }
+  60% { text-shadow: -4px 4px #00D9D9; transform: translate(-2px, -2px) rotate(0.3deg); }
+  70% { text-shadow: 3px 3px #00D9D9; transform: translate(1px, -2px) rotate(-0.1deg); }
+  80% { text-shadow: -2px -2px #00D9D9; transform: translate(-3px, 1px) rotate(0.2deg); }
+  90% { text-shadow: 5px -5px #00D9D9; transform: translate(2px, 2px) rotate(-0.4deg); }
+  100% { text-shadow: -3px 3px #00D9D9; transform: translate(-1px, -1px) rotate(0.3deg); }
+}
