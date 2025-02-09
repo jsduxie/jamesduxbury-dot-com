@@ -21,7 +21,6 @@ export function NavLinks() {
 }
 
 interface CTAButtonProps {
-  link: string;
   name: string;
   onClick?: () => void;
   icon?: React.ReactNode;
@@ -30,13 +29,12 @@ interface CTAButtonProps {
 
 interface CTAButtonProps {
   name: string;
-  link: string;
   onClick?: () => void;
   icon?: React.ReactNode;
   isMenuButton?: boolean;
 }
 
-export function CTAButton({ name, link, onClick, icon, isMenuButton }: CTAButtonProps) {
+export function CTAButton({ name, onClick, icon, isMenuButton }: CTAButtonProps) {
   return (
     <button
       onClick={onClick}
@@ -77,7 +75,7 @@ export default function NavBar() {
 
         {/* Mobile Menu Button */}
         <div className="block lg:hidden">
-          <CTAButton name="Menu" isMenuButton onClick={() => setIsMenuOpen(!isMenuOpen)} link='' icon={<svg className="fill-current h-5 w-5" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+          <CTAButton name="Menu" isMenuButton onClick={() => setIsMenuOpen(!isMenuOpen)} icon={<svg className="fill-current h-5 w-5" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
               <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
             </svg>} />
         </div>
@@ -108,7 +106,7 @@ export function HeroBanner() {
                 <p className="text-lg lg:text-xl text-gray-300 mb-5">
                     I am a third-year Computer Science MEng Student at Durham University. An aspiring software engineer with a passion for solving real-world problems and leveraging technology. 
                 </p>
-                <CTAButton name='Download my CV!' link='#' onClick={() => alert("CV button clicked")} />
+                <CTAButton name='Download my CV!' onClick={() => alert("CV button clicked")} />
             </div>
 
             <div className="lg:w-2/5 flex justify-center mt-6 lg:mt-0 relative">

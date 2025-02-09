@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Dialog, DialogContent, DialogTrigger, Button, Input, Textarea, DialogTitle } from "@/components/ui/ui";
-import { Mail, Github, Linkedin } from "lucide-react";
+import { Github, Linkedin } from "lucide-react";
 import { CTAButton } from "./Components";
 
 interface ContactModalProps {
@@ -8,17 +8,10 @@ interface ContactModalProps {
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   }
 
-const ContactModal: React.FC<ContactModalProps> = ({open, setOpen}) => {
+const ContactModal: React.FC<ContactModalProps> = ({setOpen}) => {
     const [formData, setFormData] = useState({name: "", email: "", mobile: "", message: ""});
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
-
-    interface FormData {
-        name: string;
-        email: string;
-        mobile: string;
-        message: string;
-    }
 
     interface ChangeEvent {
         target: {
@@ -37,6 +30,7 @@ const ContactModal: React.FC<ContactModalProps> = ({open, setOpen}) => {
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
+        setLoading(true);
         const response = await fetch("/api/contact", {
             method: "POST",
             headers: {'content-type': 'application/json'},
@@ -47,16 +41,19 @@ const ContactModal: React.FC<ContactModalProps> = ({open, setOpen}) => {
             alert("Message sent successfully!");
             setOpen(false);
             setFormData({name: "", email: "", mobile: "", message: ""});
+            setSuccess(true);
         } else {
             alert("An error occurred. Please try again later.");
         }
+
+        setLoading(false);
     }
 
 
     return (
         <Dialog>
           <DialogTrigger>
-            <CTAButton name="Contact" link='' onClick={() => setOpen(true)} />
+            <CTAButton name="Contact" onClick={() => setOpen(true)} />
           </DialogTrigger>
           <DialogContent className="max-w-md p-6 rounded-xl shadow-lg bg-white dark:bg-gray-900 flex-col align-center">
             <DialogTitle>Contact Me :)</DialogTitle>

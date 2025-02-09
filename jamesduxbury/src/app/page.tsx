@@ -1,7 +1,5 @@
 "use client";
-import Image from "next/image";
 import React from "react";
-import { useState, useEffect } from "react";
 import NavBar, { HeroBanner, About, Skills } from "@/components/Components";
 import { Projects } from "@/components/Projects";
 import Education from "@/components/Education";

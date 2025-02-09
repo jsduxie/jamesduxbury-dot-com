@@ -1,7 +1,4 @@
 import React from "react";
-import { useState, useEffect } from "react";
-import Image from 'next/image';
-import { CTAButton } from "./Components";
 
 const Experience: React.FC = () => {
     return (

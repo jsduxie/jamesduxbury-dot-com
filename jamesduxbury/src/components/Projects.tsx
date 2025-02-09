@@ -40,7 +40,7 @@ const ProjectCard: React.FC<Project> = ({ imagePath, title, techStack, descripti
           <p className="text-lg font-medium text-gray-800 dark:text-gray-300">Tech Stack: {techStack.join(', ')}</p>
           <p className="text-gray-700 dark:text-gray-300">{description}</p>
   
-          <CTAButton name="View on GitHub" link={githubLink} onClick={() => {window.open(githubLink, '_blank')}} />
+          <CTAButton name="View on GitHub" onClick={() => {window.open(githubLink, '_blank')}} />
         </div>
   
       </div>
