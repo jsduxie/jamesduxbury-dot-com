@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  reactStrictMode: true,
+  trailingSlash: false,
+  target: 'serverless'
 };
 
 export default nextConfig;
