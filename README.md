@@ -2,7 +2,7 @@
 
 This repo contains the source code for my personal portfolio website. This website was built using Next.js, Typescript and Tailwindcss.
 
-The website can be accessed via this [link][https://jamesduxbury-dot-com.vercel.app]!
+The website can be accessed via this [link](https://jamesduxbury-dot-com.vercel.app)!
 
 ## Technologies
 Next.js
