@@ -1,26 +1,17 @@
 [
     {
-        "imagePath": "/images/the-disappearance.png",
-        "title": "The Disappearance (2024)",
+        "imagePath": "/images/projects/the-disappearance.png",
+        "title": "The Disappearance: An IBM SkillsBuild Pursuit (2024)",
         "techStack": ["Godot", "GDScript"],
-        "description": "A 2D platformer game where you play as a detective trying to solve a mystery.",
-        "githubLink": "https://github.com/jsduxie",
-        "liveLink": null
+        "description": "As part of my second year software engineering project, we worked with IBM to implement a quest-based RPG to improve engagement with IBM's premier skills program, SkillsBuild. My main contributions related to the development of the character and NPC, in addition to stakeholder communication and liasion.",
+        "githubLink": "https://github.com/jsduxie/the-disappearance-game",
+        "liveLink": "https://djp200304.itch.io/the-disappearance-an-ibm-skillsbuild-pursuit"
     },
     {
-        "imagePath": "/images/the-disappearance.png",
-        "title": "X-Ray Image Repair in OpenCV",
+        "imagePath": "/images/projects/xray-image-repair.png",
+        "title": "X-Ray Image Repair in OpenCV (2024)",
         "techStack": ["Python", "OpenCV"],
-        "description": "A 2D platformer game where you play as a detective trying to solve a mystery.",
-        "githubLink": "https://github.com/jsduxie",
-        "liveLink": "test"
-    },
-    {
-        "imagePath": "/images/the-disappearance.png",
-        "title": "The Disappearance",
-        "techStack": ["Godot", "GDScript"],
-        "description": "A 2D platformer game where you play as a detective trying to solve a mystery.",
-        "githubLink": "https://github.com/jsduxie",
-        "liveLink": null
+        "description": "An implementation of an image processing program, using OpenCV to repair artificially damaged x-ray images. The program uses a combination of image processing techniques to repair the images, including inpainting and edge detection. This project was completed as part of my image processing coursework, achieving a first-class grade.",
+        "githubLink": "https://github.com/jsduxie/opencv-xray-repair"
     }
 ]
