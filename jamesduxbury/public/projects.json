@@ -4,20 +4,23 @@
         "title": "The Disappearance (2024)",
         "techStack": ["Godot", "GDScript"],
         "description": "A 2D platformer game where you play as a detective trying to solve a mystery.",
-        "githubLink": "https://github.com/jsduxie"
+        "githubLink": "https://github.com/jsduxie",
+        "liveLink": null
     },
     {
         "imagePath": "/images/the-disappearance.png",
         "title": "X-Ray Image Repair in OpenCV",
         "techStack": ["Python", "OpenCV"],
         "description": "A 2D platformer game where you play as a detective trying to solve a mystery.",
-        "githubLink": "https://github.com/jsduxie"
+        "githubLink": "https://github.com/jsduxie",
+        "liveLink": "test"
     },
     {
         "imagePath": "/images/the-disappearance.png",
         "title": "The Disappearance",
         "techStack": ["Godot", "GDScript"],
         "description": "A 2D platformer game where you play as a detective trying to solve a mystery.",
-        "githubLink": "https://github.com/jsduxie"
+        "githubLink": "https://github.com/jsduxie",
+        "liveLink": null
     }
 ]

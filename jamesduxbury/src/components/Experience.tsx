@@ -2,15 +2,15 @@ import React from "react";
 
 const Experience: React.FC = () => {
     return (
-        <section className="relative w-full bg-background py-12 text-white shadow-[0_0_15px_#00D9D9]" id="experience">
-        <div className="absolute w-[200px] h-[200px] border-5 border-accent bg-[#00D9D9] rounded-full blur-[100px] top-[15%] right-[0%]"></div>
-        <div className="absolute w-[200px] h-[200px] border-5 border-accent bg-[#00D9D9] rounded-full blur-[100px] bottom-[15%] left-[0%]"></div>
+        <section className="relative w-full bg-background py-12 text-white shadow-[0_0_15px_#3182ce]" id="experience">
+        <div className="absolute w-[200px] h-[200px] border-5 border-accent bg-[#3182ce] rounded-full blur-[100px] top-[15%] right-[0%]"></div>
+        <div className="absolute w-[200px] h-[200px] border-5 border-accent bg-[#3182ce] rounded-full blur-[100px] bottom-[15%] left-[0%]"></div>
         <div className="max-w-7xl mx-auto px-6">
             <h2 className="text-3xl font-bold text-accent mb-6">Experience</h2>
             <div className="lg:flex justify-between items-center space-y-6 lg:space-y-0 relative">
 
                 <div>
-                <div className="absolute left-0 top-0 bottom-0 w-1 bg-accent shadow-[0_0_15px_#00D9D9]"></div>
+                <div className="absolute left-0 top-0 bottom-0 w-1 bg-accent shadow-[0_0_15px_#3182ce]"></div>
                 <div className="space-y-8 pl-10">
                     <div>
                         <h3 className="text-xl font-semibold">Software Engineer - AI Trainer</h3>

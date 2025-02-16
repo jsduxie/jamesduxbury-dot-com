@@ -15,7 +15,7 @@ const CertificationCard: React.FC<Certification> = ({ name, imgPath, certificati
         alt={name} 
         width={100} 
         height={100} 
-        className="hover:border-2 hover:border-accent hover:shadow-[0_0_20px_#00D9D9] rounded-lg object-cove duration-200 hover:duration-200"
+        className="hover:border-2 hover:border-accent hover:shadow-[0_0_20px_#3182ce] rounded-lg object-cove duration-200 hover:duration-200"
         onClick={() => {window.open(certificationLink, '_blank')}}
         />
     );
@@ -46,15 +46,15 @@ const Education: React.FC = () => {
 
 
     return (
-        <section className="relative w-full bg-background py-12 text-white shadow-[0_0_15px_#00D9D9]" id="education">
-        <div className="absolute w-[200px] h-[200px] border-5 border-accent bg-[#00D9D9] rounded-full blur-[100px] top-[15%] right-[0%]"></div>
-        <div className="absolute w-[200px] h-[200px] border-5 border-accent bg-[#00D9D9] rounded-full blur-[100px] bottom-[15%] left-[0%]"></div>
+        <section className="relative w-full bg-background py-12 text-white shadow-[0_0_15px_#3182ce]" id="education">
+        <div className="absolute w-[200px] h-[200px] border-5 border-accent bg-[#3182ce] rounded-full blur-[100px] top-[15%] right-[0%]"></div>
+        <div className="absolute w-[200px] h-[200px] border-5 border-accent bg-[#3182ce] rounded-full blur-[100px] bottom-[15%] left-[0%]"></div>
         <div className="max-w-7xl mx-auto px-6">
             <h2 className="text-3xl font-bold text-accent mb-6">Education</h2>
             <div className="lg:flex justify-between items-center space-y-6 lg:space-y-0 relative">
 
                 <div>
-                <div className="absolute left-0 top-0 bottom-0 w-1 bg-accent shadow-[0_0_15px_#00D9D9]"></div>
+                <div className="absolute left-0 top-0 bottom-0 w-1 bg-accent shadow-[0_0_15px_#3182ce]"></div>
                 <div className="space-y-8 pl-10">
                     <div>
                         <h3 className="text-xl font-semibold">MEng Computer Science</h3>
@@ -90,7 +90,7 @@ const Education: React.FC = () => {
 export default Education;
 
 /*
-<section className="relative w-full bg-background py-12 text-white shadow-[0_0_15px_#00D9D9]" id="education">
+<section className="relative w-full bg-background py-12 text-white shadow-[0_0_15px_#3182ce]" id="education">
 <div className="max-w-7xl mx-auto px-6"></div>
 
     <div className="relative">

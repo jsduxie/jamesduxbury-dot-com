@@ -14,7 +14,7 @@ export function NavLinks() {
       <a href="#projects" className="text-xl text-white hover:text-accent transition">Projects</a>
       <a href="#education" className="text-xl text-white hover:text-accent transition">Education</a>
       <a href="#experience" className="text-xl text-white hover:text-accent transition">Experience</a>
-      <a href="#" className="text-xl text-white hover:text-accent transition">CV</a>
+      <a href="CV.pdf" download="James_Duxbury_CV.pdf" className="text-xl text-white hover:text-accent transition">CV</a>
       <ContactModal open={isModalOpen} setOpen={setIsModalOpen} />
     </>
   );
@@ -32,16 +32,17 @@ interface CTAButtonProps {
   onClick?: () => void;
   icon?: React.ReactNode;
   isMenuButton?: boolean;
+  style?: string;
 }
 
-export function CTAButton({ name, onClick, icon, isMenuButton }: CTAButtonProps) {
+export function CTAButton({ name, onClick, icon, isMenuButton, style }: CTAButtonProps) {
   return (
     <button
       onClick={onClick}
       className={`inline-flex items-center px-4 py-2 rounded 
         ${isMenuButton 
-          ? "border-none text-teal-200 hover:text-white" 
-          : "border text-accent border-accent hover:border-transparent hover:text-black hover:bg-accent transition duration-300 hover:shadow-[0_0_15px_#3182ce] text-xl"
+          ? `border-none text-teal-200 hover:text-white ${style}`
+          : `border text-accent border-accent hover:border-transparent hover:text-black hover:bg-accent transition duration-300 hover:shadow-[0_0_15px_#3182ce] text-xl ${style}`
         }`
       }
     >
@@ -106,12 +107,11 @@ export function HeroBanner() {
                 <p className="text-lg lg:text-xl text-gray-300 mb-5">
                     I am a third-year Computer Science MEng Student at Durham University. An aspiring software engineer with a passion for solving real-world problems and leveraging technology. 
                 </p>
-                <CTAButton name='Download my CV!' onClick={() => alert("CV button clicked")} />
+                <CTAButton name='Download my CV!' onClick={() => window.open("CV.pdf")} />
             </div>
 
             <div className="lg:w-2/5 flex justify-center mt-6 lg:mt-0 relative">
                 <div className="absolute w-[280px] h-[280px] bg-[#3182ce] rounded-full blur-[120px] opacity-50 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0"></div>
-
                 <Image src="/images/profile-picture.png" alt="James Duxbury" width={300} height={300} className="border-2 border-accent shadow-[0_0_20px_#3182ce] z-[2]" />
             </div>
 
