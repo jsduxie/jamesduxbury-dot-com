@@ -14,7 +14,7 @@ export function NavLinks() {
       <a href="#projects" className="text-xl text-white hover:text-accent transition">Projects</a>
       <a href="#education" className="text-xl text-white hover:text-accent transition">Education</a>
       <a href="#experience" className="text-xl text-white hover:text-accent transition">Experience</a>
-      <a href="CV.pdf" download="James_Duxbury_CV.pdf" className="text-xl text-white hover:text-accent transition">CV</a>
+      <a href="data/CV.pdf" download="James_Duxbury_CV.pdf" className="text-xl text-white hover:text-accent transition">CV</a>
       <ContactModal open={isModalOpen} setOpen={setIsModalOpen} />
     </>
   );
@@ -107,7 +107,7 @@ export function HeroBanner() {
                 <p className="text-lg lg:text-xl text-gray-300 mb-5">
                     I am a third-year Computer Science MEng Student at Durham University. An aspiring software engineer with a passion for solving real-world problems and leveraging technology. 
                 </p>
-                <CTAButton name='Download my CV!' onClick={() => window.open("CV.pdf")} />
+                <CTAButton name='Download my CV!' onClick={() => window.open("data/CV.pdf")} />
             </div>
 
             <div className="lg:w-2/5 flex justify-center mt-6 lg:mt-0 relative">

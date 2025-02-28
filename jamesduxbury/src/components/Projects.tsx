@@ -57,7 +57,7 @@ export const Projects = () => {
     useEffect(() => {
         const fetchProjects = async () => {
         try {
-            const res = await fetch('/projects.json');
+            const res = await fetch('/data/projects.json');
             if (res.ok) {
             const data = await res.json();
             setProjects(data);

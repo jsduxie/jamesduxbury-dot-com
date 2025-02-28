@@ -27,7 +27,7 @@ const Education: React.FC = () => {
     useEffect(() => {
         const fetchCertifications = async () => {
         try {
-            const res = await fetch('/certifications.json');
+            const res = await fetch('/data/certifications.json');
             if (res.ok) {
             const data = await res.json();
             setCertifications(data);
