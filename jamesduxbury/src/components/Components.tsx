@@ -132,19 +132,13 @@ export function About() {
 
                     <div className="lg:w-2/3 space-y-6">
                         <p className="text-lg lg:text-xl text-gray-300">
-                        I have always had a function for learning about, breaking and fixing technology. I am a huge advocate for Rapid Continuous Improvement (RCI) initiatives.
+                          At University, I specialise in Artificial Intelligence, Data Science and Software Engineering. I am strongly passionate about leveraging AI to drive innovation and efficiency.
 
-                        I have always had a function for learning about, breaking and fixing technology. I am a huge advocate for Rapid Continuous Improvement (RCI) initiatives
+                          With over three years of corporate IT experience, I have led training initiatives, optimated workflows and contributed to major projects. Also, as an AI Trainer for DataAnnotation, I have experience with analysing and evaluating LLM outputs, with a focus on code generation.
 
-                        I have always had a function for learning about, breaking and fixing technology. I am a huge advocate for Rapid Continuous Improvement (RCI) initiatives
+                          I have a wide range of software projects from University, ranging from developing a RPG for IBM as part of a group project, to creating minimised deep learning models. I achieved 98% in both courseworks for my Web Development module, with one site being a full-stack marketplace for VW enthusiasts.
 
-                        I have always had a function for learning about, breaking and fixing technology. I am a huge advocate for Rapid Continuous Improvement (RCI) initiatives
-
-                        I have always had a function for learning about, breaking and fixing technology. I am a huge advocate for Rapid Continuous Improvement (RCI) initiatives
-
-                        I have always had a function for learning about, breaking and fixing technology. I am a huge advocate for Rapid Continuous Improvement (RCI) initiatives
-
-                        I have always had a function for learning about, breaking and fixing technology. I am a huge advocate for Rapid Continuous Improvement (RCI) initiatives
+                          I am always eager to expand my knowledge and contribute. For any opportunities or questions, feel free to reach out to me using the contact form!
                         </p>
                     </div>
                 </div>

@@ -5,9 +5,9 @@ This repo contains the source code for my personal portfolio website. This websi
 The website can be accessed via this [link](https://jamesduxbury-dot-com.vercel.app)!
 
 ## Technologies
-Next.js
-TypeScript
-Tailwindcss
+Next.js<br>
+TypeScript<br>
+Tailwindcss<br>
 Nodemailer for sending me the contact form details
 
 ## Project Structure
