@@ -68,7 +68,7 @@ export default function NavBar() {
 
   return (
     <>
-      <nav className="fixed top-0 left-10 right-10 flex items-center justify-between bg-background p-6">
+      <nav className="fixed top-0 flex items-center justify-between bg-background p-3 pl-6 pr-6 z-10 w-[100%]">
         {/* Name Section */}
         <div className="flex items-center flex-shrink-0 text-white mr-6">
           <span className="font-semibold text-3xl tracking-tight">James Duxbury</span>

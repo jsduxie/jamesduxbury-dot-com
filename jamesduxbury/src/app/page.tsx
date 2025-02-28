@@ -11,8 +11,9 @@ export default function Home() {
 
   
   return (
+   <>
+    <NavBar />
     <main className="text-white flex flex-col items-center justify-center pt-20 backdrop-blur-lg">
-      <NavBar />
       <HeroBanner />
       <hr className="border-t-2 border-accent my-6" />
       <About />
@@ -20,8 +21,10 @@ export default function Home() {
       <Projects />
       <Education />
       <Experience />
-      
+        
 
     </main>
+  </>
+   
   );
 }
