@@ -2,6 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import Image from 'next/image';
 import ContactModal from "./Contact";
+import Link from 'next/link'
 
 
 export function NavLinks() {
@@ -9,12 +10,12 @@ export function NavLinks() {
 
   return (
     <>
-      <a href="#about" className="text-xl text-white hover:text-accent transition">About</a>
-      <a href="#skills" className="text-xl text-white hover:text-accent transition">Skills</a>
-      <a href="#projects" className="text-xl text-white hover:text-accent transition">Projects</a>
-      <a href="#education" className="text-xl text-white hover:text-accent transition">Education</a>
-      <a href="#experience" className="text-xl text-white hover:text-accent transition">Experience</a>
-      <a href="data/CV.pdf" download="James_Duxbury_CV.pdf" className="text-xl text-white hover:text-accent transition">CV</a>
+      <Link href="#about" className="text-xl text-white hover:text-accent transition">About</Link>
+      <Link href="#skills" className="text-xl text-white hover:text-accent transition">Skills</Link>
+      <Link href="#projects" className="text-xl text-white hover:text-accent transition">Projects</Link>
+      <Link href="#education" className="text-xl text-white hover:text-accent transition">Education</Link>
+      <Link href="#experience" className="text-xl text-white hover:text-accent transition">Experience</Link>
+      <Link href="data/CV.pdf" download="James_Duxbury_CV.pdf" className="text-xl text-white hover:text-accent transition">CV</Link>
       <ContactModal open={isModalOpen} setOpen={setIsModalOpen} />
     </>
   );
@@ -89,7 +90,7 @@ export default function NavBar() {
 
       {/* Mobile */}
       {isMenuOpen && (
-      <div className="lg:hidden fixed top-16 left-0 right-0 bg-background flex flex-col items-center space-y-6 p-6">
+      <div className="lg:hidden fixed top-10 left-0 right-0 bg-background flex flex-col items-center space-y-6 p-6 z-[2] ease-in-out transition-discrete">
         <NavLinks />
       </div>
       )}
@@ -99,7 +100,7 @@ export default function NavBar() {
 
 export function HeroBanner() {
     return (
-        <section className="w-full flex flex-col lg:flex-row items-center justify-center text-white p-10 pt-40 bg-background">
+        <section className="w-full flex flex-col lg:flex-row items-center justify-center text-white p-10 pt-0 lg:pt-40 bg-background">
             
             <div className="lg:w-3/5 text-center lg:text-left space-y-3 p-4 px-10">
                 <h2 className="text-2xl lg:text-3xl text-gray-300">Hello, I am</h2>

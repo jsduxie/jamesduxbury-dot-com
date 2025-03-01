@@ -15,7 +15,7 @@ const CertificationCard: React.FC<Certification> = ({ name, imgPath, certificati
         alt={name} 
         width={100} 
         height={100} 
-        className="hover:border-2 hover:border-accent hover:shadow-[0_0_20px_#3182ce] rounded-lg object-cove duration-200 hover:duration-200"
+        className="hover:border-2 hover:border-accent hover:shadow-[0_0_20px_#3182ce] rounded-lg object-cove duration-200 hover:duration-200 mt-5 mx-5 z-[10]"
         onClick={() => {window.open(certificationLink, '_blank')}}
         />
     );

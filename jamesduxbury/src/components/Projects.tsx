@@ -41,9 +41,12 @@ const ProjectCard: React.FC<Project> = ({ imagePath, title, techStack, descripti
             <h3 className="text-2xl lg:text-3xl font-semibold text-gray-900 dark:text-white">{title}</h3>
             <p className="text-lg font-medium text-gray-800 dark:text-gray-300">Tech Stack: {techStack.join(', ')}</p>
             <p className="text-gray-700 dark:text-gray-300">{description}</p>
-  
+            
+            <div className="flex items-center justify-around flex-wrap w-45">
             <CTAButton name="View on GitHub" onClick={() => {window.open(githubLink, '_blank')}} />
-            {liveLink && <CTAButton name="Live" onClick={() => {window.open(liveLink, '_blank')}} style="ml-5"/>}
+            {liveLink && <CTAButton name="Live" onClick={() => {window.open(liveLink, '_blank')}}/>}
+            </div>
+            
         </div>
   
       </div>
