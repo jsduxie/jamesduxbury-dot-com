@@ -18,7 +18,7 @@ export const WorkSummary: React.FC = () => {
       </div>
       <Link
         href="/work"
-        className="group flex items-center justify-between border-t border-border bg-bg/40 px-4 py-3 font-mono text-xs uppercase tracking-[0.18em] text-accent transition-colors hover:bg-accent/10 sm:px-6"
+        className="group flex items-center justify-between border-t border-border bg-bg/40 px-4 py-3 font-mono text-sm uppercase tracking-[0.18em] text-accent transition-colors hover:bg-accent/10 sm:px-6"
       >
         <span>{remaining > 0 ? `+ ${remaining} more` : 'view all'}</span>
         <span className="transition-transform group-hover:translate-x-1">open /work →</span>

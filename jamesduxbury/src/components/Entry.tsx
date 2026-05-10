@@ -14,12 +14,12 @@ export const Entry: React.FC = () => {
 
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-[auto_1fr] sm:items-start sm:gap-12">
           {/* driver portrait */}
-          <div className="relative h-48 w-48 overflow-hidden border border-border sm:h-56 sm:w-56 lg:h-64 lg:w-64">
+          <div className="relative h-36 w-36 overflow-hidden border border-border sm:h-40 sm:w-40 lg:h-44 lg:w-44">
             <Image
               src="/images/profile-picture.png"
               alt="James Duxbury"
               fill
-              sizes="(max-width: 640px) 192px, 256px"
+              sizes="(max-width: 640px) 144px, 176px"
               className="object-cover transition duration-300"
               priority
             />
@@ -33,8 +33,8 @@ export const Entry: React.FC = () => {
           {/* spec rows */}
           <div className="divide-y divide-border border-y border-border">
             <SpecRow label="Driver" trailing={<StatusChip kind="live" label="ACTIVE" />}>
-              <span className="font-mono text-base text-text sm:text-lg">James Duxbury</span>{' '}
-              <span className="font-mono text-xs uppercase tracking-[0.2em] text-accent">
+              <span className="font-mono text-base text-text sm:text-lg">James Duxbury</span>
+              <span className="ml-3 font-mono text-xs uppercase tracking-[0.2em] text-accent">
                 AfCIIS
               </span>
             </SpecRow>
