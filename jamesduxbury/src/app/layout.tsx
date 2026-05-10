@@ -8,8 +8,16 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: 'James Duxbury | Portfolio',
-  description: 'Welcome to my portfolio website.',
+  title: 'James Duxbury — Software Engineer in AI and Cybersecurity',
+  description:
+    'Final-year MEng Computer Science student at Durham. AI / NLP research, application security, full-stack engineering. Accredited Affiliate Member of the Chartered Institute of Information Security (AfCIIS).',
+  authors: [{ name: 'James Duxbury' }],
+  openGraph: {
+    title: 'James Duxbury — Software Engineer in AI and Cybersecurity',
+    description:
+      'Portfolio of James Duxbury — MEng Computer Science, Durham. AI, NLP, application security, full-stack engineering.',
+    type: 'website',
+  },
 };
 
 export default function RootLayout({
