@@ -2,12 +2,15 @@
   "name": "jamesduxbury",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://main.dlfydk2d74c7h.amplifyapp.com/#/",
+  "homepage": "https://jamesduxbury-dot-com.vercel.app/",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,css,json,md}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,css,json,md}\""
   },
   "dependencies": {
     "autoprefixer": "^10.4.20",
@@ -30,6 +33,8 @@
     "eslint-config-next": "15.1.6",
     "postcss": "^8.4.31",
     "postcss-import": "^16.1.0",
+    "prettier": "^3.8.3",
+    "prettier-plugin-tailwindcss": "^0.6.14",
     "tailwindcss": "^3.4.17",
     "typescript": "^5"
   }
