@@ -1,6 +1,6 @@
-import type { Metadata } from "next";
+import type { Metadata } from 'next';
 import { Montserrat } from 'next/font/google';
-import "./globals.css";
+import './globals.css';
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -8,8 +8,8 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "James Duxbury | Portfolio",
-  description: "Welcome to my portfolio website.",
+  title: 'James Duxbury | Portfolio',
+  description: 'Welcome to my portfolio website.',
 };
 
 export default function RootLayout({
@@ -19,11 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${montserrat.className} antialiased`}
-      >
-        {children}
-      </body>
+      <body className={`${montserrat.className} antialiased`}>{children}</body>
     </html>
   );
 }
