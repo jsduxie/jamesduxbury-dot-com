@@ -2,83 +2,47 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #111827;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-}
-
 html {
   @apply scroll-smooth;
 }
 
+body {
+  background-color: theme('colors.bg');
+  color: theme('colors.text');
+}
+
+/* ── Console primitives ─────────────────────────────────────────────── */
+
 @layer components {
+  /* uppercase mono label used for spec rows, section headers, status chips */
+  .mono-label {
+    @apply font-mono text-xs uppercase tracking-[0.18em] text-muted;
+  }
+
+  /* skill chip — restrained, no neon */
   .skill-badge {
-    @apply rounded-lg border border-accent bg-gray-800 px-4 py-2 text-lg font-semibold text-accent shadow-[0_0_15px_#00D9D9] transition duration-300 hover:bg-accent hover:text-black hover:shadow-[0_0_20px_#00D9D9];
+    @apply rounded border border-border bg-surface px-3 py-1.5 font-mono text-xs text-text transition-colors duration-150 hover:border-accent hover:text-accent;
   }
-}
 
-.glitch {
-  position: relative;
-  color: white;
-  animation: glitch 20s infinite linear alternate;
-}
+  /* status chip — coloured pill for project status */
+  .status-chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[0.65rem] uppercase tracking-[0.15em];
+  }
+  .status-chip-live {
+    @apply border-live/40 bg-live/10 text-live;
+  }
+  .status-chip-dev {
+    @apply border-dev/40 bg-dev/10 text-dev;
+  }
+  .status-chip-exam {
+    @apply border-danger/40 bg-danger/10 text-danger;
+  }
+  .status-chip-shipped {
+    @apply border-accent/50 bg-accent/10 text-accent;
+  }
 
-@keyframes glitch {
-  0% {
-    text-shadow: 2px 2px #00d9d9;
-    transform: translate(1px, -1px) rotate(0.5deg);
-  }
-  10% {
-    text-shadow: -3px -3px #00d9d9;
-    transform: translate(-2px, 2px) rotate(-0.5deg);
-  }
-  20% {
-    text-shadow: 4px -4px #00d9d9;
-    transform: translate(3px, 1px) rotate(0.2deg);
-  }
-  30% {
-    text-shadow: -5px 5px #00d9d9;
-    transform: translate(-1px, -3px) rotate(-0.3deg);
-  }
-  40% {
-    text-shadow: 3px -3px #00d9d9;
-    transform: translate(2px, 3px) rotate(0.1deg);
-  }
-  50% {
-    text-shadow: 0px 0px #00d9d9;
-    transform: translate(0px, 0px) rotate(0deg);
-  }
-  60% {
-    text-shadow: -4px 4px #00d9d9;
-    transform: translate(-2px, -2px) rotate(0.3deg);
-  }
-  70% {
-    text-shadow: 3px 3px #00d9d9;
-    transform: translate(1px, -2px) rotate(-0.1deg);
-  }
-  80% {
-    text-shadow: -2px -2px #00d9d9;
-    transform: translate(-3px, 1px) rotate(0.2deg);
-  }
-  90% {
-    text-shadow: 5px -5px #00d9d9;
-    transform: translate(2px, 2px) rotate(-0.4deg);
-  }
-  100% {
-    text-shadow: -3px 3px #00d9d9;
-    transform: translate(-1px, -1px) rotate(0.3deg);
+  /* small status dot for the live indicator in top bar */
+  .status-dot {
+    @apply h-1.5 w-1.5 rounded-full;
   }
 }
