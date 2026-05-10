@@ -1,10 +1,13 @@
 import type { Metadata } from 'next';
-import { Montserrat } from 'next/font/google';
+import { GeistSans } from 'geist/font/sans';
+import { JetBrains_Mono } from 'next/font/google';
+import { StatusBar } from '@/components/console/StatusBar';
 import './globals.css';
 
-const montserrat = Montserrat({
+const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
-  weight: ['400', '500', '700'],
+  variable: '--font-jetbrains-mono',
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
@@ -26,8 +29,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${montserrat.className} antialiased`}>{children}</body>
+    <html lang="en" className={`${GeistSans.variable} ${jetbrainsMono.variable}`}>
+      <body className="bg-bg bg-dot-grid bg-[length:24px_24px] font-sans text-text antialiased">
+        <StatusBar />
+        {children}
+      </body>
     </html>
   );
 }
