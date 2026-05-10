@@ -1,23 +1,33 @@
-'use client';
-import React from 'react';
-import NavBar, { HeroBanner, About, Skills } from '@/components/Components';
-import { Projects } from '@/components/Projects';
-import Education from '@/components/Education';
-import Experience from '@/components/Experience';
+import { Entry } from '@/components/Entry';
+import { AboutSummary } from '@/components/about/AboutSummary';
+import { WorkSummary } from '@/components/work/WorkSummary';
+import { SkillsSummary } from '@/components/skills/SkillsSummary';
+import { ExperienceSummary } from '@/components/experience/ExperienceSummary';
+import { EducationSummary } from '@/components/education/EducationSummary';
+import { Footer } from '@/components/Footer';
 
 export default function Home() {
   return (
     <>
-      <NavBar />
-      <main className="flex flex-col items-center justify-center pt-20 text-white backdrop-blur-lg">
-        <HeroBanner />
-        <hr className="my-6 border-t-2 border-accent" />
-        <About />
-        <Skills />
-        <Projects />
-        <Education />
-        <Experience />
+      <Entry />
+      <main className="mx-auto max-w-7xl space-y-10 px-4 pt-12 sm:px-6">
+        <AboutSummary />
+
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-3">
+          <div className="lg:col-span-2">
+            <WorkSummary />
+          </div>
+          <div>
+            <SkillsSummary />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
+          <ExperienceSummary />
+          <EducationSummary />
+        </div>
       </main>
+      <Footer />
     </>
   );
 }
