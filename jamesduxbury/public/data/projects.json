@@ -1,17 +1,74 @@
 [
-    {
-        "imagePath": "/images/projects/the-disappearance.png",
-        "title": "The Disappearance: An IBM SkillsBuild Pursuit (2024)",
-        "techStack": ["Godot", "GDScript"],
-        "description": "As part of my second year software engineering project, we worked with IBM to implement a quest-based RPG to improve engagement with IBM's premier skills program, SkillsBuild. My main contributions related to the development of the character and NPC, in addition to stakeholder communication and liasion.",
-        "githubLink": "https://github.com/jsduxie/the-disappearance-game",
-        "liveLink": "https://djp200304.itch.io/the-disappearance-an-ibm-skillsbuild-pursuit"
-    },
-    {
-        "imagePath": "/images/projects/xray-image-repair.png",
-        "title": "X-Ray Image Repair in OpenCV (2024)",
-        "techStack": ["Python", "OpenCV"],
-        "description": "An implementation of an image processing program, using OpenCV to repair artificially damaged x-ray images. The program uses a combination of image processing techniques to repair the images, including inpainting and edge detection. This project was completed as part of my image processing coursework, achieving a first-class grade.",
-        "githubLink": "https://github.com/jsduxie/opencv-xray-repair"
-    }
+  {
+    "title": "FG-HAN: Feature-Guided Hierarchical Attention for BPD Detection",
+    "subtitle": "MEng Dissertation · 2026",
+    "techStack": [
+      "Python",
+      "PyTorch",
+      "HuggingFace Transformers",
+      "LIWC",
+      "NRC-VAD",
+      "Empath",
+      "scikit-learn"
+    ],
+    "highlights": [
+      "Macro F1 0.874, matching the strongest transformer baselines on Reddit-based binary classification (BPD vs control).",
+      "Composed JSD 0.645 vs 0.380 against the unguided counterpart (p < 0.001) — heads aligned to interpersonal, emotional, and behavioural dimensions of Sanislow's three-factor model.",
+      "Evaluated 13 architectures from logistic regression to pretrained transformers, alongside a cross-architecture faithfulness comparison of four attribution methods."
+    ],
+    "comingSoon": true
+  },
+  {
+    "title": "JSGrades: Qualification Tracker",
+    "subtitle": "In progress · May 2025 – Present",
+    "techStack": [
+      "React",
+      "Node.js",
+      "PostgreSQL",
+      "Firebase",
+      "Jest",
+      "Vercel",
+      "Render",
+      "Neon"
+    ],
+    "highlights": [
+      "Full-stack web application for degree grade forecasting, task tracking, and performance visualisation.",
+      "Cloud-native CI/CD across Vercel (frontend), Render (backend), and Neon (PostgreSQL).",
+      "Firebase authentication, Jest test suite, with Qodana + ESLint + Prettier enforcing code quality, security, and maintainability."
+    ]
+  },
+  {
+    "title": "Researcher Agent: Semantic Scholar Paper Monitor",
+    "subtitle": "2025",
+    "techStack": ["Python", "Semantic Scholar API", "Gemini AI", "GitHub Actions"],
+    "highlights": [
+      "Automated research-monitoring agent that tracks new publications across configurable topics via the Semantic Scholar API.",
+      "Daily email digests summarised and relevance-filtered by Gemini AI — built to surface BPD and mental-health NLP literature during dissertation work.",
+      "Runs on a GitHub Actions cron, with a typed test harness and a dry-run mode for local development."
+    ],
+    "githubLink": "https://github.com/jsduxie/researcher-agent"
+  },
+  {
+    "title": "X-Ray Image Repair with OpenCV",
+    "subtitle": "Image Processing Coursework · 2024",
+    "techStack": ["Python", "OpenCV", "NumPy"],
+    "highlights": [
+      "Boosted a pre-trained classifier's accuracy from 55% to 90% by repairing artificially damaged X-ray images.",
+      "Applied Canny edge detection to identify damaged regions and Criminisi's inpainting algorithm for realistic restoration.",
+      "Coursework awarded a first-class grade."
+    ],
+    "imagePath": "/images/projects/xray-image-repair.png",
+    "githubLink": "https://github.com/jsduxie/opencv-xray-repair"
+  },
+  {
+    "title": "Artemis III Lunar South Pole Landing Site Analysis",
+    "subtitle": "Advanced Visualisation Coursework · 2025",
+    "techStack": ["Python", "PyGMT", "LOLA Elevation Data"],
+    "highlights": [
+      "Interactive geospatial analysis tool evaluating candidate landing sites for NASA's Artemis III mission at the lunar south pole.",
+      "Slope computation via Horn's (1981) kernel with latitude correction, paired with TOPSIS-based multi-criteria suitability scoring.",
+      "Two interactive visualisation tools for terrain rendering, illumination analysis, and candidate site comparison."
+    ],
+    "comingSoon": true
+  }
 ]
