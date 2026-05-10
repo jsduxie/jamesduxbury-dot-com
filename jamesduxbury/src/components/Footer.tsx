@@ -47,7 +47,10 @@ export const Footer: React.FC = async () => {
             href="mailto:jduxbury848@gmail.com"
             className="text-text/85 transition-colors hover:text-accent"
           >
-            jduxbury848@gmail.com
+            email ↗
+          </Link>
+          <Link href="/contact" className="text-text/85 transition-colors hover:text-accent">
+            contact form ↗
           </Link>
           <Link
             href="https://github.com/jsduxie"

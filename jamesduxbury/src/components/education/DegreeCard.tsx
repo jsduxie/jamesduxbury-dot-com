@@ -8,20 +8,22 @@ interface DegreeCardProps {
 
 export const DegreeCard: React.FC<DegreeCardProps> = ({ degree, defaultOpen = false }) => {
   const header = (
-    <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-      <h3 className="font-mono text-sm font-semibold text-text sm:text-base">
-        {degree.qualification}
-      </h3>
-      <span className="font-mono text-xs text-muted">{degree.institution}</span>
-      <span className="ml-auto font-mono text-[0.65rem] uppercase tracking-[0.15em] text-muted">
-        {degree.period}
-      </span>
+    <div className="space-y-1">
+      <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+        <h3 className="font-mono text-sm font-semibold text-text sm:text-base">
+          {degree.qualification}
+        </h3>
+        <span className="font-mono text-[0.65rem] uppercase tracking-[0.15em] text-muted">
+          {degree.period}
+        </span>
+      </div>
+      <p className="font-mono text-xs text-muted">{degree.institution}</p>
     </div>
   );
 
   if (!degree.bullets) {
     return (
-      <div className="flex w-full items-center gap-3 border-b border-border px-4 py-3 last:border-b-0 sm:px-6">
+      <div className="flex w-full items-start gap-3 border-b border-border px-4 py-3 last:border-b-0 sm:px-6">
         <span aria-hidden className="font-mono text-xs text-border">
           ▸
         </span>

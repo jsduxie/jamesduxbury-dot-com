@@ -55,7 +55,7 @@ export const StatusBar: React.FC = () => {
         </Link>
 
         {/* right — desktop nav */}
-        <nav className="hidden items-center gap-5 font-mono text-xs lg:flex">
+        <nav className="hidden items-center gap-6 font-mono text-sm lg:flex">
           {NAV_LINKS.map((link) => {
             const active = isActive(pathname, link.href);
             return (
@@ -79,8 +79,8 @@ export const StatusBar: React.FC = () => {
             cv.pdf
           </Link>
           <Link
-            href="#contact"
-            className="rounded-full border border-accent/60 bg-accent/10 px-3 py-1 text-accent transition-colors hover:border-accent hover:bg-accent hover:text-text"
+            href="/contact"
+            className="rounded-full border border-accent/60 bg-accent/10 px-3.5 py-1.5 text-accent transition-colors hover:border-accent hover:bg-accent hover:text-text"
           >
             contact
           </Link>
@@ -133,7 +133,7 @@ export const StatusBar: React.FC = () => {
             </li>
             <li>
               <Link
-                href="#contact"
+                href="/contact"
                 onClick={() => setIsMenuOpen(false)}
                 className="text-accent hover:text-danger"
               >

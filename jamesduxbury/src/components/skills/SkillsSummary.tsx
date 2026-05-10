@@ -17,16 +17,14 @@ export const SkillsSummary: React.FC = () => (
           </div>
           <p className="mt-1 font-mono text-xs text-muted">
             {group.skills.slice(0, 4).join(' · ')}
-            {group.skills.length > 4 && (
-              <span className="text-border"> · +{group.skills.length - 4}</span>
-            )}
+            {group.skills.length > 4 ? ` · +${group.skills.length - 4}` : ''}
           </p>
         </div>
       ))}
     </div>
     <Link
       href="/skills"
-      className="group flex items-center justify-between border-t border-border bg-bg/40 px-4 py-3 font-mono text-xs uppercase tracking-[0.18em] text-accent transition-colors hover:bg-accent/10 sm:px-6"
+      className="group flex items-center justify-between border-t border-border bg-bg/40 px-4 py-3 font-mono text-sm uppercase tracking-[0.18em] text-accent transition-colors hover:bg-accent/10 sm:px-6"
     >
       <span>full skill set</span>
       <span className="transition-transform group-hover:translate-x-1">open /skills →</span>
