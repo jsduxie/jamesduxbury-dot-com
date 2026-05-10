@@ -1,5 +1,57 @@
 import React from 'react';
 
+interface Role {
+  title: string;
+  organisation: string;
+  meta?: string;
+  period: string;
+  bullets?: string[];
+}
+
+const ROLES: Role[] = [
+  {
+    title: 'Software Engineer',
+    organisation: 'Compare the Market',
+    meta: 'Internship · Peterborough',
+    period: 'July 2025 – September 2025',
+    bullets: [
+      'Designed and developed a Vite + React dashboard enabling non-technical users to visualise and explore complex question sets across 9 products, reducing reliance on developers for data retrieval.',
+      'Engineered a recursive parsing algorithm to translate JSONLogic rules into natural-language bullet points, generalising across diverse logical expressions and business operators.',
+      'Led a mob-programming intern project re-engineering a legacy internal tool with modern UI, advanced filtering, and maintainability improvements for future system migration.',
+      'Implemented and optimised GitLab CI/CD pipelines, enforcing automated testing and code-quality checks to accelerate development workflows.',
+      'Applied AI-assisted development tools (Windsurf, Cursor) to streamline debugging, refactor for scalability, and auto-generate test cases — enabling greater focus on long-term architecture.',
+    ],
+  },
+  {
+    title: 'Software Engineer — AI Trainer',
+    organisation: 'DataAnnotation',
+    meta: 'Contract · Remote',
+    period: 'March 2024 – Present',
+    bullets: [
+      'Debugged and optimised LLM-generated Python, JavaScript, and SQL code, improving accuracy and reliability of model outputs.',
+      'Delivered structured feedback on syntax, logic, and explanatory text, directly enhancing training-data quality for large-scale model fine-tuning.',
+      'Applied systematic debugging and problem decomposition to resolve complex logical errors in AI-generated code.',
+    ],
+  },
+  {
+    title: 'Information Technology Support Technician',
+    organisation: 'Snap-on Tools',
+    meta: 'Remote',
+    period: 'October 2021 – Present',
+    bullets: [
+      'Built and deployed a Python automation tool to audit and clean enterprise asset databases, cutting data errors across 500+ users.',
+      'Developed a Python GUI application to automate Exchange 365 migrations for 400+ users, reducing manual effort by 70%.',
+      'Supported development of a custom web-based asset tracking system, streamlining internal infrastructure for distributed teams.',
+    ],
+  },
+  {
+    title: 'Sales Consultant',
+    organisation: 'Next',
+    meta: 'Bedford',
+    period: 'September 2019 – October 2021',
+  },
+];
+
 const Experience: React.FC = () => {
   return (
     <section
@@ -10,67 +62,26 @@ const Experience: React.FC = () => {
       <div className="border-5 absolute bottom-[15%] left-[0%] h-[200px] w-[200px] rounded-full border-accent bg-[#3182ce] blur-[100px]"></div>
       <div className="mx-auto max-w-7xl px-6">
         <h2 className="mb-6 text-3xl font-bold text-accent">Experience</h2>
-        <div className="relative items-center justify-between space-y-6 lg:flex lg:space-y-0">
-          <div>
-            <div className="absolute bottom-0 left-0 top-0 w-1 bg-accent shadow-[0_0_15px_#3182ce]"></div>
-            <div className="space-y-8 pl-10">
-              <div>
-                <h3 className="text-xl font-semibold">Software Engineer - AI Trainer</h3>
-                <p className="text-lg">DataAnnotation | 2024 - Present</p>
-                <ul className="text-md leading-7 text-gray-300">
-                  <li className="mt-3">
-                    Assisted with the training of multiple AI models, with a focus on code
-                    generation
-                  </li>
-                  <li className="mt-3">
-                    Conducted in-depth comparisons between AI-generated responses, evaluating SQL,
-                    Python, JavaScript, and Java outputs.
-                  </li>
-                  <li className="mt-3">
-                    Provided detailed feedback to improve model accuracy and consistency in various
-                    coding languages.
-                  </li>
-                </ul>
+        <div className="relative">
+          <div className="absolute bottom-0 left-0 top-0 w-1 bg-accent shadow-[0_0_15px_#3182ce]"></div>
+          <div className="space-y-10 pl-10">
+            {ROLES.map((role) => (
+              <div key={`${role.organisation}-${role.period}`}>
+                <h3 className="text-xl font-semibold">{role.title}</h3>
+                <p className="text-lg">
+                  {role.organisation}
+                  {role.meta && <span className="text-gray-400"> · {role.meta}</span>}
+                </p>
+                <p className="text-sm text-gray-400">{role.period}</p>
+                {role.bullets && (
+                  <ul className="text-md mt-3 list-disc space-y-1 pl-5 leading-7 text-gray-300">
+                    {role.bullets.map((b, i) => (
+                      <li key={i}>{b}</li>
+                    ))}
+                  </ul>
+                )}
               </div>
-              <div>
-                <h3 className="text-xl font-semibold">Information Technology Support Technician</h3>
-                <p className="text-lg">Snap-on | 2021 - Present</p>
-                <ul className="text-md/0.1 leading-7 text-gray-300">
-                  <li className="mt-3">
-                    Led onboarding and training of new team members during a major transition,
-                    ensuring proficiency in hardware and software support.
-                  </li>
-                  <li className="mt-3">
-                    Acted as the main point of contact for issues with the proprietary POS system,
-                    ensuring quick issue resolution.
-                  </li>
-                  <li className="mt-3">
-                    Improved collaboration between US and UK teams, significantly reducing
-                    resolution times through process enhancements.
-                  </li>
-                  <li className="mt-3">
-                    Created SOPs that reduced error rates and streamlined repetitive tasks, boosting
-                    operational efficiency.
-                  </li>
-                  <li className="mt-3">
-                    Assisted in migrating hardware for 400+ users, developing user guides and
-                    training to ensure a smooth transition.
-                  </li>
-                  <li className="mt-3">
-                    Contributed to key projects, including the migration to Zendesk and the creation
-                    of a web-based asset tracking system.
-                  </li>
-                  <li className="mt-3">
-                    Maintained a 100% CSAT score and consistently met SLAs across departments.
-                  </li>
-                  <li className="mt-3">Champion RCI initiatives, streamlining processes.</li>
-                </ul>
-              </div>
-              <div>
-                <h3 className="text-xl font-semibold">Sales Consultant / Team Coach</h3>
-                <p className="text-lg">Next | 2019 - 2021</p>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>
