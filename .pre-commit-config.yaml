@@ -6,7 +6,8 @@ repos:
         files: ^jamesduxbury/
         types_or: [javascript, jsx, ts, tsx, json, css, markdown, yaml]
         additional_dependencies:
-          - prettier@3.3.3
+          - prettier@3.8.3
+          - prettier-plugin-tailwindcss@0.6.14
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
