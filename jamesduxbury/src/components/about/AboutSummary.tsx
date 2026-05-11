@@ -1,14 +1,15 @@
 import Link from 'next/link';
 import { Widget } from '@/components/console/Widget';
 import { aboutParagraphs } from '@/data/about';
+import { renderRun } from './renderRun';
 
 const SUMMARY_COUNT = 2;
 
 export const AboutSummary: React.FC = () => (
   <Widget channel="01" label="TRANSMISSION" id="about">
     <div className="space-y-4 px-4 py-5 text-sm leading-relaxed text-text/85 sm:px-6 sm:text-base">
-      {aboutParagraphs.slice(0, SUMMARY_COUNT).map((p, i) => (
-        <p key={i} dangerouslySetInnerHTML={{ __html: p.html }} />
+      {aboutParagraphs.slice(0, SUMMARY_COUNT).map((paragraph, i) => (
+        <p key={i}>{paragraph.map(renderRun)}</p>
       ))}
     </div>
     <Link
