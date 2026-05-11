@@ -36,7 +36,7 @@ export const DegreeCard: React.FC<DegreeCardProps> = ({ degree, defaultOpen = fa
     <CollapsibleRow header={header} defaultOpen={defaultOpen}>
       <ul className="ml-4 list-disc space-y-2 pl-2 text-sm leading-relaxed text-text/85">
         {degree.bullets.map((b, i) => (
-          <li key={i} dangerouslySetInnerHTML={{ __html: b }} />
+          <li key={i}>{b}</li>
         ))}
       </ul>
     </CollapsibleRow>
