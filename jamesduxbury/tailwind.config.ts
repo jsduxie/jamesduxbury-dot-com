@@ -33,9 +33,6 @@ export default {
         'dot-grid':
           'radial-gradient(circle at 1px 1px, rgba(245, 245, 240, 0.06) 1px, transparent 0)',
       },
-      backgroundSize: {
-        'dot-grid': '24px 24px',
-      },
       animation: {
         'pulse-dot': 'pulse-dot 2.4s ease-in-out infinite',
       },
