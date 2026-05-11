@@ -31,7 +31,7 @@ function intensityClass(count: number): string {
   return 'bg-accent';
 }
 
-export const Footer: React.FC = async () => {
+export async function Footer() {
   const contributions = await fetchContributions();
 
   return (
@@ -104,4 +104,4 @@ export const Footer: React.FC = async () => {
       </div>
     </footer>
   );
-};
+}
