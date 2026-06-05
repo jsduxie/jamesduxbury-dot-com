@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { GeistSans } from 'geist/font/sans';
 import { JetBrains_Mono } from 'next/font/google';
 import { StatusBar } from '@/components/console/StatusBar';
+import { VisitBeacon } from '@/components/VisitBeacon';
 import { SITE_URL } from '@/lib/site';
 import './globals.css';
 
@@ -42,6 +43,7 @@ export default function RootLayout({
     <html lang="en" className={`${GeistSans.variable} ${jetbrainsMono.variable}`}>
       <body className="bg-bg bg-dot-grid bg-[length:24px_24px] font-sans text-text antialiased">
         <StatusBar />
+        <VisitBeacon />
         {children}
       </body>
     </html>
