@@ -5,7 +5,8 @@ import { usePathname } from 'next/navigation';
 
 export function VisitBeacon() {
   const pathname = usePathname();
-  const view = useRef<{ id: number | null; start: number }>({ id: null, start: 0 });
+  // ids are bigserial strings end-to-end
+  const view = useRef<{ id: string | null; start: number }>({ id: null, start: 0 });
 
   useEffect(() => {
     if (!pathname || pathname.startsWith('/admin')) return;

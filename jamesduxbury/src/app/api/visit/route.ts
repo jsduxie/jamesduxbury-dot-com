@@ -25,14 +25,16 @@ export async function POST(req: Request) {
   }
 
   // Exit beacon: records how long the view lasted
-  if (typeof body.id === 'number') {
+  if (body.id !== undefined) {
+    // bigserial ids travel as strings to avoid a 32-bit assumption in the contract
+    const id = typeof body.id === 'string' && /^\d{1,18}$/.test(body.id) ? body.id : null;
     const durationMs = typeof body.durationMs === 'number' ? Math.round(body.durationMs) : NaN;
-    if (!Number.isInteger(body.id) || !Number.isFinite(durationMs) || durationMs < 0) {
+    if (id === null || !Number.isFinite(durationMs) || durationMs < 0) {
       return Response.json({ error: 'Invalid payload' }, { status: 400 });
     }
     await getSql()`
       UPDATE page_views SET duration_ms = ${Math.min(durationMs, MAX_DURATION_MS)}
-      WHERE id = ${body.id} AND duration_ms IS NULL
+      WHERE id = ${id}::bigint AND duration_ms IS NULL
     `;
     return new Response(null, { status: 204 });
   }
@@ -45,12 +47,13 @@ export async function POST(req: Request) {
     return Response.json({ error: 'Invalid payload' }, { status: 400 });
   }
 
-  const country = req.headers.get('x-vercel-ip-country');
-  // bigint serialises as a string, so cast for the client round-trip
+  // Public endpoint: the geo header is caller-controlled, so clamp it
+  const countryHeader = req.headers.get('x-vercel-ip-country');
+  const country = countryHeader && /^[A-Z]{2}$/.test(countryHeader) ? countryHeader : null;
   const [row] = await getSql()`
     INSERT INTO page_views (session_id, path, referrer, country)
     VALUES (${sessionId}, ${path}, ${referrer}, ${country})
-    RETURNING id::int
+    RETURNING id
   `;
-  return Response.json({ id: row.id });
+  return Response.json({ id: String(row.id) });
 }
