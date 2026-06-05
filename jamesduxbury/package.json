@@ -23,9 +23,16 @@
     "framer-motion": "^12.38.0",
     "geist": "^1.7.0",
     "next": "^15.5.18",
+    "next-auth": "^5.0.0-beta.31",
     "nodemailer": "^8.0.7",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "zod": "^4.4.3"
+  },
+  "overrides": {
+    "next-auth": {
+      "nodemailer": "$nodemailer"
+    }
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

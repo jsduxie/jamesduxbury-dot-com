@@ -1,6 +1,15 @@
 import { randomUUID } from 'node:crypto';
 import { neon } from '@neondatabase/serverless';
-import { afterAll, describe, expect, it } from 'vitest';
+import { afterAll, afterEach, describe, expect, it, vi } from 'vitest';
+import type { Session } from 'next-auth';
+
+// controls the mocked session for the admin-skip tests
+const authSession = { value: null as Session | null };
+vi.mock('@/auth', async (importOriginal) => {
+  const mod = await importOriginal<typeof import('../src/auth')>();
+  return { ...mod, auth: async () => authSession.value };
+});
+
 import { POST } from '../src/app/api/visit/route';
 
 const sql = neon(process.env.DATABASE_URL!);
@@ -13,6 +22,10 @@ function request(body: unknown, headers: Record<string, string> = {}): Request {
     body: JSON.stringify(body),
   });
 }
+
+afterEach(() => {
+  authSession.value = null;
+});
 
 afterAll(async () => {
   await sql`DELETE FROM page_views WHERE session_id = ${sessionId}`;
@@ -62,6 +75,27 @@ describe('POST /api/visit', () => {
     await POST(request({ id, durationMs: 999_999_999_999 }));
     const [row] = await sql`SELECT duration_ms FROM page_views WHERE id = ${id}::bigint`;
     expect(row.duration_ms).toBe(6 * 60 * 60 * 1000);
+  });
+
+  it('skips the signed-in admin without writing', async () => {
+    authSession.value = {
+      user: { name: 'James', login: 'jsduxie' },
+      expires: '2099-01-01T00:00:00.000Z',
+    };
+    const before = await sql`SELECT count(*) AS n FROM page_views WHERE session_id = ${sessionId}`;
+    const res = await POST(request({ sessionId, path: '/' }));
+    expect(res.status).toBe(204);
+    const after = await sql`SELECT count(*) AS n FROM page_views WHERE session_id = ${sessionId}`;
+    expect(after[0].n).toBe(before[0].n);
+  });
+
+  it('still records a non-admin session visit', async () => {
+    authSession.value = {
+      user: { name: 'Someone', login: 'octocat' },
+      expires: '2099-01-01T00:00:00.000Z',
+    };
+    const res = await POST(request({ sessionId, path: '/' }));
+    expect(res.status).toBe(200);
   });
 
   it('skips bot user agents without writing', async () => {

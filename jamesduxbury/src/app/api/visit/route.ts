@@ -1,4 +1,5 @@
 import { getSql } from '@/db';
+import { auth, isAdminSession } from '@/auth';
 
 const BOT_UA = /bot|crawl|spider|slurp|headless|preview|monitor|lighthouse/i;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -14,6 +15,10 @@ interface VisitPayload {
 
 export async function POST(req: Request) {
   if (BOT_UA.test(req.headers.get('user-agent') ?? '')) {
+    return new Response(null, { status: 204 });
+  }
+  // skips the signed-in admin's visits
+  if (isAdminSession(await auth())) {
     return new Response(null, { status: 204 });
   }
 

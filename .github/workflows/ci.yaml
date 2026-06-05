@@ -38,11 +38,18 @@ jobs:
         run: npm test
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL_DEV }}
+          # dummy values, no real oauth flow runs in ci
+          GITHUB_ID: ci-dummy
+          GITHUB_SECRET: ci-dummy
+          AUTH_SECRET: ci-dummy-secret-for-build-only
 
       - name: Build
         run: npm run build
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL_DEV }}
+          GITHUB_ID: ci-dummy
+          GITHUB_SECRET: ci-dummy
+          AUTH_SECRET: ci-dummy-secret-for-build-only
 
   # One-off prod population, run manually via the Actions tab after merging this PR.
   # Never triggered by pushes or PRs; the seed is also insert-if-missing as a second guard.
