@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { Session } from 'next-auth';
 import type { FormState } from '../src/admin/actions';
 import type { FieldDef } from '../src/admin/fields';
+import { AutoSubmit } from '../src/components/AutoSubmit';
 import { AdminPanel } from '../src/components/admin/AdminPanel';
 import { DeleteButton } from '../src/components/admin/DeleteButton';
 import { SectionForm } from '../src/components/admin/SectionForm';
@@ -24,6 +25,28 @@ import AdminLayout from '../src/app/admin/layout';
 afterEach(() => {
   authSession.value = null;
   vi.restoreAllMocks();
+});
+
+describe('AutoSubmit', () => {
+  it('submits the named form on mount', () => {
+    const submitSpy = vi
+      .spyOn(HTMLFormElement.prototype, 'requestSubmit')
+      .mockImplementation(() => {});
+    render(
+      <form id="signin-form">
+        <AutoSubmit formId="signin-form" />
+      </form>,
+    );
+    expect(submitSpy).toHaveBeenCalledOnce();
+  });
+
+  it('does nothing when the form is absent', () => {
+    const submitSpy = vi
+      .spyOn(HTMLFormElement.prototype, 'requestSubmit')
+      .mockImplementation(() => {});
+    render(<AutoSubmit formId="missing-form" />);
+    expect(submitSpy).not.toHaveBeenCalled();
+  });
 });
 
 describe('AdminPanel', () => {

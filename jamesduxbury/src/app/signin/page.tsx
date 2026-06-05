@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { auth, signIn } from '@/auth';
+import { auth, isAdminSession, signIn } from '@/auth';
+import { AutoSubmit } from '@/components/AutoSubmit';
 
 export const metadata: Metadata = {
   title: 'Sign in · James Duxbury',
@@ -14,7 +15,7 @@ export default async function SignInPage({
   searchParams: Promise<{ callbackUrl?: string; error?: string }>;
 }) {
   const session = await auth();
-  if (session) redirect('/admin');
+  if (isAdminSession(session)) redirect('/admin');
   const { callbackUrl, error } = await searchParams;
 
   return (
@@ -42,11 +43,13 @@ export default async function SignInPage({
             </p>
           )}
           <form
+            id="signin-form"
             action={async () => {
               'use server';
               await signIn('github', { redirectTo: callbackUrl ?? '/admin' });
             }}
           >
+            {!error && <AutoSubmit formId="signin-form" />}
             <button
               type="submit"
               className="w-full rounded-full border border-accent bg-accent/10 px-5 py-2 font-mono text-sm uppercase tracking-[0.18em] text-accent transition-colors hover:bg-accent hover:text-text"
