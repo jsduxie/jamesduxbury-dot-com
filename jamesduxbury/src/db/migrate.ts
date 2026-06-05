@@ -1,22 +1,10 @@
-import { readFileSync, readdirSync, existsSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { neon } from '@neondatabase/serverless';
+import { loadEnvLocal } from './env';
 
 const here = dirname(fileURLToPath(import.meta.url));
-const appRoot = join(here, '..', '..');
-
-function loadEnvLocal(): void {
-  const envPath = join(appRoot, '.env.local');
-  if (!existsSync(envPath)) return;
-  for (const line of readFileSync(envPath, 'utf8').split('\n')) {
-    const match = line.match(/^([A-Za-z_][A-Za-z0-9_]*)=(.*)$/);
-    if (match && process.env[match[1]] === undefined) {
-      // Quotes stripped to match Next.js/dotenv behaviour
-      process.env[match[1]] = match[2].trim().replace(/^(["'])(.*)\1$/, '$2');
-    }
-  }
-}
 
 // Comments stripped first so their semicolons don't split; fine while the DDL has no function bodies.
 function statements(sqlText: string): string[] {
