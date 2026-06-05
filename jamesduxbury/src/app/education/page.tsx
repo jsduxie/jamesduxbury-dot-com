@@ -9,6 +9,8 @@ export const metadata: Metadata = {
     'Education and certifications of James Duxbury — MEng Computer Science at Durham, AfCIIS, ITIL 4 Foundation, Azure AI Fundamentals.',
 };
 
+export const revalidate = 60;
+
 export default function EducationPage() {
   return (
     <>

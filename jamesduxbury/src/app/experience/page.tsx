@@ -9,6 +9,8 @@ export const metadata: Metadata = {
     'Professional experience of James Duxbury — Compare the Market, DataAnnotation, Snap-on Tools, Next.',
 };
 
+export const revalidate = 60;
+
 export default function ExperiencePage() {
   return (
     <>

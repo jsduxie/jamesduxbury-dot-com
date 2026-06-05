@@ -1,11 +1,12 @@
 import Link from 'next/link';
 import { Widget } from '@/components/console/Widget';
 import { ProjectRow } from './ProjectRow';
-import { projects } from '@/data/projects';
+import { getProjects } from '@/db/queries';
 
 const SUMMARY_COUNT = 3;
 
-export const WorkSummary: React.FC = () => {
+export async function WorkSummary() {
+  const projects = await getProjects();
   const top = projects.slice(0, SUMMARY_COUNT);
   const remaining = projects.length - top.length;
 
@@ -25,4 +26,4 @@ export const WorkSummary: React.FC = () => {
       </Link>
     </Widget>
   );
-};
+}

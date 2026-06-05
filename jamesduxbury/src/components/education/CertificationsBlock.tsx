@@ -1,13 +1,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { certifications } from '@/data/certifications';
+import type { Certification } from '@/data/certifications';
+import { getCertifications } from '@/db/queries';
 
-const Card: React.FC<(typeof certifications)[number]> = ({
-  name,
-  year,
-  imgPath,
-  certificationLink,
-}) => {
+const Card: React.FC<Certification> = ({ name, year, imgPath, certificationLink }) => {
   const inner = (
     <div className="flex items-center gap-3 border border-border bg-bg/40 p-3 transition-colors hover:border-accent">
       {imgPath ? (
@@ -43,15 +39,18 @@ const Card: React.FC<(typeof certifications)[number]> = ({
   return inner;
 };
 
-export const CertificationsBlock: React.FC = () => (
-  <div className="border-t border-border bg-bg/40 px-4 py-5 sm:px-6">
-    <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted">
-      Certifications & memberships / {certifications.length}
-    </p>
-    <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
-      {certifications.map((cert) => (
-        <Card key={cert.name} {...cert} />
-      ))}
+export async function CertificationsBlock() {
+  const certifications = await getCertifications();
+  return (
+    <div className="border-t border-border bg-bg/40 px-4 py-5 sm:px-6">
+      <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted">
+        Certifications & memberships / {certifications.length}
+      </p>
+      <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+        {certifications.map((cert) => (
+          <Card key={cert.name} {...cert} />
+        ))}
+      </div>
     </div>
-  </div>
-);
+  );
+}

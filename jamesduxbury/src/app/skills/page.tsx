@@ -9,6 +9,8 @@ export const metadata: Metadata = {
     'Technical skills of James Duxbury — languages, AI/ML, cloud, infrastructure, and development practices.',
 };
 
+export const revalidate = 60;
+
 export default function SkillsPage() {
   return (
     <>
