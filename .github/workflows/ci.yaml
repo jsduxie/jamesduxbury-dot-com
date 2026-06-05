@@ -44,9 +44,10 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL_DEV }}
 
-  # Insert-if-missing seed: safe to repeat, never overwrites admin edits
+  # One-off prod population, run manually via the Actions tab after merging this PR.
+  # Never triggered by pushes or PRs; the seed is also insert-if-missing as a second guard.
   populate-production:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'workflow_dispatch'
     needs: check
     runs-on: ubuntu-latest
     steps:

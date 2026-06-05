@@ -9,6 +9,9 @@ export default defineConfig({
   },
   test: {
     globals: true,
+    // Integration tests run against a remote Neon branch; CI runners need the headroom
+    testTimeout: 30_000,
+    hookTimeout: 30_000,
     setupFiles: ['./tests/setup.ts'],
     include: ['tests/**/*.test.{ts,tsx}'],
     coverage: {
