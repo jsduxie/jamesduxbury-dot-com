@@ -6,6 +6,18 @@ vi.mock('nodemailer', () => ({
   default: { createTransport: () => ({ sendMail }) },
 }));
 
+// Lets individual tests simulate the messages insert failing
+const dbDown = { value: false };
+vi.mock('@/db', async (importOriginal) => {
+  const mod = await importOriginal<typeof import('../src/db')>();
+  return {
+    getSql: () => {
+      if (dbDown.value) throw new Error('db down');
+      return mod.getSql();
+    },
+  };
+});
+
 import { POST } from '../src/app/api/contact/route';
 
 const sql = neon(process.env.DATABASE_URL!);
@@ -21,6 +33,7 @@ function request(body: unknown): Request {
 
 beforeEach(() => {
   sendMail.mockReset().mockResolvedValue(undefined);
+  dbDown.value = false;
 });
 
 afterAll(async () => {
@@ -38,13 +51,31 @@ describe('POST /api/contact', () => {
     expect(rows[0]).toMatchObject({ name: 'Vitest', message: 'hello there', read: false });
   });
 
-  it('keeps the message when the email transport fails', async () => {
+  it('succeeds without email when the message is stored', async () => {
     sendMail.mockRejectedValueOnce(new Error('smtp down'));
     const res = await POST(request({ name: 'Vitest', email: marker, message: 'survives smtp' }));
-    expect(res.status).toBe(500);
+    expect(res.status).toBe(200);
 
     const rows = await sql`SELECT 1 FROM messages WHERE email = ${marker} AND message = 'survives smtp'`;
     expect(rows).toHaveLength(1);
+  });
+
+  it('succeeds without storage when the email is sent', async () => {
+    dbDown.value = true;
+    const res = await POST(request({ name: 'Vitest', email: marker, message: 'email only' }));
+    expect(res.status).toBe(200);
+    expect(sendMail).toHaveBeenCalledTimes(1);
+    dbDown.value = false;
+
+    const rows = await sql`SELECT 1 FROM messages WHERE email = ${marker} AND message = 'email only'`;
+    expect(rows).toHaveLength(0);
+  });
+
+  it('fails only when both channels fail', async () => {
+    dbDown.value = true;
+    sendMail.mockRejectedValueOnce(new Error('smtp down'));
+    const res = await POST(request({ name: 'Vitest', email: marker, message: 'all down' }));
+    expect(res.status).toBe(500);
   });
 
   it.each([

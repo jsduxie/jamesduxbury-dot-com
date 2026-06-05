@@ -66,9 +66,11 @@ export async function POST(req: Request) {
 
   const correlationId = randomUUID();
 
-  // Stored before the email so a transport failure can't lose the submission
+  // Two delivery channels; the request only fails if both do
+  let stored = false;
   try {
     await getSql()`INSERT INTO messages (name, email, message) VALUES (${name}, ${email}, ${message})`;
+    stored = true;
   } catch (error) {
     console.error(`[contact:${correlationId}] message insert failed`, error);
   }
@@ -97,6 +99,10 @@ export async function POST(req: Request) {
   } catch (error) {
     // Log full error server-side; never return transport / auth / host details to the client.
     console.error(`[contact:${correlationId}]`, error);
+    if (stored) {
+      // Persisted for the admin inbox, so the submission is not lost
+      return Response.json({ success: true });
+    }
     return Response.json(
       {
         success: false,

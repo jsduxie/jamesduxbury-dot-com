@@ -13,7 +13,7 @@ const sendBeacon = vi.fn();
 beforeEach(() => {
   pathname = '/work';
   sessionStorage.clear();
-  fetchMock.mockReset().mockResolvedValue({ ok: true, json: async () => ({ id: 7 }) });
+  fetchMock.mockReset().mockResolvedValue({ ok: true, json: async () => ({ id: '7' }) });
   sendBeacon.mockReset();
   vi.stubGlobal('fetch', fetchMock);
   Object.defineProperty(navigator, 'sendBeacon', { value: sendBeacon, configurable: true });
@@ -55,7 +55,7 @@ describe('VisitBeacon', () => {
 
     expect(sendBeacon).toHaveBeenCalledTimes(1);
     const sent = JSON.parse(await (sendBeacon.mock.calls[0][1] as Blob).text());
-    expect(sent.id).toBe(7);
+    expect(sent.id).toBe('7');
     expect(sent.durationMs).toBeGreaterThanOrEqual(0);
   });
 
