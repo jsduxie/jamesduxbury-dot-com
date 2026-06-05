@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import nodemailer from 'nodemailer';
+import { getSql } from '@/db';
 
 interface ContactPayload {
   name: string;
@@ -64,6 +65,13 @@ export async function POST(req: Request) {
   const headerSafeEmail = sanitiseHeaderValue(email, 320);
 
   const correlationId = randomUUID();
+
+  // Stored before the email so a transport failure can't lose the submission
+  try {
+    await getSql()`INSERT INTO messages (name, email, message) VALUES (${name}, ${email}, ${message})`;
+  } catch (error) {
+    console.error(`[contact:${correlationId}] message insert failed`, error);
+  }
 
   try {
     const transporter = nodemailer.createTransport({
