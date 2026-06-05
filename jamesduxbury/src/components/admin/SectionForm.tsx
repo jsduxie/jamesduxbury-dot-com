@@ -29,6 +29,7 @@ function BulletsField({ column, initial }: { column: string; initial: string[] }
       {bullets.map((bullet, i) => (
         <div key={i} className="mt-2 flex items-center gap-3">
           <input
+            id={i === 0 ? column : undefined}
             name={column}
             type="text"
             value={bullet}
@@ -64,6 +65,7 @@ function MetricsField({ column, initial }: { column: string; initial: MetricDraf
       {metrics.map((metric, i) => (
         <div key={i} className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
           <input
+            id={i === 0 ? column : undefined}
             name={`${column}.label`}
             type="text"
             placeholder="label"
