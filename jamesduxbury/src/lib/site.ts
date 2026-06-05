@@ -1,6 +1,6 @@
 /** Canonical site origin, overridable per environment. Trailing slashes are stripped. */
 export const SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL ?? 'https://jamesduxbury-dot-com.vercel.app'
+  process.env.NEXT_PUBLIC_SITE_URL || 'https://jamesduxbury-dot-com.vercel.app'
 ).replace(/\/+$/, '');
 
 /** Bare hostname of the canonical origin, for display (e.g. the OG card footer). */

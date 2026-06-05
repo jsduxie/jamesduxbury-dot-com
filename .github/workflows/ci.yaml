@@ -34,5 +34,34 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
+      - name: Test
+        run: npm test
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL_DEV }}
+
       - name: Build
         run: npm run build
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL_DEV }}
+
+  # Insert-if-missing seed: safe to repeat, never overwrites admin edits
+  populate-production:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: jamesduxbury/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Migrate and seed production
+        run: npm run db:migrate && npm run db:seed
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL_MAIN }}
