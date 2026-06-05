@@ -4,8 +4,7 @@ import { fileURLToPath } from 'node:url';
 
 const appRoot = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 
-export function loadEnvLocal(): void {
-  const envPath = join(appRoot, '.env.local');
+export function loadEnvLocal(envPath: string = join(appRoot, '.env.local')): void {
   if (!existsSync(envPath)) return;
   for (const line of readFileSync(envPath, 'utf8').split('\n')) {
     const match = line.match(/^([A-Za-z_][A-Za-z0-9_]*)=(.*)$/);

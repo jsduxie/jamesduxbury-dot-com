@@ -7,7 +7,7 @@ import { loadEnvLocal } from './env';
 const here = dirname(fileURLToPath(import.meta.url));
 
 // Comments stripped first so their semicolons don't split; fine while the DDL has no function bodies.
-function statements(sqlText: string): string[] {
+export function statements(sqlText: string): string[] {
   return sqlText
     .split('\n')
     .map((line) => line.replace(/--.*$/, ''))
@@ -23,7 +23,7 @@ function migrationFiles(): string[] {
     .sort();
 }
 
-async function main(): Promise<void> {
+export async function main(mode: 'migrate' | 'push' = 'migrate'): Promise<void> {
   loadEnvLocal();
   const url = process.env.DATABASE_URL;
   if (!url) {
@@ -31,7 +31,6 @@ async function main(): Promise<void> {
     process.exit(1);
   }
   const sql = neon(url);
-  const mode = process.argv[2] === '--push' ? 'push' : 'migrate';
 
   await sql.query(`CREATE TABLE IF NOT EXISTS _migrations (
     name text PRIMARY KEY,
@@ -67,7 +66,9 @@ async function main(): Promise<void> {
   console.log(ran === 0 ? 'no pending migrations.' : `${ran} migration(s) applied.`);
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+if (process.argv[1]?.endsWith('migrate.ts')) {
+  main(process.argv[2] === '--push' ? 'push' : 'migrate').catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
+}
