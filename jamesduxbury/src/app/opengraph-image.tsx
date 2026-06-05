@@ -1,4 +1,5 @@
 import { ImageResponse } from 'next/og';
+import { SITE_HOST } from '@/lib/site';
 
 export const alt = 'James Duxbury — Software Engineer in AI and Cybersecurity';
 export const size = { width: 1200, height: 630 };
@@ -73,7 +74,7 @@ export default function OpenGraphImage() {
         }}
       >
         <span>MEng Computer Science · Durham</span>
-        <span>jamesduxbury-dot-com.vercel.app</span>
+        <span>{SITE_HOST}</span>
       </div>
     </div>,
     size,
