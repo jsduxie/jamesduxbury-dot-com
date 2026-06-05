@@ -9,6 +9,8 @@ export const metadata: Metadata = {
     'Projects by James Duxbury — FG-HAN dissertation, JSGrades, Researcher Agent, X-Ray Image Repair, Artemis III.',
 };
 
+export const revalidate = 60;
+
 export default function WorkPage() {
   return (
     <>

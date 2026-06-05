@@ -9,6 +9,8 @@ export const metadata: Metadata = {
     'About James Duxbury — final-year MEng Computer Science student at Durham, specialising in AI and application security.',
 };
 
+export const revalidate = 60;
+
 export default function AboutPage() {
   return (
     <>

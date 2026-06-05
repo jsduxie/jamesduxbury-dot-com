@@ -6,6 +6,8 @@ import { ExperienceSummary } from '@/components/experience/ExperienceSummary';
 import { EducationSummary } from '@/components/education/EducationSummary';
 import { Footer } from '@/components/Footer';
 
+export const revalidate = 60;
+
 export default function Home() {
   return (
     <>
