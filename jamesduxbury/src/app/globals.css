@@ -46,3 +46,26 @@ body {
     @apply h-1.5 w-1.5 rounded-full;
   }
 }
+
+/* ── Skeleton loading states ────────────────────────────────────────── */
+
+.skeleton-cursor {
+  /* step-end holds each opacity flat so the cursor blinks rather than fades */
+  animation: skeleton-cursor 1.1s step-end infinite;
+}
+
+@keyframes skeleton-cursor {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-cursor {
+    animation: none;
+  }
+}
