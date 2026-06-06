@@ -16,6 +16,7 @@ import { degrees } from '../src/data/education';
 import { certifications } from '../src/data/certifications';
 import { skillGroups } from '../src/data/skills';
 import { aboutParagraphs } from '../src/data/about';
+import { siteSettings } from '../src/data/site';
 
 const sql = neon(process.env.DATABASE_URL!);
 
@@ -72,6 +73,6 @@ describe('queries round-trip the seeded src/data shapes exactly', () => {
   });
 
   it('site settings', async () => {
-    expect(await getSiteSettings()).toEqual({ profileImage: '/images/profile-picture.png' });
+    expect(await getSiteSettings()).toEqual(siteSettings);
   });
 });
