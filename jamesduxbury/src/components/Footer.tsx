@@ -4,7 +4,7 @@ export function Footer() {
   return (
     <footer
       id="contact"
-      className="border-t border-border bg-bg/60 px-4 py-10 font-mono text-xs text-muted sm:px-6"
+      className="mt-16 border-t border-border bg-bg/60 px-4 py-10 font-mono text-xs text-muted sm:px-6"
     >
       <div className="mx-auto max-w-7xl space-y-6">
         {/* contact line */}
