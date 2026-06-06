@@ -48,7 +48,7 @@ export const StatusBar: React.FC = () => {
             LIVE
           </span>
           <span className="text-border">·</span>
-          <span className="hidden text-text sm:inline">ENG-CONSOLE</span>
+          <span className="hidden text-text sm:inline">JAMES DUXBURY</span>
           <span className="hidden text-muted sm:inline">v2.0</span>
           <span className="text-border sm:hidden">·</span>
           <span className="text-muted sm:hidden">{session}</span>

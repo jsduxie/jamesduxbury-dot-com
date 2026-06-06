@@ -13,7 +13,7 @@ export const Entry: React.FC = () => {
         <SectionHeader channel="00" label="ENTRY" />
 
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-[auto_1fr] sm:items-start sm:gap-12">
-          {/* driver portrait */}
+          {/* profile portrait */}
           <div className="relative h-36 w-36 overflow-hidden border border-border sm:h-40 sm:w-40 lg:h-44 lg:w-44">
             <Image
               src="/images/profile-picture.png"
@@ -32,26 +32,28 @@ export const Entry: React.FC = () => {
 
           {/* spec rows */}
           <div className="divide-y divide-border border-y border-border">
-            <SpecRow label="Driver" trailing={<StatusChip kind="live" label="ACTIVE" />}>
+            <SpecRow label="Name" trailing={<StatusChip kind="live" label="ACTIVE" />}>
               <span className="font-mono text-base text-text sm:text-lg">James Duxbury</span>
               <span className="ml-3 font-mono text-xs uppercase tracking-[0.2em] text-accent">
                 AfCIIS
               </span>
             </SpecRow>
 
-            <SpecRow label="Class">Software engineer · AI &amp; application security</SpecRow>
+            <SpecRow label="Role">Software engineer · AI &amp; application security</SpecRow>
 
-            <SpecRow label="Team">Durham University · Integrated MEng Computer Science</SpecRow>
+            <SpecRow label="Education">
+              Durham University · Integrated MEng Computer Science
+            </SpecRow>
 
             <SpecRow
-              label="Season"
+              label="Years"
               trailing={<span className="font-mono text-xs text-muted">FINAL YEAR</span>}
             >
               <span className="font-mono">2022 — 2026</span>
             </SpecRow>
 
             <SpecRow
-              label="Chassis"
+              label="CV"
               trailing={
                 <Link
                   href="/data/CV.pdf"

@@ -33,12 +33,15 @@ export const ContactForm: React.FC = () => {
         setMessage('');
       } else {
         const data = (await res.json().catch(() => ({}))) as { error?: string };
-        setState({ kind: 'error', message: data.error ?? `Transmission failed (${res.status})` });
+        setState({
+          kind: 'error',
+          message: data.error ?? `Message failed to send (${res.status})`,
+        });
       }
     } catch (err) {
       setState({
         kind: 'error',
-        message: err instanceof Error ? err.message : 'Transmission failed.',
+        message: err instanceof Error ? err.message : 'Message failed to send.',
       });
     }
   };
@@ -85,7 +88,7 @@ export const ContactForm: React.FC = () => {
 
       <div className="px-4 py-5 sm:px-6">
         <label htmlFor="contact-message" className={fieldLabel}>
-          Transmission · Message
+          Message
         </label>
         <textarea
           id="contact-message"
@@ -102,7 +105,7 @@ export const ContactForm: React.FC = () => {
       <div className="flex flex-col items-stretch gap-3 px-4 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
         <div className="font-mono text-xs uppercase tracking-[0.18em] text-muted">
           {state.kind === 'success' && (
-            <span className="text-live">{`>`} transmission acknowledged · thank you</span>
+            <span className="text-live">{`>`} message sent · thank you</span>
           )}
           {state.kind === 'error' && (
             <span className="text-danger">
@@ -110,14 +113,14 @@ export const ContactForm: React.FC = () => {
             </span>
           )}
           {state.kind === 'idle' && <span>{`>`} signal will be routed to a secure inbox</span>}
-          {state.kind === 'sending' && <span>{`>`} transmitting…</span>}
+          {state.kind === 'sending' && <span>{`>`} sending…</span>}
         </div>
         <button
           type="submit"
           disabled={state.kind === 'sending'}
           className="rounded-full border border-accent bg-accent/10 px-5 py-2 font-mono text-sm uppercase tracking-[0.18em] text-accent transition-colors hover:bg-accent hover:text-text disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {state.kind === 'sending' ? 'sending…' : 'transmit →'}
+          {state.kind === 'sending' ? 'sending…' : 'send →'}
         </button>
       </div>
     </form>
