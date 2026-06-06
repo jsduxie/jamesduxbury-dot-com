@@ -7,6 +7,7 @@ import {
   getDegrees,
   getProjects,
   getRoles,
+  getSiteSettings,
   getSkillGroups,
 } from '../src/db/queries';
 import { projects } from '../src/data/projects';
@@ -30,6 +31,7 @@ describe('seed', () => {
       certifications: String(certifications.length),
       skill_groups: String(skillGroups.length),
       about_paragraphs: String(aboutParagraphs.length),
+      site_settings: '1',
     });
   });
 
@@ -67,5 +69,9 @@ describe('queries round-trip the seeded src/data shapes exactly', () => {
 
   it('about paragraphs', async () => {
     expect(await getAboutParagraphs()).toEqual(aboutParagraphs);
+  });
+
+  it('site settings', async () => {
+    expect(await getSiteSettings()).toEqual({ profileImage: '/images/profile-picture.png' });
   });
 });

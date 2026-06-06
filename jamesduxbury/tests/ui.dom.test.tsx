@@ -51,7 +51,7 @@ describe('summary components render DB content', () => {
 
 describe('Entry', () => {
   it('renders the entry channel header', () => {
-    render(<Entry />);
+    render(<Entry profileImage="/images/profile-picture.png" />);
     expect(screen.getByText(/CHANNEL 00/)).toBeInTheDocument();
   });
 });

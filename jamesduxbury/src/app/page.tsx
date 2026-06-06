@@ -1,4 +1,5 @@
 import { Entry } from '@/components/Entry';
+import { getSiteSettings } from '@/db/queries';
 import { AboutSummary } from '@/components/about/AboutSummary';
 import { WorkSummary } from '@/components/work/WorkSummary';
 import { SkillsSummary } from '@/components/skills/SkillsSummary';
@@ -8,10 +9,11 @@ import { Footer } from '@/components/Footer';
 
 export const revalidate = 60;
 
-export default function Home() {
+export default async function Home() {
+  const { profileImage } = await getSiteSettings();
   return (
     <>
-      <Entry />
+      <Entry profileImage={profileImage} />
       <main className="mx-auto max-w-7xl space-y-10 px-4 pt-12 sm:px-6">
         <AboutSummary />
 
