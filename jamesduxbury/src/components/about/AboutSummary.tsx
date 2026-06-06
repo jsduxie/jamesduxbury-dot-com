@@ -10,7 +10,7 @@ export async function AboutSummary() {
   const remaining = Math.max(aboutParagraphs.length - SUMMARY_COUNT, 0);
   return (
     <Widget channel="01" label="ABOUT" id="about">
-      <div className="space-y-4 px-4 py-5 text-sm leading-relaxed text-text/85 sm:px-6 sm:text-base">
+      <div className="space-y-4 px-4 py-5 text-sm leading-relaxed text-text/85 sm:px-6">
         {aboutParagraphs.slice(0, SUMMARY_COUNT).map((paragraph, i) => (
           <p key={i}>{paragraph.map(renderRun)}</p>
         ))}
