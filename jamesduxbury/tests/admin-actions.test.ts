@@ -198,6 +198,48 @@ describe('image fields', () => {
   });
 });
 
+describe('case studies prose round trip', () => {
+  // fg-han is seeded with no case study, so the slug is free for this test
+  afterAll(async () => {
+    await sql`DELETE FROM case_studies WHERE project_slug = 'fg-han'`;
+  });
+
+  function studyForm(overrides: Record<string, string | string[]> = {}): FormData {
+    return form({
+      project_slug: 'fg-han',
+      problem: 'the **hard** part\n\nsecond paragraph',
+      approach: 'built with *care*',
+      outcome: '',
+      ...overrides,
+    });
+  }
+
+  it('creates a study with parsed prose paragraphs', async () => {
+    await expect(saveItem('case-studies', null, EMPTY, studyForm())).rejects.toThrow(
+      'REDIRECT:/admin/case-studies',
+    );
+    const [row] = await sql`SELECT * FROM case_studies WHERE project_slug = 'fg-han'`;
+    expect(row.problem).toEqual([['the ', { strong: 'hard' }, ' part'], ['second paragraph']]);
+    expect(row.approach).toEqual([['built with ', { em: 'care' }]]);
+    expect(row.outcome).toBeNull();
+  });
+
+  it('rejects a study for a project that does not exist', async () => {
+    const state = await saveItem(
+      'case-studies',
+      null,
+      EMPTY,
+      studyForm({ project_slug: 'no-such-project' }),
+    );
+    expect(state.message).toBeTruthy();
+  });
+
+  it('rejects an empty problem', async () => {
+    const state = await saveItem('case-studies', null, EMPTY, studyForm({ problem: '' }));
+    expect(state.fieldErrors.problem).toBeTruthy();
+  });
+});
+
 describe('site settings singleton', () => {
   it('updates the profile image in place', async () => {
     const url = 'https://abc.public.blob.vercel-storage.com/profile.png';

@@ -37,6 +37,9 @@ const runSchema = z.union([
   z.object({ em: z.string().min(1) }),
 ]);
 
+const proseSchema = z.array(z.array(runSchema).min(1)).min(1);
+const proseHelp = 'paragraphs separated by a blank line; **bold** and *italic* markup';
+
 export const SECTIONS: SectionConfig[] = [
   {
     slug: 'projects',
@@ -205,6 +208,31 @@ export const SECTIONS: SectionConfig[] = [
         : '';
       return text.length > 80 ? `${text.slice(0, 80)}…` : text;
     },
+  },
+  {
+    slug: 'case-studies',
+    table: 'case_studies',
+    title: 'Case studies',
+    fields: [
+      {
+        column: 'project_slug',
+        label: 'Project slug',
+        type: 'text',
+        help: 'slug of the project row',
+      },
+      { column: 'problem', label: 'Problem', type: 'prose', help: proseHelp },
+      { column: 'approach', label: 'Approach', type: 'prose', help: proseHelp },
+      { column: 'outcome', label: 'Outcome', type: 'prose', help: proseHelp },
+      imageField('image_path'),
+    ],
+    schema: z.object({
+      project_slug: z.string().regex(/^[a-z0-9-]+$/, 'lowercase letters, digits, and hyphens only'),
+      problem: proseSchema,
+      approach: proseSchema,
+      outcome: proseSchema.nullable(),
+      image_path: z.string().min(1).nullable(),
+    }),
+    listLabel: (row) => String(row.project_slug),
   },
   {
     slug: 'site',
