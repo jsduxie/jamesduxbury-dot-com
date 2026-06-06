@@ -21,11 +21,12 @@ describe('site config', () => {
 });
 
 describe('sitemap and robots', () => {
-  it('covers every public route with no double slashes', async () => {
+  it('covers every public route and case study with no double slashes', async () => {
     const { default: sitemap } = await import('../src/app/sitemap');
     const { SITE_ROUTES } = await import('../src/lib/site');
-    const entries = sitemap();
-    expect(entries).toHaveLength(SITE_ROUTES.length);
+    const entries = await sitemap();
+    expect(entries.length).toBeGreaterThanOrEqual(SITE_ROUTES.length);
+    expect(entries.some((e) => e.url.endsWith('/work/researcher-agent'))).toBe(true);
     for (const e of entries) {
       expect(e.url).not.toMatch(/[^:]\/\//);
     }

@@ -30,7 +30,9 @@ export const ProjectRow: React.FC<ProjectRowProps> = ({ project, index, variant 
             {positionLabel}
           </span>
           <h3 className="font-mono text-base font-semibold text-text sm:text-lg">
-            {project.title}
+            <Link href={`/work/${project.slug}`} className="transition-colors hover:text-accent">
+              {project.title}
+            </Link>
           </h3>
           <span className="font-mono text-xs text-muted">{yearLabel}</span>
           <div className="ml-auto flex flex-wrap items-center gap-2">
@@ -53,30 +55,34 @@ export const ProjectRow: React.FC<ProjectRowProps> = ({ project, index, variant 
               ))}
             </ul>
 
-            {(project.githubLink || project.liveLink) && (
-              <div className="mt-4 flex flex-wrap items-center gap-4 font-mono text-xs">
-                {project.githubLink && (
-                  <Link
-                    href={project.githubLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-accent transition-colors hover:text-danger"
-                  >
-                    view repo ↗
-                  </Link>
-                )}
-                {project.liveLink && (
-                  <Link
-                    href={project.liveLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-accent transition-colors hover:text-danger"
-                  >
-                    open live ↗
-                  </Link>
-                )}
-              </div>
-            )}
+            <div className="mt-4 flex flex-wrap items-center gap-4 font-mono text-xs">
+              <Link
+                href={`/work/${project.slug}`}
+                className="inline-flex items-center gap-1 text-accent transition-colors hover:text-danger"
+              >
+                case study →
+              </Link>
+              {project.githubLink && (
+                <Link
+                  href={project.githubLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-accent transition-colors hover:text-danger"
+                >
+                  view repo ↗
+                </Link>
+              )}
+              {project.liveLink && (
+                <Link
+                  href={project.liveLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-accent transition-colors hover:text-danger"
+                >
+                  open live ↗
+                </Link>
+              )}
+            </div>
           </>
         )}
       </div>
