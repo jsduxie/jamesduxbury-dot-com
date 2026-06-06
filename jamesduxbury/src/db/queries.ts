@@ -106,6 +106,17 @@ export async function getSkillGroups(): Promise<SkillGroup[]> {
   return rows.map((r) => ({ heading: r.heading, skills: r.skills }));
 }
 
+export interface SiteSettings {
+  profileImage: string;
+}
+
+export async function getSiteSettings(): Promise<SiteSettings> {
+  const rows = (await getSql()`SELECT profile_image FROM site_settings WHERE id = 1`) as {
+    profile_image: string;
+  }[];
+  return { profileImage: rows[0]?.profile_image ?? '/images/profile-picture.png' };
+}
+
 export async function getAboutParagraphs(): Promise<AboutParagraph[]> {
   const rows = (await getSql()`SELECT runs FROM about_paragraphs ORDER BY sort_order`) as {
     runs: AboutParagraph;

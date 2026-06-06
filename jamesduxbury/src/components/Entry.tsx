@@ -6,7 +6,7 @@ import { SectionHeader } from './console/SectionHeader';
 import { SpecRow } from './console/SpecRow';
 import { StatusChip } from './console/StatusChip';
 
-export const Entry: React.FC = () => {
+export const Entry: React.FC<{ profileImage: string }> = ({ profileImage }) => {
   return (
     <section id="entry" className="w-full pt-20 sm:pt-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
@@ -15,7 +15,7 @@ export const Entry: React.FC = () => {
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-[auto_1fr] sm:items-start sm:gap-12">
           <div className="relative h-36 w-36 overflow-hidden border border-border sm:h-40 sm:w-40 lg:h-44 lg:w-44">
             <Image
-              src="/images/profile-picture.png"
+              src={profileImage}
               alt="James Duxbury"
               fill
               sizes="(max-width: 640px) 144px, 176px"

@@ -61,6 +61,12 @@ export async function seed(sql: NeonQueryFunction<false, false>): Promise<Record
     `;
   }
 
+  await sql`
+    INSERT INTO site_settings (profile_image)
+    VALUES ('/images/profile-picture.png')
+    ON CONFLICT (id) DO NOTHING
+  `;
+
   const counts = (await sql`
     SELECT
       (SELECT count(*) FROM projects) AS projects,
@@ -68,7 +74,8 @@ export async function seed(sql: NeonQueryFunction<false, false>): Promise<Record
       (SELECT count(*) FROM education) AS education,
       (SELECT count(*) FROM certifications) AS certifications,
       (SELECT count(*) FROM skill_groups) AS skill_groups,
-      (SELECT count(*) FROM about_paragraphs) AS about_paragraphs
+      (SELECT count(*) FROM about_paragraphs) AS about_paragraphs,
+      (SELECT count(*) FROM site_settings) AS site_settings
   `) as Record<string, string>[];
   return counts[0];
 }
