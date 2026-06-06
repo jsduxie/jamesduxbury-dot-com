@@ -56,44 +56,10 @@ describe('Entry', () => {
 });
 
 describe('Footer', () => {
-  beforeEach(() => {
-    fetchMock.mockReset();
-    vi.stubGlobal('fetch', fetchMock);
-  });
-  afterEach(() => vi.unstubAllGlobals());
-
-  // Counts chosen to hit every intensity band: 0, <3, <6, <10, >=10
-  const contributions = Array.from({ length: 91 }, (_, i) => ({
-    date: `2026-0${(i % 9) + 1}-0${(i % 9) + 1}-${i}`,
-    contributionCount: [0, 2, 5, 7, 11][i % 5],
-  }));
-
-  it('renders the contribution grid across all intensity bands', async () => {
-    fetchMock.mockResolvedValue({
-      ok: true,
-      json: async () => ({ total: {}, contributions }),
-    });
-    const { container } = render(await Footer());
-    expect(screen.getByText(/github activity/)).toBeInTheDocument();
-    const cells = [...container.querySelectorAll('span[title]')];
-    expect(cells).toHaveLength(91);
-    const tokens = new Set(cells.flatMap((c) => c.className.split(' ')));
-    for (const cls of ['bg-border/60', 'bg-accent/30', 'bg-accent/55', 'bg-accent/80', 'bg-accent']) {
-      expect(tokens).toContain(cls);
-    }
-  });
-
-  it('omits the grid when the contributions API fails', async () => {
-    fetchMock.mockResolvedValue({ ok: false });
-    render(await Footer());
-    expect(screen.queryByText(/github activity/)).toBeNull();
-  });
-
-  it('omits the grid when the contributions API is unreachable', async () => {
-    fetchMock.mockRejectedValue(new Error('offline'));
-    render(await Footer());
-    expect(screen.queryByText(/github activity/)).toBeNull();
+  it('renders the contact links', () => {
+    render(<Footer />);
     expect(screen.getByText('contact form ↗')).toBeInTheDocument();
+    expect(screen.getByText('email ↗')).toBeInTheDocument();
   });
 });
 
