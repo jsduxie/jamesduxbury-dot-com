@@ -104,23 +104,23 @@ Contact form submissions are written to the `messages` table and emailed to me. 
 
 The public site:
 
-| | |
-|---|---|
-| ![Home](jamesduxbury/docs/screenshots/home.png) | ![Work](jamesduxbury/docs/screenshots/work.png) |
-
-| |
-|---|
-| ![Contact](jamesduxbury/docs/screenshots/contact.png) |
+<p>
+  <img src="jamesduxbury/docs/screenshots/home.png" alt="Home" width="49%" />
+  <img src="jamesduxbury/docs/screenshots/work.png" alt="Work" width="49%" />
+</p>
+<p>
+  <img src="jamesduxbury/docs/screenshots/contact.png" alt="Contact" width="100%" />
+</p>
 
 The admin console:
 
-| | |
-|---|---|
-| ![Admin](jamesduxbury/docs/screenshots/admin.png) | ![Edit form](jamesduxbury/docs/screenshots/admin-edit.png) |
-
-| |
-|---|
-| ![Analytics](jamesduxbury/docs/screenshots/admin-analytics.png) |
+<p>
+  <img src="jamesduxbury/docs/screenshots/admin.png" alt="Admin" width="49%" />
+  <img src="jamesduxbury/docs/screenshots/admin-edit.png" alt="Edit form" width="49%" />
+</p>
+<p>
+  <img src="jamesduxbury/docs/screenshots/admin-analytics.png" alt="Analytics" width="100%" />
+</p>
 
 ## Design decisions
 
