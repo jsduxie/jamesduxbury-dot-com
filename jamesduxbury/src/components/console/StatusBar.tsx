@@ -55,7 +55,7 @@ export const StatusBar: React.FC = () => {
         </Link>
 
         {/* right — desktop nav */}
-        <nav className="hidden items-center gap-6 font-mono text-sm lg:flex">
+        <nav className="hidden items-center gap-6 font-mono text-sm uppercase tracking-[0.18em] lg:flex">
           {NAV_LINKS.map((link) => {
             const active = isActive(pathname, link.href);
             return (
@@ -96,7 +96,7 @@ export const StatusBar: React.FC = () => {
           aria-label="Open menu"
           aria-expanded={isMenuOpen}
           onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="font-mono text-xs uppercase tracking-[0.2em] text-muted hover:text-accent lg:hidden"
+          className="font-mono text-sm uppercase tracking-[0.18em] text-muted hover:text-accent lg:hidden"
         >
           menu
         </button>
@@ -105,7 +105,7 @@ export const StatusBar: React.FC = () => {
       {/* mobile menu */}
       {isMenuOpen && (
         <nav className="border-t border-border bg-bg px-6 py-4 lg:hidden">
-          <ul className="flex flex-col gap-3 font-mono text-sm">
+          <ul className="flex flex-col gap-3 font-mono text-sm uppercase tracking-[0.18em]">
             {NAV_LINKS.map((link) => {
               const active = isActive(pathname, link.href);
               return (
