@@ -1,0 +1,69 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: portfolio
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d portfolio']
+      interval: 2s
+      timeout: 2s
+      retries: 15
+
+  # the app's Neon driver speaks HTTP, not the Postgres wire protocol
+  neon-proxy:
+    image: ghcr.io/timowilhelm/local-neon-http-proxy:main
+    environment:
+      PG_CONNECTION_STRING: postgres://postgres:postgres@postgres:5432/portfolio
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # one-shot: migrates and seeds the compose database, then exits
+  migrate:
+    build:
+      context: jamesduxbury
+      target: build
+      args:
+        DATABASE_URL: ${DATABASE_URL}
+    command: sh -c "npx tsx src/db/migrate.ts && npx tsx scripts/seed.ts"
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/portfolio
+      NEON_HTTP_PROXY: http://neon-proxy:4444/sql
+    depends_on:
+      neon-proxy:
+        condition: service_started
+
+  web:
+    build:
+      context: jamesduxbury
+      args:
+        DATABASE_URL: ${DATABASE_URL}
+    ports:
+      - '3000:3000'
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/portfolio
+      NEON_HTTP_PROXY: http://neon-proxy:4444/sql
+      GITHUB_ID: ${GITHUB_ID:-docker-dev}
+      GITHUB_SECRET: ${GITHUB_SECRET:-docker-dev}
+      AUTH_SECRET: ${AUTH_SECRET:-docker-dev-secret-docker-dev-secret}
+      BLOB_READ_WRITE_TOKEN: ${BLOB_READ_WRITE_TOKEN:-}
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  adminer:
+    image: adminer:4
+    ports:
+      - '8080:8080'
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  pgdata:
