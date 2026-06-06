@@ -1,7 +1,8 @@
 import Link from 'next/link';
-import type { Project } from '@/data/projects';
+import { formatYearRange, type Project } from '@/data/projects';
 import { StatusChip } from '@/components/console/StatusChip';
 import { MetricBar } from './MetricBar';
+import { ProjectLinks, projectLinkClass } from './ProjectLinks';
 
 interface ProjectRowProps {
   project: Project;
@@ -11,10 +12,7 @@ interface ProjectRowProps {
 
 export const ProjectRow: React.FC<ProjectRowProps> = ({ project, index, variant = 'detail' }) => {
   const positionLabel = `P${String(index + 1).padStart(1, '0')}`;
-  const yearLabel =
-    project.yearEnd === project.yearStart
-      ? `${project.yearStart}`
-      : `${project.yearStart} — ${project.yearEnd}`;
+  const yearLabel = formatYearRange(project);
 
   const techPreview =
     variant === 'compact'
@@ -55,34 +53,11 @@ export const ProjectRow: React.FC<ProjectRowProps> = ({ project, index, variant 
               ))}
             </ul>
 
-            <div className="mt-4 flex flex-wrap items-center gap-4 font-mono text-xs">
-              <Link
-                href={`/work/${project.slug}`}
-                className="inline-flex items-center gap-1 text-accent transition-colors hover:text-danger"
-              >
+            <ProjectLinks githubLink={project.githubLink} liveLink={project.liveLink}>
+              <Link href={`/work/${project.slug}`} className={projectLinkClass}>
                 case study →
               </Link>
-              {project.githubLink && (
-                <Link
-                  href={project.githubLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-accent transition-colors hover:text-danger"
-                >
-                  view repo ↗
-                </Link>
-              )}
-              {project.liveLink && (
-                <Link
-                  href={project.liveLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-accent transition-colors hover:text-danger"
-                >
-                  open live ↗
-                </Link>
-              )}
-            </div>
+            </ProjectLinks>
           </>
         )}
       </div>

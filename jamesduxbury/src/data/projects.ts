@@ -25,6 +25,10 @@ export interface Project {
   metrics?: ProjectMetric[];
 }
 
+export function formatYearRange(p: Pick<Project, 'yearStart' | 'yearEnd'>): string {
+  return p.yearEnd === p.yearStart ? `${p.yearStart}` : `${p.yearStart} — ${p.yearEnd}`;
+}
+
 export const projects: Project[] = [
   {
     slug: 'fg-han',
