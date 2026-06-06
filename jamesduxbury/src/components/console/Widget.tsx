@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, type Variants } from 'framer-motion';
-import { SectionHeader } from './SectionHeader';
+import { WidgetFrame } from './WidgetFrame';
 
 interface WidgetProps {
   channel: string;
@@ -33,7 +33,8 @@ export const Widget: React.FC<WidgetProps> = ({
     variants={revealVariants}
     className={`scroll-mt-24 ${className ?? ''}`}
   >
-    <SectionHeader channel={channel} label={label} count={count} />
-    <div className="border border-border bg-surface/40 backdrop-blur-sm">{children}</div>
+    <WidgetFrame channel={channel} label={label} count={count}>
+      {children}
+    </WidgetFrame>
   </motion.section>
 );

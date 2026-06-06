@@ -1,4 +1,4 @@
-import { SkeletonBits, SkeletonCursor } from '@/components/skeleton/Skeleton';
+import { SkeletonBits, SkeletonLine } from './Skeleton';
 
 export function ProjectRowSkeleton() {
   return (
@@ -13,25 +13,13 @@ export function ProjectRowSkeleton() {
           </span>
         </header>
 
-        <p className="mt-2 overflow-hidden whitespace-nowrap">
-          <SkeletonBits length={32} className="text-sm" />
-        </p>
-
-        <p className="mt-3 overflow-hidden whitespace-nowrap">
-          <SkeletonBits length={26} className="text-xs" />
-        </p>
+        <SkeletonLine length={32} className="mt-2" textClassName="text-sm" />
+        <SkeletonLine length={26} className="mt-3" textClassName="text-xs" />
 
         <div className="mt-4 space-y-2">
-          <p className="overflow-hidden whitespace-nowrap">
-            <SkeletonBits length={64} className="text-sm" />
-          </p>
-          <p className="overflow-hidden whitespace-nowrap">
-            <SkeletonBits length={56} className="text-sm" />
-          </p>
-          <p className="overflow-hidden whitespace-nowrap">
-            <SkeletonBits length={40} className="text-sm" />
-            <SkeletonCursor />
-          </p>
+          <SkeletonLine length={64} textClassName="text-sm" />
+          <SkeletonLine length={56} textClassName="text-sm" />
+          <SkeletonLine length={40} textClassName="text-sm" cursor />
         </div>
       </div>
 

@@ -1,4 +1,4 @@
-import { SkeletonBits } from '@/components/skeleton/Skeleton';
+import { SkeletonBits, SkeletonLine } from '@/components/skeleton/Skeleton';
 import { SkeletonCollapsibleRow } from '@/components/skeleton/SkeletonCollapsibleRow';
 import { SkeletonShell } from '@/components/skeleton/SkeletonShell';
 
@@ -12,12 +12,8 @@ function CertificationCardSkeleton() {
         <SkeletonBits length={2} className="text-xs" />
       </span>
       <div className="flex-1 space-y-1">
-        <p className="overflow-hidden whitespace-nowrap">
-          <SkeletonBits length={24} className="text-sm" />
-        </p>
-        <p className="overflow-hidden whitespace-nowrap">
-          <SkeletonBits length={4} className="text-xs" />
-        </p>
+        <SkeletonLine length={24} textClassName="text-sm" />
+        <SkeletonLine length={4} textClassName="text-xs" />
       </div>
     </div>
   );

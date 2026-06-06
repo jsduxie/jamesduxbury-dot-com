@@ -1,5 +1,5 @@
 import { SkeletonShell } from '@/components/skeleton/SkeletonShell';
-import { ProjectRowSkeleton } from '@/components/work/ProjectRowSkeleton';
+import { ProjectRowSkeleton } from '@/components/skeleton/ProjectRowSkeleton';
 
 export default function WorkLoading() {
   return (
