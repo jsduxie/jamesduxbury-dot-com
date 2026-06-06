@@ -6,6 +6,7 @@ import type { Certification } from '@/data/certifications';
 import type { SkillGroup } from '@/data/skills';
 import type { AboutParagraph } from '@/data/about';
 import { siteSettings, type SiteSettings } from '@/data/site';
+import type { CaseStudy } from '@/data/case-studies';
 
 interface ProjectRow {
   slug: string;
@@ -105,6 +106,35 @@ export async function getCertifications(): Promise<Certification[]> {
 export async function getSkillGroups(): Promise<SkillGroup[]> {
   const rows = (await getSql()`SELECT * FROM skill_groups ORDER BY sort_order`) as SkillGroup[];
   return rows.map((r) => ({ heading: r.heading, skills: r.skills }));
+}
+
+export async function getProjectBySlug(slug: string): Promise<Project | null> {
+  const projects = await getProjects();
+  return projects.find((p) => p.slug === slug) ?? null;
+}
+
+interface CaseStudyRow {
+  project_slug: string;
+  problem: AboutParagraph[];
+  approach: AboutParagraph[];
+  outcome: AboutParagraph[] | null;
+  image_path: string | null;
+}
+
+export async function getCaseStudy(slug: string): Promise<CaseStudy | null> {
+  const rows = (await getSql()`
+    SELECT project_slug, problem, approach, outcome, image_path
+    FROM case_studies WHERE project_slug = ${slug}
+  `) as CaseStudyRow[];
+  const r = rows[0];
+  if (!r) return null;
+  return {
+    projectSlug: r.project_slug,
+    problem: r.problem,
+    approach: r.approach,
+    outcome: r.outcome ?? undefined,
+    imagePath: r.image_path ?? undefined,
+  };
 }
 
 export async function getSiteSettings(): Promise<SiteSettings> {
