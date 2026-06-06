@@ -94,6 +94,22 @@ export const projects: Project[] = [
     githubLink: 'https://github.com/jsduxie/opencv-xray-repair',
   },
   {
+    slug: 'jamesduxbury-dot-com',
+    title: 'jamesduxbury.com',
+    subtitle: 'This site: DB-backed portfolio with an admin console',
+    status: 'live',
+    yearStart: 2024,
+    yearEnd: 2026,
+    techStack: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Neon Postgres', 'Vercel'],
+    highlights: [
+      'All content in Postgres behind a schema-driven admin console; edits are live on save without a redeploy.',
+      'GitHub OAuth sign-in with a single-account allowlist enforced at four layers.',
+      'First-party, privacy-light analytics with a custom dashboard; no cookies, IPs, or fingerprinting.',
+    ],
+    githubLink: 'https://github.com/jsduxie/jamesduxbury-dot-com',
+    liveLink: 'https://jamesduxbury-dot-com.vercel.app',
+  },
+  {
     slug: 'artemis-iii',
     title: 'Artemis III Landing Site Analysis',
     subtitle: 'Advanced visualisation coursework',
