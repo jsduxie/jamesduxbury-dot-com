@@ -95,8 +95,10 @@ describe('SectionForm', () => {
     { column: 'metrics', label: 'Metrics', type: 'metrics' },
     { column: 'runs', label: 'Paragraph', type: 'runs' },
     { column: 'image', label: 'Image', type: 'image' },
+    { column: 'body', label: 'Body', type: 'prose' },
   ];
   const defaults = {
+    body: 'first **heavy**\n\nsecond',
     image: 'https://abc.public.blob.vercel-storage.com/existing.png',
     title: 'Existing',
     notes: 'note text',
@@ -129,6 +131,7 @@ describe('SectionForm', () => {
     expect(screen.getByDisplayValue('second')).toBeInTheDocument();
     expect(screen.getByDisplayValue('F1')).toBeInTheDocument();
     expect(screen.getByLabelText('Paragraph')).toHaveValue('plain **bold**');
+    expect(screen.getByLabelText('Body')).toHaveValue('first **heavy**\n\nsecond');
     const fileInput = screen.getByLabelText('Image');
     expect(fileInput).toHaveAttribute('type', 'file');
     expect(fileInput).toHaveAttribute('accept', 'image/png,image/jpeg,image/webp');
@@ -137,6 +140,28 @@ describe('SectionForm', () => {
       'https://abc.public.blob.vercel-storage.com/existing.png',
     );
     expect(screen.getByRole('button', { name: 'save →' })).toBeInTheDocument();
+  });
+
+  it('previews prose paragraphs as they are typed', () => {
+    render(
+      <SectionForm fields={fields} defaults={defaults} action={noopAction} submitLabel="save" />,
+    );
+    expect(screen.getByText('heavy')).toBeInTheDocument();
+    fireEvent.change(screen.getByLabelText('Body'), {
+      target: { value: 'now with *emphasis*\n\nand a second paragraph' },
+    });
+    expect(screen.getByText('emphasis')).toBeInTheDocument();
+    expect(screen.getByText('and a second paragraph')).toBeInTheDocument();
+  });
+
+  it('wraps the selection when a toolbar button is clicked', () => {
+    render(
+      <SectionForm fields={fields} defaults={defaults} action={noopAction} submitLabel="save" />,
+    );
+    const area = screen.getByLabelText('Body') as HTMLTextAreaElement;
+    area.setSelectionRange(0, 5);
+    fireEvent.click(screen.getByRole('button', { name: 'italic' }));
+    expect(area.value).toBe('*first* **heavy**\n\nsecond');
   });
 
   it('adds and removes bullet rows', () => {
