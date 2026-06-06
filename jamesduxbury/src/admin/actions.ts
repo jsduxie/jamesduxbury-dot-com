@@ -33,7 +33,9 @@ function toSqlValues(fields: FieldDef[], data: Record<string, unknown>): Record<
   for (const f of fields) {
     const value = data[f.column];
     out[f.column] =
-      (f.type === 'metrics' || f.type === 'runs') && value !== null ? JSON.stringify(value) : value;
+      (f.type === 'metrics' || f.type === 'runs' || f.type === 'prose') && value !== null
+        ? JSON.stringify(value)
+        : value;
   }
   return out;
 }

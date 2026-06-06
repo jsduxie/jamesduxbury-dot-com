@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { fieldDefault, parseFields, type FieldDef } from '../src/admin/fields';
-import { parseRuns, serialiseRuns } from '../src/admin/runs';
+import { parseProse, parseRuns, serialiseProse, serialiseRuns } from '../src/admin/runs';
 import { getSection, SECTIONS } from '../src/admin/sections';
 
 function form(entries: Record<string, string | string[]>): FormData {
@@ -37,6 +37,25 @@ describe('about runs markup', () => {
   });
 });
 
+describe('prose markup', () => {
+  it('splits paragraphs on blank lines and parses runs', () => {
+    expect(parseProse('one **two**\n\n\nthree\nwrapped')).toEqual([
+      ['one ', { strong: 'two' }],
+      ['three wrapped'],
+    ]);
+  });
+
+  it('round-trips through serialiseProse', () => {
+    const text = 'one **two**\n\n*three* four';
+    expect(serialiseProse(parseProse(text))).toBe(text);
+  });
+
+  it('parses empty input to no paragraphs', () => {
+    expect(parseProse('')).toEqual([]);
+    expect(parseProse('  \n\n  ')).toEqual([]);
+  });
+});
+
 describe('parseFields', () => {
   const defs: FieldDef[] = [
     { column: 'title', label: 'Title', type: 'text' },
@@ -51,6 +70,7 @@ describe('parseFields', () => {
     { column: 'metrics', label: 'Metrics', type: 'metrics' },
     { column: 'runs', label: 'Runs', type: 'runs' },
     { column: 'image', label: 'Image', type: 'image' },
+    { column: 'prose', label: 'Prose', type: 'prose' },
   ];
 
   it('maps every field type to its DB value', () => {
@@ -68,6 +88,7 @@ describe('parseFields', () => {
       'metrics.value': ['0.9', ''],
       'metrics.ratio': ['0.9', ''],
       runs: 'hello **world**',
+      prose: 'first *para*\n\nsecond para',
     });
     expect(parseFields(defs, fd)).toEqual({
       title: 'Spaced',
@@ -82,6 +103,10 @@ describe('parseFields', () => {
       metrics: [{ label: 'F1', value: '0.9', ratio: 0.9 }],
       runs: ['hello ', { strong: 'world' }],
       image: null,
+      prose: [
+        ['first ', { em: 'para' }],
+        ['second para'],
+      ],
     });
   });
 
@@ -99,6 +124,7 @@ describe('parseFields', () => {
       metrics: null,
       runs: [],
       image: null,
+      prose: null,
     });
   });
 
@@ -135,6 +161,12 @@ describe('fieldDefault', () => {
       [{ column: 'c', label: 'c', type: 'runs' }, ['a ', { strong: 'b' }], 'a **b**'],
       [{ column: 'c', label: 'c', type: 'image' }, 'https://blob/x.png', 'https://blob/x.png'],
       [{ column: 'c', label: 'c', type: 'image' }, null, ''],
+      [
+        { column: 'c', label: 'c', type: 'prose' },
+        [['a ', { strong: 'b' }], ['c']],
+        'a **b**\n\nc',
+      ],
+      [{ column: 'c', label: 'c', type: 'prose' }, null, ''],
     ];
     for (const [def, dbValue, expected] of cases) {
       expect(fieldDefault(def, dbValue)).toEqual(expected);
@@ -143,7 +175,7 @@ describe('fieldDefault', () => {
 });
 
 describe('section registry', () => {
-  it('exposes the seven content sections', () => {
+  it('exposes the eight content sections', () => {
     expect(SECTIONS.map((s) => s.slug)).toEqual([
       'projects',
       'experience',
@@ -151,6 +183,7 @@ describe('section registry', () => {
       'certifications',
       'skills',
       'about',
+      'case-studies',
       'site',
     ]);
   });
@@ -192,6 +225,11 @@ describe('section registry', () => {
     certifications: { name: 'Cert', year: '2024', sort_order: '1' },
     skills: { heading: 'Languages', skills: 'Python, TypeScript', sort_order: '1' },
     about: { runs: 'plain **bold**', sort_order: '1' },
+    'case-studies': {
+      project_slug: 'test-slug',
+      problem: 'the **problem** statement\n\nsecond paragraph',
+      approach: 'how it was built',
+    },
     site: {},
   };
 
@@ -223,6 +261,7 @@ describe('section registry', () => {
     expect(getSection('certifications').listLabel({ name: 'ITIL 4' })).toBe('ITIL 4');
     expect(getSection('skills').listLabel({ heading: 'Languages' })).toBe('Languages');
     expect(getSection('site').listLabel({})).toBe('Site settings');
+    expect(getSection('case-studies').listLabel({ project_slug: 'fg-han' })).toBe('fg-han');
     expect(getSection('about').listLabel({ runs: ['plain ', { strong: 'bold' }] })).toBe(
       'plain bold',
     );

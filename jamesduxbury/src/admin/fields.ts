@@ -1,6 +1,6 @@
 import type { AboutParagraph } from '@/data/about';
 import type { ProjectMetric } from '@/data/projects';
-import { parseRuns, serialiseRuns } from './runs';
+import { parseProse, parseRuns, serialiseProse, serialiseRuns } from './runs';
 
 export type FieldType =
   | 'text'
@@ -14,6 +14,7 @@ export type FieldType =
   | 'checkbox'
   | 'metrics'
   | 'runs'
+  | 'prose'
   | 'image';
 
 export interface FieldDef {
@@ -84,6 +85,11 @@ export function parseFields(fields: FieldDef[], formData: FormData): Record<stri
       case 'runs':
         out[f.column] = parseRuns(text);
         break;
+      case 'prose': {
+        const paragraphs = parseProse(text);
+        out[f.column] = paragraphs.length ? paragraphs : null;
+        break;
+      }
       // the file is uploaded in the action, which fills the column
       case 'image':
         out[f.column] = null;
@@ -122,6 +128,8 @@ export function fieldDefault(f: FieldDef, value: unknown): FieldDefault {
         : [];
     case 'runs':
       return Array.isArray(value) ? serialiseRuns(value as AboutParagraph) : '';
+    case 'prose':
+      return Array.isArray(value) ? serialiseProse(value as AboutParagraph[]) : '';
     case 'number':
     case 'sort_order':
       return typeof value === 'number' ? String(value) : '';

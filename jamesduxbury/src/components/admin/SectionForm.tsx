@@ -1,9 +1,11 @@
 'use client';
 
 import Image from 'next/image';
-import { useActionState, useState } from 'react';
+import { useActionState, useRef, useState } from 'react';
 import type { FormState } from '@/admin/actions';
 import type { FieldDef, FieldDefault, MetricDraft } from '@/admin/fields';
+import { parseProse } from '@/admin/runs';
+import { renderRun } from '@/components/about/renderRun';
 
 const INITIAL_STATE: FormState = { message: null, fieldErrors: {} };
 
@@ -113,6 +115,57 @@ function MetricsField({ column, initial }: { column: string; initial: MetricDraf
   );
 }
 
+function ProseField({ column, initial }: { column: string; initial: string }) {
+  const [text, setText] = useState(initial);
+  const area = useRef<HTMLTextAreaElement>(null);
+
+  // wraps the current selection in markup and restores it
+  const wrap = (marker: string) => {
+    const el = area.current;
+    if (!el) return;
+    const { selectionStart: start, selectionEnd: end } = el;
+    setText(text.slice(0, start) + marker + text.slice(start, end) + marker + text.slice(end));
+    requestAnimationFrame(() => {
+      el.focus();
+      el.setSelectionRange(start + marker.length, end + marker.length);
+    });
+  };
+
+  const paragraphs = parseProse(text);
+
+  return (
+    <div>
+      <div className="mt-2 flex gap-4">
+        <button type="button" onClick={() => wrap('**')} className={addButton + ' mt-0'}>
+          bold
+        </button>
+        <button type="button" onClick={() => wrap('*')} className={addButton + ' mt-0'}>
+          italic
+        </button>
+      </div>
+      <textarea
+        ref={area}
+        id={column}
+        name={column}
+        rows={10}
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        className={`${fieldInput} resize-y`}
+      />
+      {paragraphs.length > 0 && (
+        <div className="mt-3 border border-border px-4 py-3">
+          <p className={fieldLabel}>preview</p>
+          {paragraphs.map((p, i) => (
+            <p key={i} className="mt-2 font-mono text-sm leading-relaxed text-text/85">
+              {p.map(renderRun)}
+            </p>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function FieldInput({ field, defaultValue }: { field: FieldDef; defaultValue: FieldDefault }) {
   const text = typeof defaultValue === 'string' ? defaultValue : '';
   switch (field.type) {
@@ -190,6 +243,8 @@ function FieldInput({ field, defaultValue }: { field: FieldDef; defaultValue: Fi
           className={fieldInput}
         />
       );
+    case 'prose':
+      return <ProseField column={field.column} initial={text} />;
     case 'image':
       return (
         <div className="mt-2">
