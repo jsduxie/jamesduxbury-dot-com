@@ -1,4 +1,5 @@
 import { neon } from '@neondatabase/serverless';
+import '../src/db/config';
 import { loadEnvLocal } from '../src/db/env';
 import { seed } from '../src/db/seed';
 

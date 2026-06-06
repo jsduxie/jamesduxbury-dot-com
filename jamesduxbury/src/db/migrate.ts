@@ -2,6 +2,7 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { neon } from '@neondatabase/serverless';
+import './config';
 import { loadEnvLocal } from './env';
 
 const here = dirname(fileURLToPath(import.meta.url));

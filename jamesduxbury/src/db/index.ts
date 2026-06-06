@@ -1,4 +1,5 @@
 import { neon } from '@neondatabase/serverless';
+import './config';
 
 // Tagged-template queries only; the driver parameterises every interpolated value
 export function getSql() {
