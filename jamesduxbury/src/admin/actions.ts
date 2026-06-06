@@ -5,9 +5,10 @@ import { redirect } from 'next/navigation';
 import { auth, isAdminSession } from '@/auth';
 import { getSql } from '@/db';
 import { SITE_ROUTES } from '@/lib/site';
-import { parseFields, type FieldDef } from './fields';
+import { parseFields, type FieldDef, type FieldValue } from './fields';
+import { deleteImage, imageFileError, uploadImage } from './images';
 import { getSection } from './sections';
-import { deleteRow, insertRow, makeRoomAt, updateRow } from './sql';
+import { deleteRow, getRow, insertRow, makeRoomAt, updateRow } from './sql';
 
 export interface FormState {
   message: string | null;
@@ -16,6 +17,10 @@ export interface FormState {
 
 async function requireAdmin(): Promise<void> {
   if (!isAdminSession(await auth())) throw new Error('Unauthorised');
+}
+
+function imageFields(fields: FieldDef[]): FieldDef[] {
+  return fields.filter((f) => f.type === 'image');
 }
 
 function revalidatePublicPages(): void {
@@ -43,6 +48,22 @@ export async function saveItem(
   const section = getSection(slug);
 
   const values = parseFields(section.fields, formData);
+  const images = imageFields(section.fields);
+  const files = new Map<string, File>();
+  for (const f of images) {
+    const raw = formData.get(f.column);
+    if (raw instanceof File && raw.size > 0) {
+      const error = imageFileError(raw);
+      if (error) return { message: 'Validation failed', fieldErrors: { [f.column]: error } };
+      files.set(f.column, raw);
+    }
+  }
+  // an empty file input keeps the stored image
+  const prior = id !== null && images.length > 0 ? await getRow(section.table, id) : null;
+  for (const f of images) {
+    if (!files.has(f.column)) values[f.column] = (prior?.[f.column] as FieldValue) ?? null;
+  }
+
   const parsed = section.schema.safeParse(values);
   if (!parsed.success) {
     const fieldErrors: Record<string, string> = {};
@@ -53,15 +74,25 @@ export async function saveItem(
     return { message: 'Validation failed', fieldErrors };
   }
 
+  const uploaded: string[] = [];
   try {
     const row = toSqlValues(section.fields, parsed.data);
+    for (const [column, file] of files) {
+      const url = await uploadImage(file);
+      uploaded.push(url);
+      row[column] = url;
+    }
     const sortOrder = row.sort_order;
     if (typeof sortOrder === 'number') await makeRoomAt(section.table, sortOrder, id);
     if (id === null) await insertRow(section.table, row);
     else await updateRow(section.table, id, row);
   } catch (err) {
+    // a failed save must not leave blobs the row never referenced
+    for (const url of uploaded) await deleteImage(url);
     return { message: err instanceof Error ? err.message : 'Save failed', fieldErrors: {} };
   }
+
+  if (prior !== null) for (const column of files.keys()) await deleteImage(prior[column]);
 
   revalidatePublicPages();
   revalidatePath(`/admin/${slug}`);
@@ -71,7 +102,10 @@ export async function saveItem(
 export async function deleteItem(slug: string, id: number): Promise<void> {
   await requireAdmin();
   const section = getSection(slug);
+  const images = imageFields(section.fields);
+  const row = images.length > 0 ? await getRow(section.table, id) : null;
   await deleteRow(section.table, id);
+  for (const f of images) await deleteImage(row?.[f.column]);
   revalidatePublicPages();
   revalidatePath(`/admin/${slug}`);
 }

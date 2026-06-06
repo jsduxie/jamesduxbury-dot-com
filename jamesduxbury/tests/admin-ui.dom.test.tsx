@@ -94,8 +94,10 @@ describe('SectionForm', () => {
     { column: 'bullets', label: 'Bullets', type: 'bullets' },
     { column: 'metrics', label: 'Metrics', type: 'metrics' },
     { column: 'runs', label: 'Paragraph', type: 'runs' },
+    { column: 'image', label: 'Image', type: 'image' },
   ];
   const defaults = {
+    image: 'https://abc.public.blob.vercel-storage.com/existing.png',
     title: 'Existing',
     notes: 'note text',
     link: 'https://example.com',
@@ -127,6 +129,13 @@ describe('SectionForm', () => {
     expect(screen.getByDisplayValue('second')).toBeInTheDocument();
     expect(screen.getByDisplayValue('F1')).toBeInTheDocument();
     expect(screen.getByLabelText('Paragraph')).toHaveValue('plain **bold**');
+    const fileInput = screen.getByLabelText('Image');
+    expect(fileInput).toHaveAttribute('type', 'file');
+    expect(fileInput).toHaveAttribute('accept', 'image/png,image/jpeg,image/webp');
+    expect(screen.getByAltText('current image')).toHaveAttribute(
+      'src',
+      'https://abc.public.blob.vercel-storage.com/existing.png',
+    );
     expect(screen.getByRole('button', { name: 'save →' })).toBeInTheDocument();
   });
 

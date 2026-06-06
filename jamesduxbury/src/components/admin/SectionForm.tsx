@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useActionState, useState } from 'react';
 import type { FormState } from '@/admin/actions';
 import type { FieldDef, FieldDefault, MetricDraft } from '@/admin/fields';
@@ -188,6 +189,28 @@ function FieldInput({ field, defaultValue }: { field: FieldDef; defaultValue: Fi
           defaultValue={text}
           className={fieldInput}
         />
+      );
+    case 'image':
+      return (
+        <div className="mt-2">
+          {text && (
+            <Image
+              src={text}
+              alt="current image"
+              width={80}
+              height={80}
+              unoptimized
+              className="mb-3 border border-border object-cover"
+            />
+          )}
+          <input
+            id={field.column}
+            name={field.column}
+            type="file"
+            accept="image/png,image/jpeg,image/webp"
+            className={`${fieldInput} mt-0 cursor-pointer file:mr-4 file:cursor-pointer file:border-0 file:bg-transparent file:font-mono file:text-xs file:uppercase file:tracking-[0.18em] file:text-accent`}
+          />
+        </div>
       );
     case 'url':
       return (
