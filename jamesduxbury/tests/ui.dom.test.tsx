@@ -142,8 +142,8 @@ describe('ContactForm', () => {
     fetchMock.mockResolvedValue({ ok: true });
     render(<ContactForm />);
     fill();
-    fireEvent.submit(screen.getByRole('button', { name: /transmit/ }).closest('form')!);
-    await waitFor(() => expect(screen.getByText(/transmission acknowledged/)).toBeInTheDocument());
+    fireEvent.submit(screen.getByRole('button', { name: /send/ }).closest('form')!);
+    await waitFor(() => expect(screen.getByText(/message sent/)).toBeInTheDocument());
     expect(screen.getByLabelText('Name')).toHaveValue('');
   });
 
@@ -151,7 +151,7 @@ describe('ContactForm', () => {
     fetchMock.mockResolvedValue({ ok: false, status: 400, json: async () => ({ error: 'Invalid payload' }) });
     render(<ContactForm />);
     fill();
-    fireEvent.submit(screen.getByRole('button', { name: /transmit/ }).closest('form')!);
+    fireEvent.submit(screen.getByRole('button', { name: /send/ }).closest('form')!);
     await waitFor(() => expect(screen.getByText(/Invalid payload/)).toBeInTheDocument());
   });
 
@@ -159,8 +159,8 @@ describe('ContactForm', () => {
     fetchMock.mockResolvedValue({ ok: false, status: 500, json: async () => Promise.reject(new Error('no body')) });
     render(<ContactForm />);
     fill();
-    fireEvent.submit(screen.getByRole('button', { name: /transmit/ }).closest('form')!);
-    await waitFor(() => expect(screen.getByText(/Transmission failed \(500\)/)).toBeInTheDocument());
+    fireEvent.submit(screen.getByRole('button', { name: /send/ }).closest('form')!);
+    await waitFor(() => expect(screen.getByText(/Message failed to send \(500\)/)).toBeInTheDocument());
   });
 
   it('shows network failures and disables the button while sending', async () => {
@@ -168,7 +168,7 @@ describe('ContactForm', () => {
     fetchMock.mockReturnValue(new Promise((_, rej) => (reject = rej)));
     render(<ContactForm />);
     fill();
-    fireEvent.submit(screen.getByRole('button', { name: /transmit/ }).closest('form')!);
+    fireEvent.submit(screen.getByRole('button', { name: /send/ }).closest('form')!);
     await waitFor(() => expect(screen.getByRole('button', { name: /sending/ })).toBeDisabled());
     reject!(new Error('network down'));
     await waitFor(() => expect(screen.getByText(/network down/)).toBeInTheDocument());

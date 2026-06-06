@@ -95,7 +95,7 @@ export async function Footer() {
         {/* footer bottom */}
         <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4 text-[0.65rem] uppercase tracking-[0.18em]">
           <span>
-            {`>`} eng-console · v2.0 · last build {new Date().getFullYear()}
+            {`>`} jamesduxbury.com · v2.0 · last build {new Date().getFullYear()}
           </span>
           <span>
             {`> built with`} <span className="text-accent">next.js</span> · vercel

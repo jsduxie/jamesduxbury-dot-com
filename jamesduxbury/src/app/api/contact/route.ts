@@ -106,7 +106,7 @@ export async function POST(req: Request) {
     return Response.json(
       {
         success: false,
-        error: 'Transmission failed. Please try again later.',
+        error: 'Message failed to send. Please try again later.',
         correlationId,
       },
       { status: 500 },

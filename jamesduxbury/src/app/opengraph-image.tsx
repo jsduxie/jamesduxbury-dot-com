@@ -51,7 +51,7 @@ export default function OpenGraphImage() {
         />
         <span style={{ color: colours.live }}>LIVE</span>
         <span style={{ color: colours.border }}>·</span>
-        <span style={{ color: colours.text }}>ENG-CONSOLE</span>
+        <span style={{ color: colours.text }}>JAMES DUXBURY</span>
         <span>v2.0</span>
       </div>
 

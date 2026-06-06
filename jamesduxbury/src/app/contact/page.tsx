@@ -22,7 +22,7 @@ export default function ContactPage() {
           ← / home
         </Link>
 
-        <Widget channel="06" label="TRANSMIT" id="contact">
+        <Widget channel="06" label="CONTACT" id="contact">
           <div className="px-4 py-5 sm:px-6">
             <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted">
               {`>`} open channels
@@ -31,7 +31,7 @@ export default function ContactPage() {
           <ContactChannels />
           <div className="px-4 py-5 sm:px-6">
             <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted">
-              {`>`} or transmit a message directly
+              {`>`} or send a message directly
             </p>
           </div>
           <ContactForm />
