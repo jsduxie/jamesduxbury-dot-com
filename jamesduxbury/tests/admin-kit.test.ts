@@ -50,6 +50,7 @@ describe('parseFields', () => {
     { column: 'tags', label: 'Tags', type: 'tags' },
     { column: 'metrics', label: 'Metrics', type: 'metrics' },
     { column: 'runs', label: 'Runs', type: 'runs' },
+    { column: 'image', label: 'Image', type: 'image' },
   ];
 
   it('maps every field type to its DB value', () => {
@@ -80,6 +81,7 @@ describe('parseFields', () => {
       tags: ['a', 'b', 'c'],
       metrics: [{ label: 'F1', value: '0.9', ratio: 0.9 }],
       runs: ['hello ', { strong: 'world' }],
+      image: null,
     });
   });
 
@@ -96,6 +98,7 @@ describe('parseFields', () => {
       tags: [],
       metrics: null,
       runs: [],
+      image: null,
     });
   });
 
@@ -130,6 +133,8 @@ describe('fieldDefault', () => {
       ],
       [{ column: 'c', label: 'c', type: 'metrics' }, null, []],
       [{ column: 'c', label: 'c', type: 'runs' }, ['a ', { strong: 'b' }], 'a **b**'],
+      [{ column: 'c', label: 'c', type: 'image' }, 'https://blob/x.png', 'https://blob/x.png'],
+      [{ column: 'c', label: 'c', type: 'image' }, null, ''],
     ];
     for (const [def, dbValue, expected] of cases) {
       expect(fieldDefault(def, dbValue)).toEqual(expected);

@@ -13,7 +13,8 @@ export type FieldType =
   | 'select'
   | 'checkbox'
   | 'metrics'
-  | 'runs';
+  | 'runs'
+  | 'image';
 
 export interface FieldDef {
   column: string;
@@ -82,6 +83,10 @@ export function parseFields(fields: FieldDef[], formData: FormData): Record<stri
       }
       case 'runs':
         out[f.column] = parseRuns(text);
+        break;
+      // the file is uploaded in the action, which fills the column
+      case 'image':
+        out[f.column] = null;
         break;
     }
   }

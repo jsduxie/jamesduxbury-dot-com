@@ -18,6 +18,17 @@ vi.mock('next/navigation', () => ({
   },
 }));
 
+const uploadMock = vi.fn<(file: File) => Promise<string>>();
+const deleteImageMock = vi.fn<(url: unknown) => Promise<void>>();
+vi.mock('../src/admin/images', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../src/admin/images')>();
+  return {
+    ...actual,
+    uploadImage: (file: File) => uploadMock(file),
+    deleteImage: (url: unknown) => deleteImageMock(url),
+  };
+});
+
 import { deleteItem, markMessageRead, saveItem } from '../src/admin/actions';
 import { countRows, getRow, listRows, makeRoomAt } from '../src/admin/sql';
 import { SITE_ROUTES } from '../src/lib/site';
@@ -66,10 +77,14 @@ function projectForm(overrides: Record<string, string | string[]> = {}): FormDat
 beforeEach(() => {
   authMock.mockResolvedValue(session);
   revalidated.length = 0;
+  uploadMock.mockReset();
+  deleteImageMock.mockReset();
+  deleteImageMock.mockResolvedValue(undefined);
 });
 
 afterAll(async () => {
   await sql`DELETE FROM projects WHERE slug LIKE 'test-admin-%'`;
+  await sql`DELETE FROM certifications WHERE name LIKE 'test-admin-%'`;
   await sql`DELETE FROM about_paragraphs WHERE sort_order >= 9000`;
   await sql`DELETE FROM messages WHERE email = ${emailMarker}`;
 });
@@ -97,6 +112,80 @@ describe('validation', () => {
   it('rejects an out-of-range metric ratio', async () => {
     const state = await saveItem('projects', null, EMPTY, projectForm({ 'metrics.ratio': ['1.5', ''] }));
     expect(state.fieldErrors.metrics).toBeTruthy();
+  });
+});
+
+describe('image fields', () => {
+  const certName = `${marker}-cert`;
+  const urlOne = 'https://abc.public.blob.vercel-storage.com/one.png';
+  const urlTwo = 'https://abc.public.blob.vercel-storage.com/two.png';
+
+  function certForm(file?: File): FormData {
+    const fd = form({ name: certName, year: '2026', certification_link: '', sort_order: '960' });
+    if (file) fd.append('img_path', file);
+    return fd;
+  }
+
+  function png(name: string): File {
+    return new File([new Uint8Array(8)], name, { type: 'image/png' });
+  }
+
+  async function certId(): Promise<number> {
+    const [{ id }] = await sql`SELECT id FROM certifications WHERE name = ${certName}`;
+    return id as number;
+  }
+
+  it('uploads the file on create and stores its url', async () => {
+    uploadMock.mockResolvedValue(urlOne);
+    await expect(saveItem('certifications', null, EMPTY, certForm(png('one.png')))).rejects.toThrow(
+      'REDIRECT:/admin/certifications',
+    );
+    const [row] = await sql`SELECT img_path FROM certifications WHERE name = ${certName}`;
+    expect(row.img_path).toBe(urlOne);
+    expect(deleteImageMock).not.toHaveBeenCalled();
+  });
+
+  it('keeps the stored image when no file is chosen', async () => {
+    await expect(saveItem('certifications', await certId(), EMPTY, certForm())).rejects.toThrow(
+      'REDIRECT:/admin/certifications',
+    );
+    const [row] = await sql`SELECT img_path FROM certifications WHERE name = ${certName}`;
+    expect(row.img_path).toBe(urlOne);
+    expect(uploadMock).not.toHaveBeenCalled();
+    expect(deleteImageMock).not.toHaveBeenCalled();
+  });
+
+  it('replaces the image and deletes the old blob', async () => {
+    uploadMock.mockResolvedValue(urlTwo);
+    await expect(
+      saveItem('certifications', await certId(), EMPTY, certForm(png('two.png'))),
+    ).rejects.toThrow('REDIRECT:/admin/certifications');
+    const [row] = await sql`SELECT img_path FROM certifications WHERE name = ${certName}`;
+    expect(row.img_path).toBe(urlTwo);
+    expect(deleteImageMock).toHaveBeenCalledWith(urlOne);
+  });
+
+  it('rejects a wrong mime type before uploading', async () => {
+    const gif = new File([new Uint8Array(8)], 'a.gif', { type: 'image/gif' });
+    const state = await saveItem('certifications', await certId(), EMPTY, certForm(gif));
+    expect(state.fieldErrors.img_path).toMatch(/png, jpeg or webp/);
+    expect(uploadMock).not.toHaveBeenCalled();
+  });
+
+  it('cleans up the uploaded blob when the insert fails', async () => {
+    uploadMock.mockResolvedValue(urlOne);
+    // duplicate name violates the unique constraint after the upload
+    const state = await saveItem('certifications', null, EMPTY, certForm(png('dupe.png')));
+    expect(state.message).toBeTruthy();
+    expect(deleteImageMock).toHaveBeenCalledWith(urlOne);
+  });
+
+  it('deletes the blob with the row', async () => {
+    const id = await certId();
+    await deleteItem('certifications', id);
+    const rows = await sql`SELECT 1 FROM certifications WHERE id = ${id}`;
+    expect(rows).toHaveLength(0);
+    expect(deleteImageMock).toHaveBeenCalledWith(urlTwo);
   });
 });
 

@@ -18,6 +18,13 @@ const optionalBullets = z
   .array(z.string().min(1))
   .transform((lines) => (lines.length ? lines : null));
 
+const imageField = (column: string): FieldDef => ({
+  column,
+  label: 'Image',
+  type: 'image',
+  help: 'png, jpeg or webp up to 4MB; empty keeps the current image',
+});
+
 const metricSchema = z.object({
   label: z.string().min(1),
   value: z.string().min(1),
@@ -56,7 +63,7 @@ export const SECTIONS: SectionConfig[] = [
         type: 'metrics',
         help: 'ratio is the 0–1 bar fill, optional — remove all rows for none',
       },
-      { column: 'image_path', label: 'Image path', type: 'text' },
+      imageField('image_path'),
       { column: 'github_link', label: 'GitHub link', type: 'url' },
       { column: 'live_link', label: 'Live link', type: 'url' },
       { column: 'sort_order', label: 'Sort order', type: 'sort_order' },
@@ -139,7 +146,7 @@ export const SECTIONS: SectionConfig[] = [
     fields: [
       { column: 'name', label: 'Name', type: 'text' },
       { column: 'year', label: 'Year', type: 'text', help: 'display text, e.g. 2024' },
-      { column: 'img_path', label: 'Image path', type: 'text' },
+      imageField('img_path'),
       { column: 'certification_link', label: 'Certification link', type: 'url' },
       { column: 'sort_order', label: 'Sort order', type: 'sort_order' },
     ],
