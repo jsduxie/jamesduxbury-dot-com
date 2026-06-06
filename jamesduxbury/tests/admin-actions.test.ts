@@ -174,6 +174,13 @@ describe('image fields', () => {
     expect(uploadMock).not.toHaveBeenCalled();
   });
 
+  it('fails the save and cleans up the blob when the row no longer exists', async () => {
+    uploadMock.mockResolvedValue(urlOne);
+    const state = await saveItem('certifications', 999999, EMPTY, certForm(png('gone.png')));
+    expect(state.message).toBe('Row no longer exists');
+    expect(deleteImageMock).toHaveBeenCalledWith(urlOne);
+  });
+
   it('cleans up the uploaded blob when the insert fails', async () => {
     uploadMock.mockResolvedValue(urlOne);
     // duplicate name violates the unique constraint after the upload

@@ -7,8 +7,8 @@ const nextConfig: NextConfig = {
     remotePatterns: [{ protocol: "https", hostname: "*.public.blob.vercel-storage.com" }],
   },
   experimental: {
-    // default 1mb is too small for image uploads; Vercel functions cap bodies at 4.5mb
-    serverActions: { bodySizeLimit: "4mb" },
+    // headroom over the 4mb image cap for multipart overhead; 4.5mb is the Vercel function limit
+    serverActions: { bodySizeLimit: "4.5mb" },
   },
 };
 
