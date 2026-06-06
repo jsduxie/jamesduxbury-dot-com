@@ -4,9 +4,16 @@ import { CollapsibleRow } from '@/components/console/CollapsibleRow';
 interface RoleCardProps {
   role: Role;
   defaultOpen?: boolean;
+  open?: boolean;
+  onToggle?: () => void;
 }
 
-export const RoleCard: React.FC<RoleCardProps> = ({ role, defaultOpen = false }) => {
+export const RoleCard: React.FC<RoleCardProps> = ({
+  role,
+  defaultOpen = false,
+  open,
+  onToggle,
+}) => {
   const isCurrent = role.yearEnd === 'present';
 
   const header = (
@@ -41,7 +48,7 @@ export const RoleCard: React.FC<RoleCardProps> = ({ role, defaultOpen = false })
   }
 
   return (
-    <CollapsibleRow header={header} defaultOpen={defaultOpen}>
+    <CollapsibleRow header={header} defaultOpen={defaultOpen} open={open} onToggle={onToggle}>
       <ul className="ml-4 list-disc space-y-2 pl-2 text-sm leading-relaxed text-text/85">
         {role.bullets.map((b, i) => (
           <li key={i}>{b}</li>

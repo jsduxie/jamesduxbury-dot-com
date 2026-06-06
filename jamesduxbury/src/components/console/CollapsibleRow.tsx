@@ -6,21 +6,35 @@ import { AnimatePresence, motion } from 'framer-motion';
 interface CollapsibleRowProps {
   header: React.ReactNode;
   defaultOpen?: boolean;
+  open?: boolean;
+  onToggle?: () => void;
   children: React.ReactNode;
 }
 
 export const CollapsibleRow: React.FC<CollapsibleRowProps> = ({
   header,
   defaultOpen = false,
+  open: controlledOpen,
+  onToggle,
   children,
 }) => {
-  const [open, setOpen] = useState(defaultOpen);
+  const [internalOpen, setInternalOpen] = useState(defaultOpen);
+  const isControlled = controlledOpen !== undefined;
+  const open = isControlled ? controlledOpen : internalOpen;
+
+  const toggle = () => {
+    if (isControlled) {
+      onToggle?.();
+    } else {
+      setInternalOpen((v) => !v);
+    }
+  };
 
   return (
     <div className="border-b border-border last:border-b-0">
       <button
         type="button"
-        onClick={() => setOpen((v) => !v)}
+        onClick={toggle}
         aria-expanded={open}
         className="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-bg/40 sm:px-6"
       >
