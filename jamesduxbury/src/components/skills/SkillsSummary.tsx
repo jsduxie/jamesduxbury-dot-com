@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Widget } from '@/components/console/Widget';
 import { getSkillGroups } from '@/db/queries';
+import { SkillIconBadge } from './SkillIconBadge';
 
 export async function SkillsSummary() {
   const skillGroups = await getSkillGroups();
@@ -17,9 +18,15 @@ export async function SkillsSummary() {
                 {group.skills.length} item{group.skills.length === 1 ? '' : 's'}
               </span>
             </div>
-            <p className="mt-1 font-mono text-xs text-muted">
-              {group.skills.slice(0, 4).join(' · ')}
-              {group.skills.length > 4 ? ` · +${group.skills.length - 4}` : ''}
+            <p className="mt-1 flex flex-wrap items-center gap-x-1.5 gap-y-1 font-mono text-xs text-muted">
+              {group.skills.slice(0, 4).map((skill, index) => (
+                <span key={skill} className="inline-flex items-center gap-1">
+                  {index > 0 ? <span aria-hidden="true">·</span> : null}
+                  <SkillIconBadge name={skill} />
+                  {skill}
+                </span>
+              ))}
+              {group.skills.length > 4 ? <span>· +{group.skills.length - 4}</span> : null}
             </p>
           </div>
         ))}

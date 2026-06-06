@@ -1,5 +1,6 @@
 import { Widget } from '@/components/console/Widget';
 import { getSkillGroups } from '@/db/queries';
+import { SkillIconBadge } from './SkillIconBadge';
 
 export async function SkillsDetail() {
   const skillGroups = await getSkillGroups();
@@ -16,7 +17,8 @@ export async function SkillsDetail() {
             </div>
             <div className="mt-3 flex flex-wrap gap-2">
               {group.skills.map((skill) => (
-                <span key={skill} className="skill-badge">
+                <span key={skill} className="skill-badge inline-flex items-center gap-1.5">
+                  <SkillIconBadge name={skill} />
                   {skill}
                 </span>
               ))}
