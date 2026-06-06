@@ -16,7 +16,9 @@ export async function EducationSummary() {
         href="/education"
         className="group flex items-center justify-between border-t border-border bg-bg/40 px-4 py-3 font-mono text-sm uppercase tracking-[0.18em] text-accent transition-colors hover:bg-accent/10 sm:px-6"
       >
-        <span>+ {certifications.length} certifications</span>
+        <span>
+          {certifications.length > 0 ? `+ ${certifications.length} certifications` : 'view all'}
+        </span>
         <span className="transition-transform group-hover:translate-x-1">open /education →</span>
       </Link>
     </Widget>
