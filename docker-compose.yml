@@ -27,8 +27,8 @@ services:
     build:
       context: jamesduxbury
       target: build
-      args:
-        DATABASE_URL: ${DATABASE_URL}
+      secrets:
+        - database_url
     command: sh -c "npx tsx src/db/migrate.ts && npx tsx scripts/seed.ts"
     environment:
       DATABASE_URL: postgres://postgres:postgres@postgres:5432/portfolio
@@ -40,10 +40,15 @@ services:
   web:
     build:
       context: jamesduxbury
-      args:
-        DATABASE_URL: ${DATABASE_URL}
+      secrets:
+        - database_url
     ports:
       - '3000:3000'
+    healthcheck:
+      test: ['CMD', 'wget', '-qO-', 'http://127.0.0.1:3000']
+      interval: 5s
+      timeout: 3s
+      retries: 12
     environment:
       DATABASE_URL: postgres://postgres:postgres@postgres:5432/portfolio
       NEON_HTTP_PROXY: http://neon-proxy:4444/sql
@@ -67,3 +72,7 @@ services:
 
 volumes:
   pgdata:
+
+secrets:
+  database_url:
+    environment: DATABASE_URL

@@ -5,16 +5,14 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 
-# next build prerenders DB-backed pages, so it needs a reachable database
+# prerenders against the secret-mounted DB (Neon dev); migrations run in the compose migrate service
 FROM node:22-alpine AS build
 WORKDIR /app
-ARG DATABASE_URL
-ENV DATABASE_URL=$DATABASE_URL
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV GITHUB_ID=docker-build GITHUB_SECRET=docker-build AUTH_SECRET=docker-build-secret
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN npx next build
+RUN --mount=type=secret,id=database_url,env=DATABASE_URL npx next build
 
 FROM node:22-alpine AS runner
 WORKDIR /app
