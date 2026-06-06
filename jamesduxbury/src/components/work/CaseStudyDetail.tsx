@@ -1,10 +1,10 @@
 import Image from 'next/image';
-import Link from 'next/link';
 import type { CaseStudy } from '@/data/case-studies';
-import type { Project } from '@/data/projects';
+import { formatYearRange, type Project } from '@/data/projects';
 import { StatusChip } from '@/components/console/StatusChip';
 import { renderRun } from '@/components/about/renderRun';
 import { MetricBar } from './MetricBar';
+import { ProjectLinks } from './ProjectLinks';
 
 interface CaseStudyDetailProps {
   project: Project;
@@ -25,10 +25,7 @@ function ProseSection({ label, paragraphs }: { label: string; paragraphs: CaseSt
 }
 
 export function CaseStudyDetail({ project, study }: CaseStudyDetailProps) {
-  const yearLabel =
-    project.yearEnd === project.yearStart
-      ? `${project.yearStart}`
-      : `${project.yearStart} — ${project.yearEnd}`;
+  const yearLabel = formatYearRange(project);
 
   return (
     <article>
@@ -47,30 +44,7 @@ export function CaseStudyDetail({ project, study }: CaseStudyDetailProps) {
           {project.subtitle}
         </p>
         <p className="mt-3 font-mono text-xs text-muted">{project.techStack.join('  ·  ')}</p>
-        {(project.githubLink || project.liveLink) && (
-          <div className="mt-4 flex flex-wrap items-center gap-4 font-mono text-xs">
-            {project.githubLink && (
-              <Link
-                href={project.githubLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-accent transition-colors hover:text-danger"
-              >
-                view repo ↗
-              </Link>
-            )}
-            {project.liveLink && (
-              <Link
-                href={project.liveLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-accent transition-colors hover:text-danger"
-              >
-                open live ↗
-              </Link>
-            )}
-          </div>
-        )}
+        <ProjectLinks githubLink={project.githubLink} liveLink={project.liveLink} />
       </header>
 
       {study ? (

@@ -1,4 +1,5 @@
 import { ImageResponse } from 'next/og';
+import { formatYearRange } from '@/data/projects';
 import { getProjectBySlug } from '@/db/queries';
 import { SITE_HOST } from '@/lib/site';
 
@@ -16,15 +17,12 @@ const colours = {
   live: '#22C55E',
 };
 
-export default async function OpenGraphImage({ params }: { params: { slug: string } }) {
-  const project = await getProjectBySlug(params.slug);
+export default async function OpenGraphImage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const project = await getProjectBySlug(slug);
   const title = project?.title ?? 'Case study';
   const subtitle = project?.subtitle ?? '';
-  const yearLabel = project
-    ? project.yearEnd === project.yearStart
-      ? `${project.yearStart}`
-      : `${project.yearStart} — ${project.yearEnd}`
-    : '';
+  const yearLabel = project ? formatYearRange(project) : '';
   const status = (project?.status ?? 'live').toUpperCase();
 
   return new ImageResponse(
