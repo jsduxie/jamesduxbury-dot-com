@@ -9,6 +9,7 @@ The site started as a static portfolio and is now a full-stack application. All 
 - Next.js 15 (App Router) with TypeScript and Tailwind CSS
 - Neon Postgres accessed with raw SQL, no ORM
 - Admin console behind GitHub OAuth, restricted to my account only
+- Site images stored in Vercel Blob, uploaded and replaced from the admin console
 - Public pages are statically cached (ISR) and revalidate instantly when I save an edit
 - First-party, privacy-light visit analytics with an admin dashboard
 - Deployed on Vercel; database migrations run on every build
@@ -46,6 +47,7 @@ flowchart TB
 
     github[GitHub OAuth]
     email[Email]
+    blob[(Vercel Blob)]
 
     pages --> isr
     isr -- raw SQL reads --> content
@@ -57,6 +59,8 @@ flowchart TB
     admin --> actions
     actions -- raw SQL writes --> content
     actions -- revalidatePath --> isr
+    actions -- image upload, delete --> blob
+    pages -- images --> blob
 
     push --> ci
     ci -- tests, Neon dev branch --> neon
@@ -71,7 +75,7 @@ flowchart TB
     classDef ops fill:#ffe4e6,stroke:#f43f5e,color:#881337
     class pages,beacon,form client
     class isr,visit,contact,admin,actions,auth app
-    class content,views,messages db
+    class content,views,messages,blob db
     class github,email ext
     class push,ci,deploy ops
     style browser fill:none,stroke:#3b82f6
@@ -91,6 +95,10 @@ Sign-in is GitHub OAuth through next-auth v5 with JWT sessions and no database a
 ### Admin console
 
 Each content section is defined once in a registry (`src/admin/sections.ts`) as field config plus a Zod schema. The list, create, edit and delete pages, the form rendering, and the SQL are all generic, so adding a section is configuration rather than new code. The console also has a messages inbox and the analytics dashboard.
+
+### Images
+
+Site images (the profile picture, certification badges, project images) live in Vercel Blob and are served from its CDN. The admin form kit has an upload field type: saving uploads the file, writes its URL to the row, and deletes the blob it replaced; deleting a row deletes its blobs, so the store never accumulates unused files. Each environment uploads its own copies, which keeps a replacement in one environment from breaking the other.
 
 ### Analytics
 
@@ -126,7 +134,7 @@ The admin console:
 
 ### No ORM
 
-The schema is eight tables and the queries are straightforward. The Neon driver parameterises every tagged-template value, so the usual injection argument for an ORM does not apply, and the whole data layer stays readable in two files. Working directly with SQL was also part of the point of the project.
+The schema is nine tables and the queries are straightforward. The Neon driver parameterises every tagged-template value, so the usual injection argument for an ORM does not apply, and the whole data layer stays readable in two files. Working directly with SQL was also part of the point of the project.
 
 ### A single-user allowlist instead of roles
 
@@ -144,6 +152,10 @@ Visitors get statically cached pages; the database is not touched per request. S
 
 I want rough visit numbers, not a tracking product. Collecting a per-tab session id and no cookies, IPs or fingerprints keeps the data in my own database and keeps the site free of consent banners.
 
+### Images in Vercel Blob
+
+The images are a few megabytes in total, so almost anything would work. I evaluated Cloudflare R2 and Postgres bytea behind a cached route handler; Blob won because it needs no extra account or dependency and serves straight from the CDN with no route handler in the path. Old blobs are deleted when an image is replaced, so quota stays flat.
+
 ### No chart library
 
 The dashboard chart is a server-rendered bar chart built from divs. It is one dependency fewer and renders without client-side JavaScript.
@@ -153,6 +165,7 @@ The dashboard chart is a server-rendered bar chart built from divs. It is one de
 | Table | Contents |
 |---|---|
 | `projects`, `experience`, `education`, `certifications`, `skill_groups`, `about_paragraphs` | Site content, one table per section, ordered by an integer `sort_order` |
+| `site_settings` | Single row of site-wide settings (currently the profile picture) |
 | `messages` | Contact form submissions |
 | `page_views` | Analytics events |
 
@@ -181,6 +194,7 @@ DATABASE_URL=postgres://...        # Neon dev branch
 GITHUB_ID=...                      # localhost OAuth app
 GITHUB_SECRET=...
 AUTH_SECRET=...                    # npx auth secret, or openssl rand -base64 32
+BLOB_READ_WRITE_TOKEN=...          # Vercel Blob store with public access
 ```
 
 Then set up the database and run:
@@ -204,6 +218,7 @@ npm run dev
 | `npm run db:migrate` | Apply pending migrations |
 | `npm run db:push` | Apply `schema.sql` to a fresh database |
 | `npm run db:seed` | Insert-if-missing seed from `src/data/*.ts` |
+| `npm run images:migrate` | One-off upload of static `/images` rows to Vercel Blob |
 
 ## Testing
 
