@@ -52,6 +52,16 @@ describe('detail components render seeded DB content', () => {
     }
   });
 
+  it('SkillsDetail renders an icon for a known skill', async () => {
+    const { container } = render(await SkillsDetail());
+    const badge = screen
+      .getAllByText('TypeScript')
+      .map((el) => el.closest('.skill-badge'))
+      .find((el): el is HTMLElement => el !== null);
+    expect(badge?.querySelector('svg')).not.toBeNull();
+    expect(container.querySelector('svg')).not.toBeNull();
+  });
+
   it('AboutDetail renders styled runs from jsonb', async () => {
     render(await AboutDetail());
     const strong = screen.getByText('Artificial Intelligence and application security');
