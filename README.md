@@ -205,6 +205,17 @@ npm run db:seed   # load first-boot content
 npm run dev
 ```
 
+### Docker
+
+The stack also runs locally in containers: the app, Postgres 16, Adminer on port 8080, and a proxy that translates the Neon driver's HTTP protocol to the local Postgres. A one-shot service migrates and seeds the database before the app starts.
+
+```bash
+docker compose --env-file jamesduxbury/.env.local build   # image build prerenders against your Neon dev branch
+docker compose up
+```
+
+The build needs `DATABASE_URL` because `next build` prerenders the DB-backed pages; at runtime the containers use the compose Postgres instead. OAuth sign-in works only if you pass the localhost GitHub app credentials through the environment.
+
 ### Scripts
 
 | Script | What it does |
