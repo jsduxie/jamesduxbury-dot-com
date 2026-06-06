@@ -26,7 +26,15 @@ jobs:
           cache: 'npm'
           cache-dependency-path: jamesduxbury/package-lock.json
 
+      - name: Cache node_modules
+        id: modules-cache
+        uses: actions/cache@v4
+        with:
+          path: jamesduxbury/node_modules
+          key: ${{ runner.os }}-node20-modules-${{ hashFiles('jamesduxbury/package-lock.json') }}
+
       - name: Install dependencies
+        if: steps.modules-cache.outputs.cache-hit != 'true'
         run: npm ci
 
       - name: Format check
@@ -70,7 +78,15 @@ jobs:
           cache: 'npm'
           cache-dependency-path: jamesduxbury/package-lock.json
 
+      - name: Cache node_modules
+        id: modules-cache
+        uses: actions/cache@v4
+        with:
+          path: jamesduxbury/node_modules
+          key: ${{ runner.os }}-node20-modules-${{ hashFiles('jamesduxbury/package-lock.json') }}
+
       - name: Install dependencies
+        if: steps.modules-cache.outputs.cache-hit != 'true'
         run: npm ci
 
       - name: Migrate and seed production
