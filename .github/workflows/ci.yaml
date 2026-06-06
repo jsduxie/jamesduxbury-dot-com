@@ -12,6 +12,10 @@ defaults:
 
 jobs:
   check:
+    # serialise runs so concurrent suites never share the neon dev branch
+    concurrency:
+      group: neon-dev-db
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
