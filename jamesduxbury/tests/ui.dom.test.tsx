@@ -11,6 +11,7 @@ import { StatusBar } from '../src/components/console/StatusBar';
 import { MetricBar } from '../src/components/work/MetricBar';
 import { ProjectRow } from '../src/components/work/ProjectRow';
 import { DegreeCard } from '../src/components/education/DegreeCard';
+import { DegreeList } from '../src/components/education/DegreeList';
 import { ContactForm } from '../src/components/contact/ContactForm';
 import { ContactChannels } from '../src/components/contact/ContactChannels';
 import { WorkSummary } from '../src/components/work/WorkSummary';
@@ -196,5 +197,38 @@ describe('presentational edge cases', () => {
     const toggle = screen.getByRole('button');
     fireEvent.click(toggle);
     expect(screen.getAllByText(degrees[0].bullets![0]).length).toBeGreaterThan(0);
+  });
+});
+
+describe('single-open accordion', () => {
+  it('opens the first item by default and keeps at most one open', async () => {
+    render(<DegreeList degrees={degrees} />);
+    const toggles = screen.getAllByRole('button');
+
+    expect(toggles[0]).toHaveAttribute('aria-expanded', 'true');
+    expect(toggles[1]).toHaveAttribute('aria-expanded', 'false');
+
+    fireEvent.click(toggles[1]);
+
+    await waitFor(() => {
+      expect(toggles[1]).toHaveAttribute('aria-expanded', 'true');
+      expect(toggles[0]).toHaveAttribute('aria-expanded', 'false');
+    });
+    expect(
+      screen.getAllByRole('button').filter((b) => b.getAttribute('aria-expanded') === 'true'),
+    ).toHaveLength(1);
+  });
+
+  it('toggles an open item closed so none remain open', async () => {
+    render(<DegreeList degrees={degrees} />);
+    const toggles = screen.getAllByRole('button');
+
+    fireEvent.click(toggles[0]);
+
+    await waitFor(() =>
+      expect(
+        screen.getAllByRole('button').filter((b) => b.getAttribute('aria-expanded') === 'true'),
+      ).toHaveLength(0),
+    );
   });
 });
