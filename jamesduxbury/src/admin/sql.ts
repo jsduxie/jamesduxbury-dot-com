@@ -38,10 +38,12 @@ export async function updateRow(
 ): Promise<void> {
   const cols = Object.keys(values);
   const sets = cols.map((c, i) => `${c} = $${i + 1}`);
-  await getSql().query(
-    `UPDATE ${table} SET ${sets.join(', ')}, updated_at = now() WHERE id = $${cols.length + 1}`,
+  const rows = (await getSql().query(
+    `UPDATE ${table} SET ${sets.join(', ')}, updated_at = now() WHERE id = $${cols.length + 1} RETURNING id`,
     [...cols.map((c) => values[c]), id],
-  );
+  )) as unknown[];
+  // surfaces a concurrent delete instead of silently updating nothing
+  if (rows.length === 0) throw new Error('Row no longer exists');
 }
 
 export async function deleteRow(table: string, id: number): Promise<void> {
