@@ -30,6 +30,7 @@ vi.mock('../src/admin/images', async (importOriginal) => {
 });
 
 import { deleteItem, markMessageRead, saveItem } from '../src/admin/actions';
+import { siteSettings } from '../src/data/site';
 import { countRows, getRow, listRows, makeRoomAt } from '../src/admin/sql';
 import { SITE_ROUTES } from '../src/lib/site';
 
@@ -85,6 +86,7 @@ beforeEach(() => {
 afterAll(async () => {
   await sql`DELETE FROM projects WHERE slug LIKE 'test-admin-%'`;
   await sql`DELETE FROM certifications WHERE name LIKE 'test-admin-%'`;
+  await sql`UPDATE site_settings SET profile_image = ${siteSettings.profileImage} WHERE id = 1`;
   await sql`DELETE FROM about_paragraphs WHERE sort_order >= 9000`;
   await sql`DELETE FROM messages WHERE email = ${emailMarker}`;
 });
@@ -186,6 +188,29 @@ describe('image fields', () => {
     const rows = await sql`SELECT 1 FROM certifications WHERE id = ${id}`;
     expect(rows).toHaveLength(0);
     expect(deleteImageMock).toHaveBeenCalledWith(urlTwo);
+  });
+});
+
+describe('site settings singleton', () => {
+  it('updates the profile image in place', async () => {
+    const url = 'https://abc.public.blob.vercel-storage.com/profile.png';
+    uploadMock.mockResolvedValue(url);
+    const fd = new FormData();
+    fd.append('profile_image', new File([new Uint8Array(8)], 'profile.png', { type: 'image/png' }));
+    await expect(saveItem('site', 1, EMPTY, fd)).rejects.toThrow('REDIRECT:/admin/site');
+    const [row] = await sql`SELECT profile_image FROM site_settings WHERE id = 1`;
+    expect(row.profile_image).toBe(url);
+    expect(deleteImageMock).toHaveBeenCalledWith(siteSettings.profileImage);
+  });
+
+  it('rejects a second settings row', async () => {
+    const fd = new FormData();
+    fd.append('profile_image', new File([new Uint8Array(8)], 'extra.png', { type: 'image/png' }));
+    uploadMock.mockResolvedValue('https://abc.public.blob.vercel-storage.com/extra.png');
+    const state = await saveItem('site', null, EMPTY, fd);
+    expect(state.message).toBeTruthy();
+    const rows = await sql`SELECT id FROM site_settings`;
+    expect(rows).toHaveLength(1);
   });
 });
 

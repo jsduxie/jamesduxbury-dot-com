@@ -5,6 +5,7 @@ import { degrees } from '@/data/education';
 import { certifications } from '@/data/certifications';
 import { skillGroups } from '@/data/skills';
 import { aboutParagraphs } from '@/data/about';
+import { siteSettings } from '@/data/site';
 
 // Insert-if-missing only: reseeding must never overwrite admin edits
 export async function seed(sql: NeonQueryFunction<false, false>): Promise<Record<string, string>> {
@@ -63,7 +64,7 @@ export async function seed(sql: NeonQueryFunction<false, false>): Promise<Record
 
   await sql`
     INSERT INTO site_settings (profile_image)
-    VALUES ('/images/profile-picture.png')
+    VALUES (${siteSettings.profileImage})
     ON CONFLICT (id) DO NOTHING
   `;
 

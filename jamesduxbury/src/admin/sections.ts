@@ -206,6 +206,16 @@ export const SECTIONS: SectionConfig[] = [
       return text.length > 80 ? `${text.slice(0, 80)}…` : text;
     },
   },
+  {
+    slug: 'site',
+    table: 'site_settings',
+    title: 'Site',
+    fields: [imageField('profile_image')],
+    schema: z.object({
+      profile_image: z.string().min(1).nullable(),
+    }),
+    listLabel: () => 'Site settings',
+  },
 ];
 
 export function getSection(slug: string): SectionConfig {

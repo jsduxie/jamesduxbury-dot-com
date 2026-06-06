@@ -89,7 +89,8 @@ export const projects: Project[] = [
       "Applied Canny edge detection to identify damaged regions and Criminisi's inpainting algorithm for realistic restoration.",
       'Coursework awarded a first-class grade.',
     ],
-    imagePath: '/images/projects/xray-image-repair.png',
+    imagePath:
+      'https://aaobkpkc4uh9kgtn.public.blob.vercel-storage.com/xray-image-repair-chKwesUpc9d6Xw6PJdjZHoW9cU99cr.png',
     githubLink: 'https://github.com/jsduxie/opencv-xray-repair',
   },
   {

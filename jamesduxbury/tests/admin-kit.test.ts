@@ -143,7 +143,7 @@ describe('fieldDefault', () => {
 });
 
 describe('section registry', () => {
-  it('exposes the six content sections', () => {
+  it('exposes the seven content sections', () => {
     expect(SECTIONS.map((s) => s.slug)).toEqual([
       'projects',
       'experience',
@@ -151,6 +151,7 @@ describe('section registry', () => {
       'certifications',
       'skills',
       'about',
+      'site',
     ]);
   });
 
@@ -191,6 +192,7 @@ describe('section registry', () => {
     certifications: { name: 'Cert', year: '2024', sort_order: '1' },
     skills: { heading: 'Languages', skills: 'Python, TypeScript', sort_order: '1' },
     about: { runs: 'plain **bold**', sort_order: '1' },
+    site: {},
   };
 
   it.each(SECTIONS.map((s) => [s.slug] as const))(
@@ -202,11 +204,15 @@ describe('section registry', () => {
     },
   );
 
-  it.each(SECTIONS.map((s) => [s.slug] as const))('%s: an empty form fails validation', (slug) => {
-    const section = getSection(slug);
-    const parsed = section.schema.safeParse(parseFields(section.fields, form({})));
-    expect(parsed.success).toBe(false);
-  });
+  // site has no required text inputs: its only field is the upload the action fills
+  it.each(SECTIONS.filter((s) => s.slug !== 'site').map((s) => [s.slug] as const))(
+    '%s: an empty form fails validation',
+    (slug) => {
+      const section = getSection(slug);
+      const parsed = section.schema.safeParse(parseFields(section.fields, form({})));
+      expect(parsed.success).toBe(false);
+    },
+  );
 
   it('labels rows for every section list page', () => {
     expect(getSection('projects').listLabel({ title: 'FG-HAN' })).toBe('FG-HAN');
@@ -216,6 +222,7 @@ describe('section registry', () => {
     expect(getSection('education').listLabel({ qualification: 'MEng' })).toBe('MEng');
     expect(getSection('certifications').listLabel({ name: 'ITIL 4' })).toBe('ITIL 4');
     expect(getSection('skills').listLabel({ heading: 'Languages' })).toBe('Languages');
+    expect(getSection('site').listLabel({})).toBe('Site settings');
     expect(getSection('about').listLabel({ runs: ['plain ', { strong: 'bold' }] })).toBe(
       'plain bold',
     );

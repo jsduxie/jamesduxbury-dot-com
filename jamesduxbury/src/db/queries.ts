@@ -5,6 +5,7 @@ import type { Degree } from '@/data/education';
 import type { Certification } from '@/data/certifications';
 import type { SkillGroup } from '@/data/skills';
 import type { AboutParagraph } from '@/data/about';
+import { siteSettings, type SiteSettings } from '@/data/site';
 
 interface ProjectRow {
   slug: string;
@@ -106,15 +107,11 @@ export async function getSkillGroups(): Promise<SkillGroup[]> {
   return rows.map((r) => ({ heading: r.heading, skills: r.skills }));
 }
 
-export interface SiteSettings {
-  profileImage: string;
-}
-
 export async function getSiteSettings(): Promise<SiteSettings> {
   const rows = (await getSql()`SELECT profile_image FROM site_settings WHERE id = 1`) as {
     profile_image: string;
   }[];
-  return { profileImage: rows[0]?.profile_image ?? '/images/profile-picture.png' };
+  return { profileImage: rows[0]?.profile_image ?? siteSettings.profileImage };
 }
 
 export async function getAboutParagraphs(): Promise<AboutParagraph[]> {
