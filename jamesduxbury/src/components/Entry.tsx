@@ -13,7 +13,6 @@ export const Entry: React.FC = () => {
         <SectionHeader channel="00" label="ENTRY" />
 
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-[auto_1fr] sm:items-start sm:gap-12">
-          {/* profile portrait */}
           <div className="relative h-36 w-36 overflow-hidden border border-border sm:h-40 sm:w-40 lg:h-44 lg:w-44">
             <Image
               src="/images/profile-picture.png"
