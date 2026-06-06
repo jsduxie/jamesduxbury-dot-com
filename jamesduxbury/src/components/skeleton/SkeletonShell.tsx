@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { SectionHeader } from '@/components/console/SectionHeader';
+import { WidgetFrame } from '@/components/console/WidgetFrame';
 import { Footer } from '@/components/Footer';
 
 interface SkeletonShellProps {
@@ -31,8 +31,9 @@ export function SkeletonShell({
           ← / home
         </Link>
         <section>
-          <SectionHeader channel={channel} label={label} />
-          <div className="border border-border bg-surface/40 backdrop-blur-sm">{children}</div>
+          <WidgetFrame channel={channel} label={label}>
+            {children}
+          </WidgetFrame>
         </section>
       </main>
       <Footer />

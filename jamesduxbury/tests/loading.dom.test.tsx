@@ -52,10 +52,11 @@ describe('route-specific skeleton shapes', () => {
 
   it('experience and education render collapsible-row placeholders', () => {
     const exp = render(<ExperienceLoading />);
-    expect(exp.container.querySelectorAll('section > div > div').length).toBeGreaterThanOrEqual(4);
+    expect(exp.getAllByText('▸')).toHaveLength(4);
     exp.unmount();
 
     const edu = render(<EducationLoading />);
+    expect(edu.getAllByText('▸')).toHaveLength(2);
     expect(edu.container.querySelector('.grid.grid-cols-1')).not.toBeNull();
   });
 

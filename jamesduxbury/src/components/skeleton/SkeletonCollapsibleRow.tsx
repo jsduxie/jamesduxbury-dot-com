@@ -1,4 +1,4 @@
-import { SkeletonBits } from './Skeleton';
+import { SkeletonBits, SkeletonLine } from './Skeleton';
 
 export function SkeletonCollapsibleRow() {
   return (
@@ -12,9 +12,7 @@ export function SkeletonCollapsibleRow() {
             <SkeletonBits length={22} className="text-sm sm:text-base" />
             <SkeletonBits length={14} className="text-[0.65rem]" />
           </div>
-          <p className="overflow-hidden whitespace-nowrap">
-            <SkeletonBits length={18} className="text-xs" />
-          </p>
+          <SkeletonLine length={18} textClassName="text-xs" />
         </div>
       </div>
     </div>
