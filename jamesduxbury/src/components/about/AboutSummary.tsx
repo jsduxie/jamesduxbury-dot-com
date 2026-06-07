@@ -1,19 +1,17 @@
 import Link from 'next/link';
 import { Widget } from '@/components/console/Widget';
-import { getAboutParagraphs } from '@/db/queries';
-import { renderRun } from './renderRun';
+import { getAbout } from '@/db/queries';
+import { renderBlocks } from './BlockView';
 
 const SUMMARY_COUNT = 2;
 
 export async function AboutSummary() {
-  const aboutParagraphs = await getAboutParagraphs();
-  const remaining = Math.max(aboutParagraphs.length - SUMMARY_COUNT, 0);
+  const blocks = await getAbout();
+  const remaining = Math.max(blocks.length - SUMMARY_COUNT, 0);
   return (
     <Widget channel="01" label="ABOUT" id="about">
       <div className="space-y-4 px-4 py-5 text-sm leading-relaxed text-text/85 sm:px-6">
-        {aboutParagraphs.slice(0, SUMMARY_COUNT).map((paragraph, i) => (
-          <p key={i}>{paragraph.map(renderRun)}</p>
-        ))}
+        {renderBlocks(blocks.slice(0, SUMMARY_COUNT), { paragraphClass: '' })}
       </div>
       <Link
         href="/about"

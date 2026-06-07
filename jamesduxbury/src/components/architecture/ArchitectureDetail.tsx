@@ -1,5 +1,6 @@
+import { Fragment } from 'react';
 import { Widget } from '@/components/console/Widget';
-import { renderRun } from '@/components/about/renderRun';
+import { renderBlocks } from '@/components/about/BlockView';
 import { getArchitectureSections } from '@/db/queries';
 import type { ArchitectureSection } from '@/data/architecture';
 import { ArchDiagram } from './ArchDiagram';
@@ -7,13 +8,13 @@ import { ArchDiagram } from './ArchDiagram';
 function Paragraphs({ sections }: { sections: ArchitectureSection[] }) {
   return (
     <>
-      {sections.map((s, i) =>
-        s.body.map((p, j) => (
-          <p key={`${i}-${j}`} className="text-sm leading-relaxed text-text/85 sm:text-base">
-            {p.map(renderRun)}
-          </p>
-        )),
-      )}
+      {sections.map((s, i) => (
+        <Fragment key={i}>
+          {renderBlocks(s.body, {
+            paragraphClass: 'text-sm leading-relaxed text-text/85 sm:text-base',
+          })}
+        </Fragment>
+      ))}
     </>
   );
 }
@@ -27,9 +28,9 @@ export async function ArchitectureDetail() {
       <div className="space-y-4 px-4 py-6 sm:px-6">
         <Paragraphs sections={byKind('intro')} />
         {byKind('stack').map((s, i) => (
-          <p key={i} className="font-mono text-xs text-muted">
-            {s.body.flat().map(renderRun)}
-          </p>
+          <Fragment key={i}>
+            {renderBlocks(s.body, { paragraphClass: 'font-mono text-xs text-muted' })}
+          </Fragment>
         ))}
       </div>
 
@@ -50,11 +51,9 @@ export async function ArchitectureDetail() {
               <h4 className="font-mono text-sm uppercase tracking-[0.15em] text-accent">
                 {d.title}
               </h4>
-              {d.body.map((p, j) => (
-                <p key={j} className="mt-2 text-sm leading-relaxed text-text/85">
-                  {p.map(renderRun)}
-                </p>
-              ))}
+              {renderBlocks(d.body, {
+                paragraphClass: 'mt-2 text-sm leading-relaxed text-text/85',
+              })}
             </div>
           ))}
         </div>

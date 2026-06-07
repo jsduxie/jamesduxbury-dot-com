@@ -68,11 +68,12 @@ CREATE TABLE IF NOT EXISTS skill_groups (
   updated_at timestamptz NOT NULL DEFAULT now()
 );
 
-CREATE TABLE IF NOT EXISTS about_paragraphs (
-  id serial PRIMARY KEY,
-  -- AboutParagraph from src/data/about.ts
-  runs jsonb NOT NULL,
-  sort_order integer NOT NULL UNIQUE,
+-- single about document; sort_order only satisfies the generic admin list ordering
+CREATE TABLE IF NOT EXISTS about (
+  id integer PRIMARY KEY DEFAULT 1 CHECK (id = 1),
+  -- Block[] from src/data/about.ts
+  blocks jsonb NOT NULL,
+  sort_order integer NOT NULL DEFAULT 0,
   created_at timestamptz NOT NULL DEFAULT now(),
   updated_at timestamptz NOT NULL DEFAULT now()
 );

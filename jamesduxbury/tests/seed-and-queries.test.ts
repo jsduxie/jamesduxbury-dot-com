@@ -2,7 +2,7 @@ import { neon } from '@neondatabase/serverless';
 import { describe, expect, it } from 'vitest';
 import { seed } from '../src/db/seed';
 import {
-  getAboutParagraphs,
+  getAbout,
   getArchitectureSections,
   getCaseStudy,
   getCertifications,
@@ -18,7 +18,7 @@ import { roles } from '../src/data/experience';
 import { degrees } from '../src/data/education';
 import { certifications } from '../src/data/certifications';
 import { skillGroups } from '../src/data/skills';
-import { aboutParagraphs } from '../src/data/about';
+import { aboutBlocks } from '../src/data/about';
 import { caseStudies } from '../src/data/case-studies';
 import { siteSettings } from '../src/data/site';
 import { architectureSections } from '../src/data/architecture';
@@ -76,8 +76,8 @@ describe('queries round-trip the seeded src/data shapes exactly', () => {
     for (const g of skillGroups) expect(byHeading.get(g.heading)).toEqual(g);
   });
 
-  it('about paragraphs', async () => {
-    expect(await getAboutParagraphs()).toEqual(aboutParagraphs);
+  it('about document', async () => {
+    expect(await getAbout()).toEqual(aboutBlocks);
   });
 
   it('site settings', async () => {

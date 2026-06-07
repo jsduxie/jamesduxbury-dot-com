@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { ArchitectureDetail } from '../src/components/architecture/ArchitectureDetail';
 import { ArchDiagram } from '../src/components/architecture/ArchDiagram';
 import { architectureSections } from '../src/data/architecture';
-import { runText as plain } from '../src/data/about';
+import { proseText } from '../src/admin/blocks';
 
 const byKind = (kind: string) => architectureSections.filter((s) => s.kind === kind);
 
@@ -13,7 +13,7 @@ describe('ArchitectureDetail renders seeded DB content', () => {
     render(await ArchitectureDetail());
     for (const d of byKind('decision')) {
       expect(screen.getByText(d.title!)).toBeInTheDocument();
-      expect(screen.getByText(plain(d.body[0]))).toBeInTheDocument();
+      expect(screen.getByText(proseText(d.body))).toBeInTheDocument();
     }
   });
 
@@ -21,7 +21,7 @@ describe('ArchitectureDetail renders seeded DB content', () => {
     render(await ArchitectureDetail());
     for (const kind of ['intro', 'stack', 'build']) {
       for (const s of byKind(kind)) {
-        expect(screen.getByText(plain(s.body[0]))).toBeInTheDocument();
+        expect(screen.getByText(proseText(s.body))).toBeInTheDocument();
       }
     }
   });

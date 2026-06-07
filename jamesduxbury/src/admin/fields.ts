@@ -1,6 +1,6 @@
-import type { AboutParagraph } from '@/data/about';
+import type { Block, Features } from '@/data/about';
 import type { ProjectMetric } from '@/data/projects';
-import { parseProse, parseRuns, serialiseProse, serialiseRuns } from './runs';
+import { parseBlocks, serialiseBlocks } from './blocks';
 
 export type FieldType =
   | 'text'
@@ -13,7 +13,6 @@ export type FieldType =
   | 'select'
   | 'checkbox'
   | 'metrics'
-  | 'runs'
   | 'prose'
   | 'image'
   | 'document';
@@ -24,6 +23,8 @@ export interface FieldDef {
   type: FieldType;
   options?: readonly string[];
   help?: string;
+  // restricts the prose editor surface; defaults to the full set when omitted
+  features?: Features;
 }
 
 export function isUploadField(field: FieldDef): boolean {
@@ -87,12 +88,9 @@ export function parseFields(fields: FieldDef[], formData: FormData): Record<stri
         out[f.column] = metrics.length ? metrics : null;
         break;
       }
-      case 'runs':
-        out[f.column] = parseRuns(text);
-        break;
       case 'prose': {
-        const paragraphs = parseProse(text);
-        out[f.column] = paragraphs.length ? paragraphs : null;
+        const blocks = parseBlocks(text, f.features);
+        out[f.column] = blocks.length ? blocks : null;
         break;
       }
       // the file is uploaded in the action, which fills the column
@@ -132,10 +130,8 @@ export function fieldDefault(f: FieldDef, value: unknown): FieldDefault {
             ratio: m.ratio !== undefined ? String(m.ratio) : '',
           }))
         : [];
-    case 'runs':
-      return Array.isArray(value) ? serialiseRuns(value as AboutParagraph) : '';
     case 'prose':
-      return Array.isArray(value) ? serialiseProse(value as AboutParagraph[]) : '';
+      return Array.isArray(value) ? serialiseBlocks(value as Block[]) : '';
     case 'number':
     case 'sort_order':
       return typeof value === 'number' ? String(value) : '';

@@ -31,16 +31,3 @@ export function serialiseRuns(runs: AboutParagraph): string {
     })
     .join('');
 }
-
-// blank lines separate paragraphs
-export function parseProse(text: string): AboutParagraph[] {
-  return text
-    .split(/\n\s*\n/)
-    .map((p) => p.trim())
-    .filter(Boolean)
-    .map((p) => parseRuns(p.replace(/\n/g, ' ')));
-}
-
-export function serialiseProse(paragraphs: AboutParagraph[]): string {
-  return paragraphs.map(serialiseRuns).join('\n\n');
-}

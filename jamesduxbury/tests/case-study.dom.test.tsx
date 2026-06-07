@@ -20,9 +20,12 @@ const project: Project = {
 
 const study: CaseStudy = {
   projectSlug: 'test-project',
-  problem: [['the ', { strong: 'problem' }, ' statement']],
-  approach: [['the approach'], ['with a ', { em: 'second' }, ' paragraph']],
-  outcome: [['the outcome']],
+  problem: [{ kind: 'p', runs: ['the ', { strong: 'problem' }, ' statement'] }],
+  approach: [
+    { kind: 'p', runs: ['the approach'] },
+    { kind: 'p', runs: ['with a ', { em: 'second' }, ' paragraph'] },
+  ],
+  outcome: [{ kind: 'p', runs: ['the outcome'] }],
 };
 
 describe('CaseStudyDetail', () => {

@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 vi.mock('@/db/queries', () => ({
-  getAboutParagraphs: vi.fn(async () => []),
+  getAbout: vi.fn(async () => []),
   getDegrees: vi.fn(async () => []),
   getCertifications: vi.fn(async () => []),
 }));

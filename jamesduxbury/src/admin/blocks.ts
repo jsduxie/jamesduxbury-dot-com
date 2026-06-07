@@ -1,4 +1,4 @@
-import type { AboutRun, Block, Features } from '@/data/about';
+import { runText, type AboutRun, type Block, type Features } from '@/data/about';
 import { parseRuns, serialiseRuns } from './runs';
 
 export const ALL_FEATURES: Features = {
@@ -86,6 +86,17 @@ export function serialiseBlock(block: Block): string {
 
 export function serialiseBlocks(blocks: Block[]): string {
   return blocks.map(serialiseBlock).join('\n\n');
+}
+
+// flattens a block document to plain text for metadata descriptions
+export function proseText(blocks: Block[]): string {
+  return blocks
+    .map((block) => {
+      if (block.kind === 'image') return block.alt;
+      if (block.kind === 'list') return block.items.map(runText).join(' ');
+      return runText(block.runs);
+    })
+    .join(' ');
 }
 
 // drops disallowed kinds (heading downgrades to paragraph, image is removed) and unwraps

@@ -1,5 +1,6 @@
 import { z } from 'zod';
-import { runText, type AboutParagraph } from '@/data/about';
+import type { Block } from '@/data/about';
+import { proseText } from './blocks';
 import type { FieldDef } from './fields';
 
 export interface SectionConfig {
@@ -36,10 +37,22 @@ const runSchema = z.union([
   z.string().min(1),
   z.object({ strong: z.string().min(1) }),
   z.object({ em: z.string().min(1) }),
+  z.object({
+    link: z.object({ text: z.string(), href: z.string().regex(/^(https?:|mailto:)/) }),
+  }),
+]);
+const runsSchema = z.array(runSchema).min(1);
+
+const blockSchema = z.discriminatedUnion('kind', [
+  z.object({ kind: z.literal('p'), runs: runsSchema }),
+  z.object({ kind: z.literal('heading'), runs: runsSchema }),
+  z.object({ kind: z.literal('list'), items: z.array(runsSchema).min(1) }),
+  z.object({ kind: z.literal('image'), url: z.string().min(1), alt: z.string() }),
 ]);
 
-const proseSchema = z.array(z.array(runSchema).min(1)).min(1);
-const proseHelp = 'paragraphs separated by a blank line; **bold** and *italic* markup';
+const proseSchema = z.array(blockSchema).min(1);
+const proseHelp =
+  'blank line between blocks; **bold** *italic* [text](url), ### heading, - list, ![alt](url)';
 
 export const SECTIONS: SectionConfig[] = [
   {
@@ -181,24 +194,14 @@ export const SECTIONS: SectionConfig[] = [
   },
   {
     slug: 'about',
-    table: 'about_paragraphs',
+    table: 'about',
     title: 'About',
-    fields: [
-      {
-        column: 'runs',
-        label: 'Paragraph',
-        type: 'runs',
-        help: 'use **bold** and *italic* markup',
-      },
-      { column: 'sort_order', label: 'Sort order', type: 'sort_order' },
-    ],
+    fields: [{ column: 'blocks', label: 'About', type: 'prose', help: proseHelp }],
     schema: z.object({
-      runs: z.array(runSchema).min(1),
-      sort_order: sortOrder,
+      blocks: proseSchema,
     }),
     listLabel: (row) => {
-      const runs = row.runs;
-      const text = Array.isArray(runs) ? runText(runs as AboutParagraph) : '';
+      const text = Array.isArray(row.blocks) ? proseText(row.blocks as Block[]) : '';
       return text.length > 80 ? `${text.slice(0, 80)}…` : text;
     },
   },

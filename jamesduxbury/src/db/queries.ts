@@ -5,7 +5,7 @@ import type { Role } from '@/data/experience';
 import type { Degree } from '@/data/education';
 import type { Certification } from '@/data/certifications';
 import type { SkillGroup } from '@/data/skills';
-import type { AboutParagraph } from '@/data/about';
+import type { Block } from '@/data/about';
 import { siteSettings, type SiteSettings } from '@/data/site';
 import type { CaseStudy } from '@/data/case-studies';
 import type { ArchitectureSection, ArchitectureSectionKind } from '@/data/architecture';
@@ -117,9 +117,9 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
 
 interface CaseStudyRow {
   project_slug: string;
-  problem: AboutParagraph[];
-  approach: AboutParagraph[];
-  outcome: AboutParagraph[] | null;
+  problem: Block[];
+  approach: Block[];
+  outcome: Block[] | null;
   image_path: string | null;
 }
 
@@ -192,16 +192,14 @@ export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
   };
 });
 
-export async function getAboutParagraphs(): Promise<AboutParagraph[]> {
-  const rows = (await getSql()`SELECT runs FROM about_paragraphs ORDER BY sort_order`) as {
-    runs: AboutParagraph;
-  }[];
-  return rows.map((r) => r.runs);
+export async function getAbout(): Promise<Block[]> {
+  const rows = (await getSql()`SELECT blocks FROM about WHERE id = 1`) as { blocks: Block[] }[];
+  return rows[0]?.blocks ?? [];
 }
 
 export async function getArchitectureSections(): Promise<ArchitectureSection[]> {
   const rows = (await getSql()`
     SELECT kind, title, body FROM architecture_sections ORDER BY sort_order
-  `) as { kind: ArchitectureSectionKind; title: string | null; body: AboutParagraph[] }[];
+  `) as { kind: ArchitectureSectionKind; title: string | null; body: Block[] }[];
   return rows.map((r) => ({ kind: r.kind, title: r.title ?? undefined, body: r.body }));
 }

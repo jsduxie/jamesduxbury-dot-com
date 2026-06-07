@@ -4,7 +4,7 @@ import { roles } from '@/data/experience';
 import { degrees } from '@/data/education';
 import { certifications } from '@/data/certifications';
 import { skillGroups } from '@/data/skills';
-import { aboutParagraphs } from '@/data/about';
+import { aboutBlocks } from '@/data/about';
 import { siteSettings } from '@/data/site';
 import { caseStudies } from '@/data/case-studies';
 import { architectureSections } from '@/data/architecture';
@@ -56,13 +56,11 @@ export async function seed(sql: NeonQueryFunction<false, false>): Promise<Record
     `;
   }
 
-  for (const [i, runs] of aboutParagraphs.entries()) {
-    await sql`
-      INSERT INTO about_paragraphs (runs, sort_order)
-      VALUES (${JSON.stringify(runs)}, ${i})
-      ON CONFLICT (sort_order) DO NOTHING
-    `;
-  }
+  await sql`
+    INSERT INTO about (id, blocks)
+    VALUES (1, ${JSON.stringify(aboutBlocks)})
+    ON CONFLICT (id) DO NOTHING
+  `;
 
   for (const [i, cs] of caseStudies.entries()) {
     await sql`
@@ -94,7 +92,7 @@ export async function seed(sql: NeonQueryFunction<false, false>): Promise<Record
       (SELECT count(*) FROM education) AS education,
       (SELECT count(*) FROM certifications) AS certifications,
       (SELECT count(*) FROM skill_groups) AS skill_groups,
-      (SELECT count(*) FROM about_paragraphs) AS about_paragraphs,
+      (SELECT count(*) FROM about) AS about,
       (SELECT count(*) FROM case_studies) AS case_studies,
       (SELECT count(*) FROM site_settings) AS site_settings,
       (SELECT count(*) FROM architecture_sections) AS architecture_sections

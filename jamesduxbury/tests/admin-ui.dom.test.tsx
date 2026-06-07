@@ -93,7 +93,6 @@ describe('SectionForm', () => {
     { column: 'tags', label: 'Tags', type: 'tags' },
     { column: 'bullets', label: 'Bullets', type: 'bullets' },
     { column: 'metrics', label: 'Metrics', type: 'metrics' },
-    { column: 'runs', label: 'Paragraph', type: 'runs' },
     { column: 'image', label: 'Image', type: 'image' },
     { column: 'body', label: 'Body', type: 'prose' },
   ];
@@ -110,7 +109,6 @@ describe('SectionForm', () => {
     tags: 'a, b',
     bullets: ['first', 'second'],
     metrics: [{ label: 'F1', value: '0.9', ratio: '0.9' }],
-    runs: 'plain **bold**',
   };
   const noopAction = async (): Promise<FormState> => ({ message: null, fieldErrors: {} });
 
@@ -130,7 +128,6 @@ describe('SectionForm', () => {
     expect(screen.getByDisplayValue('first')).toBeInTheDocument();
     expect(screen.getByDisplayValue('second')).toBeInTheDocument();
     expect(screen.getByDisplayValue('F1')).toBeInTheDocument();
-    expect(screen.getByLabelText('Paragraph')).toHaveValue('plain **bold**');
     expect(screen.getByLabelText('Body')).toHaveValue('first **heavy**\n\nsecond');
     const fileInput = screen.getByLabelText('Image');
     expect(fileInput).toHaveAttribute('type', 'file');
