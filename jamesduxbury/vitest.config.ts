@@ -25,8 +25,12 @@ export default defineConfig({
     fileParallelism: false,
     setupFiles: ['./tests/setup.ts'],
     include: ['tests/**/*.test.{ts,tsx}'],
+    // junit feeds Codecov test analytics; written into the gitignored coverage dir
+    reporters: ['default', 'junit'],
+    outputFile: { junit: 'coverage/junit.xml' },
     coverage: {
       provider: 'v8',
+      reporter: ['text', 'lcov'],
       include: ['src/**/*.{ts,tsx}'],
       // Page shells and the OG card are covered by the build-time HTML diff, not unit tests
       exclude: [
