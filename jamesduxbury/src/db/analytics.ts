@@ -137,6 +137,59 @@ export async function getRecentSessions(limit: number): Promise<RecentSession[]>
   }));
 }
 
+export interface PageTransition {
+  from: string;
+  to: string;
+  count: number;
+}
+
+export interface FlowPage {
+  path: string;
+  views: number;
+  entries: number;
+  exits: number;
+  dropOff: number;
+}
+
+export async function getPageTransitions(days: number, limit = 12): Promise<PageTransition[]> {
+  const rows = (await getSql()`
+    WITH ordered AS (
+      SELECT session_id, path,
+        lead(path) OVER (PARTITION BY session_id ORDER BY created_at, id) AS next_path
+      FROM page_views
+      WHERE created_at > now() - make_interval(days => ${days})
+    )
+    SELECT path AS from_path, next_path AS to_path, count(*)::int AS count
+    FROM ordered
+    WHERE next_path IS NOT NULL AND next_path <> path
+    GROUP BY path, next_path
+    ORDER BY count DESC, from_path, to_path
+    LIMIT ${limit}
+  `) as { from_path: string; to_path: string; count: number }[];
+  return rows.map((r) => ({ from: r.from_path, to: r.to_path, count: r.count }));
+}
+
+export async function getFlowPages(days: number, limit = 10): Promise<FlowPage[]> {
+  const rows = (await getSql()`
+    WITH ordered AS (
+      SELECT path,
+        lag(path) OVER (PARTITION BY session_id ORDER BY created_at, id) AS prev_path,
+        lead(path) OVER (PARTITION BY session_id ORDER BY created_at, id) AS next_path
+      FROM page_views
+      WHERE created_at > now() - make_interval(days => ${days})
+    )
+    SELECT path,
+      count(*)::int AS views,
+      count(*) FILTER (WHERE prev_path IS NULL)::int AS entries,
+      count(*) FILTER (WHERE next_path IS NULL)::int AS exits
+    FROM ordered
+    GROUP BY path
+    ORDER BY views DESC, path
+    LIMIT ${limit}
+  `) as { path: string; views: number; entries: number; exits: number }[];
+  return rows.map((r) => ({ ...r, dropOff: r.views > 0 ? r.exits / r.views : 0 }));
+}
+
 export interface MessageCounts {
   total: number;
   unread: number;
