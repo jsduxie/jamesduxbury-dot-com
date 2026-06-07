@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { seed } from '../src/db/seed';
 import {
   getAboutParagraphs,
+  getArchitectureSections,
   getCaseStudy,
   getCertifications,
   getDegrees,
@@ -20,6 +21,7 @@ import { skillGroups } from '../src/data/skills';
 import { aboutParagraphs } from '../src/data/about';
 import { caseStudies } from '../src/data/case-studies';
 import { siteSettings } from '../src/data/site';
+import { architectureSections } from '../src/data/architecture';
 
 const sql = neon(process.env.DATABASE_URL!);
 
@@ -31,6 +33,9 @@ describe('seed', () => {
     expect(second).toEqual(first);
     expect(Number(first.projects)).toBeGreaterThanOrEqual(projects.length);
     expect(Number(first.case_studies)).toBeGreaterThanOrEqual(caseStudies.length);
+    expect(Number(first.architecture_sections)).toBeGreaterThanOrEqual(
+      architectureSections.length,
+    );
     expect(first.site_settings).toBe('1');
   });
 
@@ -84,6 +89,12 @@ describe('queries round-trip the seeded src/data shapes exactly', () => {
       expect(await getCaseStudy(cs.projectSlug)).toEqual(cs);
     }
     expect(await getCaseStudy('no-such-slug')).toBeNull();
+  });
+
+  // subset, not equality: rows may be edited or added in the shared dev DB
+  it('architecture sections', async () => {
+    const rows = await getArchitectureSections();
+    for (const s of architectureSections) expect(rows).toContainEqual(s);
   });
 
   it('project lookup by slug', async () => {

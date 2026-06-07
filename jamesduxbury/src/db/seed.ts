@@ -7,6 +7,7 @@ import { skillGroups } from '@/data/skills';
 import { aboutParagraphs } from '@/data/about';
 import { siteSettings } from '@/data/site';
 import { caseStudies } from '@/data/case-studies';
+import { architectureSections } from '@/data/architecture';
 
 // Insert-if-missing only: reseeding must never overwrite admin edits
 export async function seed(sql: NeonQueryFunction<false, false>): Promise<Record<string, string>> {
@@ -78,6 +79,14 @@ export async function seed(sql: NeonQueryFunction<false, false>): Promise<Record
     ON CONFLICT (id) DO NOTHING
   `;
 
+  for (const [i, s] of architectureSections.entries()) {
+    await sql`
+      INSERT INTO architecture_sections (kind, title, body, sort_order)
+      VALUES (${s.kind}, ${s.title ?? null}, ${JSON.stringify(s.body)}, ${i})
+      ON CONFLICT (sort_order) DO NOTHING
+    `;
+  }
+
   const counts = (await sql`
     SELECT
       (SELECT count(*) FROM projects) AS projects,
@@ -87,7 +96,8 @@ export async function seed(sql: NeonQueryFunction<false, false>): Promise<Record
       (SELECT count(*) FROM skill_groups) AS skill_groups,
       (SELECT count(*) FROM about_paragraphs) AS about_paragraphs,
       (SELECT count(*) FROM case_studies) AS case_studies,
-      (SELECT count(*) FROM site_settings) AS site_settings
+      (SELECT count(*) FROM site_settings) AS site_settings,
+      (SELECT count(*) FROM architecture_sections) AS architecture_sections
   `) as Record<string, string>[];
   return counts[0];
 }

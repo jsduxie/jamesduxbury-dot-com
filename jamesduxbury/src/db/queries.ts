@@ -7,6 +7,7 @@ import type { SkillGroup } from '@/data/skills';
 import type { AboutParagraph } from '@/data/about';
 import { siteSettings, type SiteSettings } from '@/data/site';
 import type { CaseStudy } from '@/data/case-studies';
+import type { ArchitectureSection, ArchitectureSectionKind } from '@/data/architecture';
 
 interface ProjectRow {
   slug: string;
@@ -149,4 +150,11 @@ export async function getAboutParagraphs(): Promise<AboutParagraph[]> {
     runs: AboutParagraph;
   }[];
   return rows.map((r) => r.runs);
+}
+
+export async function getArchitectureSections(): Promise<ArchitectureSection[]> {
+  const rows = (await getSql()`
+    SELECT kind, title, body FROM architecture_sections ORDER BY sort_order
+  `) as { kind: ArchitectureSectionKind; title: string | null; body: AboutParagraph[] }[];
+  return rows.map((r) => ({ kind: r.kind, title: r.title ?? undefined, body: r.body }));
 }
