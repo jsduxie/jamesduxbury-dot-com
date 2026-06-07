@@ -2,33 +2,36 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { ArchitectureDetail } from '../src/components/architecture/ArchitectureDetail';
+import { architectureSections } from '../src/data/architecture';
+import type { AboutParagraph } from '../src/data/about';
 
-describe('ArchitectureDetail', () => {
-  it('renders the system diagram lanes', () => {
-    render(<ArchitectureDetail />);
-    expect(screen.getByText('visitor browser')).toBeInTheDocument();
-    expect(screen.getByText('next.js on vercel')).toBeInTheDocument();
-    expect(screen.getByText('neon postgres')).toBeInTheDocument();
-    expect(screen.getByText('ci and deployment')).toBeInTheDocument();
-  });
+const plain = (p: AboutParagraph) =>
+  p.map((run) => (typeof run === 'string' ? run : 'strong' in run ? run.strong : run.em)).join('');
 
-  it('renders every design decision', () => {
-    render(<ArchitectureDetail />);
-    for (const title of [
-      'no ORM',
-      'a single-user allowlist instead of roles',
-      'insert-if-missing seed',
-      'ISR with revalidation on save',
-      'first-party analytics',
-      'images in Vercel Blob',
-      'no chart library',
-    ]) {
-      expect(screen.getByText(title)).toBeInTheDocument();
+const byKind = (kind: string) => architectureSections.filter((s) => s.kind === kind);
+
+describe('ArchitectureDetail renders seeded DB content', () => {
+  it('renders every decision card with its title', async () => {
+    render(await ArchitectureDetail());
+    for (const d of byKind('decision')) {
+      expect(screen.getByText(d.title!)).toBeInTheDocument();
+      expect(screen.getByText(plain(d.body[0]))).toBeInTheDocument();
     }
   });
 
-  it('explains the build approach', () => {
-    render(<ArchitectureDetail />);
-    expect(screen.getByText(/enforced coverage thresholds/)).toBeInTheDocument();
+  it('renders the intro, stack and build sections', async () => {
+    render(await ArchitectureDetail());
+    for (const kind of ['intro', 'stack', 'build']) {
+      for (const s of byKind(kind)) {
+        expect(screen.getByText(plain(s.body[0]))).toBeInTheDocument();
+      }
+    }
+  });
+
+  it('renders the headed page sections', async () => {
+    render(await ArchitectureDetail());
+    for (const heading of ['system', 'design decisions', 'how it was built']) {
+      expect(screen.getByRole('heading', { name: heading })).toBeInTheDocument();
+    }
   });
 });
