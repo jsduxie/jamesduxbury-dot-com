@@ -60,10 +60,16 @@ export async function saveItem(
       files.set(f.column, raw);
     }
   }
-  // an empty file input keeps the stored image
+  // a new file wins over a remove request; otherwise remove clears, empty keeps
+  const removed = new Set(
+    images
+      .filter((f) => !files.has(f.column) && formData.get(`${f.column}.remove`) === 'on')
+      .map((f) => f.column),
+  );
   const prior = id !== null && images.length > 0 ? await getRow(section.table, id) : null;
   for (const f of images) {
-    if (!files.has(f.column)) values[f.column] = (prior?.[f.column] as FieldValue) ?? null;
+    if (files.has(f.column)) continue;
+    values[f.column] = removed.has(f.column) ? null : ((prior?.[f.column] as FieldValue) ?? null);
   }
 
   const parsed = section.schema.safeParse(values);
@@ -94,7 +100,10 @@ export async function saveItem(
     return { message: err instanceof Error ? err.message : 'Save failed', fieldErrors: {} };
   }
 
-  if (prior !== null) for (const column of files.keys()) await deleteImage(prior[column]);
+  if (prior !== null) {
+    for (const column of files.keys()) await deleteImage(prior[column]);
+    for (const column of removed) await deleteImage(prior[column]);
+  }
 
   revalidatePublicPages();
   revalidatePath(`/admin/${slug}`);
