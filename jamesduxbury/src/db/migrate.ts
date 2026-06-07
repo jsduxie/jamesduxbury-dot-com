@@ -2,7 +2,7 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { neon } from '@neondatabase/serverless';
-import './config';
+import { applyNeonProxy } from './config';
 import { loadEnvLocal } from './env';
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -26,6 +26,7 @@ function migrationFiles(): string[] {
 
 export async function main(mode: 'migrate' | 'push' = 'migrate'): Promise<void> {
   loadEnvLocal();
+  applyNeonProxy();
   const url = process.env.DATABASE_URL;
   if (!url) {
     console.error('DATABASE_URL is not set (env or .env.local).');
