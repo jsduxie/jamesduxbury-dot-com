@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import type { Block } from '@/data/about';
+import { SAFE_HREF } from '@/lib/href';
 import { proseText } from './blocks';
 import type { FieldDef } from './fields';
 
@@ -38,7 +39,7 @@ const runSchema = z.union([
   z.object({ strong: z.string().min(1) }),
   z.object({ em: z.string().min(1) }),
   z.object({
-    link: z.object({ text: z.string(), href: z.string().regex(/^(https?:|mailto:)/i) }),
+    link: z.object({ text: z.string(), href: z.string().regex(SAFE_HREF) }),
   }),
 ]);
 const runsSchema = z.array(runSchema).min(1);

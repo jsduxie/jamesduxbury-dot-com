@@ -1,8 +1,9 @@
 import type { AboutParagraph, AboutRun } from '@/data/about';
+import { LINK_SCHEME } from '@/lib/href';
 
 // links are matched first so [a](b) is not split on its inner punctuation; the scheme
 // allowlist here means a javascript: url never tokenises as a link and stays literal
-const LINK = /\[[^\]\n]*\]\((?:https?:|mailto:)[^)\s]*\)/.source;
+const LINK = `\\[[^\\]\\n]*\\]\\((?:${LINK_SCHEME})[^)\\s]*\\)`;
 const STRONG = /\*\*[^*\n]+\*\*/.source;
 const EM = /\*[^*\n]+\*/.source;
 const MARKUP = new RegExp(`(${LINK}|${STRONG}|${EM})`, 'g');

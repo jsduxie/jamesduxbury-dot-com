@@ -3,6 +3,7 @@ import nodemailer from 'nodemailer';
 import { CONTACT_FEATURES, parseBlocks } from '@/admin/blocks';
 import { insertMessage } from '@/db/messages';
 import { runText, type AboutRun, type Block } from '@/data/about';
+import { SAFE_HREF } from '@/lib/href';
 
 interface ContactPayload {
   name: string;
@@ -29,8 +30,6 @@ function sanitiseHeaderValue(value: string, maxLength: number): string {
     .trim()
     .slice(0, maxLength);
 }
-
-const SAFE_HREF = /^(https?:|mailto:)/i;
 
 function runsSafe(runs: AboutRun[]): boolean {
   return runs.every(
