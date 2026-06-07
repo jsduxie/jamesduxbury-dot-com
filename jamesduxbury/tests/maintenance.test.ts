@@ -33,6 +33,7 @@ beforeEach(async () => {
 
 afterEach(async () => {
   await sql`DELETE FROM certifications WHERE name = ${certName}`;
+  await sql`DELETE FROM architecture_sections WHERE sort_order = 9998`;
   await sql`UPDATE site_settings SET profile_image = ${originalProfile} WHERE id = 1`;
 });
 
@@ -65,6 +66,17 @@ describe('runBlobMaintenance', () => {
     const report = await runBlobMaintenance();
     expect(deleteImageMock).toHaveBeenCalledWith(ORPHAN);
     expect(deleteImageMock).not.toHaveBeenCalledWith(ALIVE);
+    expect(report.purged).toBe(1);
+  });
+
+  it('keeps a blob referenced only from inside prose blocks', async () => {
+    const inline = 'https://x.public.blob.vercel-storage.com/dev/inline.png';
+    await sql`INSERT INTO architecture_sections (kind, body, sort_order)
+      VALUES ('build', ${JSON.stringify([{ kind: 'image', url: inline, alt: '' }])}, 9998)`;
+    listEnvBlobsMock.mockResolvedValue([inline, ORPHAN]);
+    const report = await runBlobMaintenance();
+    expect(deleteImageMock).toHaveBeenCalledWith(ORPHAN);
+    expect(deleteImageMock).not.toHaveBeenCalledWith(inline);
     expect(report.purged).toBe(1);
   });
 });
