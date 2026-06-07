@@ -295,6 +295,24 @@ describe('site settings singleton', () => {
     expect(state.fieldErrors.cv).toBe('Document must be a pdf');
   });
 
+  it('clears the cv and deletes its blob when remove is checked', async () => {
+    const url = 'https://abc.public.blob.vercel-storage.com/cv.pdf';
+    await sql`UPDATE site_settings SET cv = ${url} WHERE id = 1`;
+    const fd = siteForm();
+    fd.append('cv.remove', 'on');
+    await expect(saveItem('site', 1, EMPTY, fd)).rejects.toThrow('REDIRECT:/admin/site');
+    const [row] = await sql`SELECT cv FROM site_settings WHERE id = 1`;
+    expect(row.cv).toBeNull();
+    expect(deleteImageMock).toHaveBeenCalledWith(url);
+  });
+
+  it('rejects clearing the non-nullable profile image', async () => {
+    const fd = siteForm();
+    fd.append('profile_image.remove', 'on');
+    const state = await saveItem('site', 1, EMPTY, fd);
+    expect(state.fieldErrors.profile_image).toBeTruthy();
+  });
+
   it('rejects a second settings row', async () => {
     const fd = siteForm();
     fd.append('profile_image', new File([new Uint8Array(8)], 'extra.png', { type: 'image/png' }));
