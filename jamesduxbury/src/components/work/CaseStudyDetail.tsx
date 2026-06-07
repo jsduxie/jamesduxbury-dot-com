@@ -2,7 +2,7 @@ import { BlobImage } from '@/components/BlobImage';
 import type { CaseStudy } from '@/data/case-studies';
 import { formatYearRange, type Project } from '@/data/projects';
 import { StatusChip } from '@/components/console/StatusChip';
-import { renderRun } from '@/components/about/renderRun';
+import { renderBlocks } from '@/components/about/BlockView';
 import { MetricBar } from './MetricBar';
 import { ProjectLinks } from './ProjectLinks';
 
@@ -11,15 +11,13 @@ interface CaseStudyDetailProps {
   study: CaseStudy | null;
 }
 
-function ProseSection({ label, paragraphs }: { label: string; paragraphs: CaseStudy['problem'] }) {
+function ProseSection({ label, blocks }: { label: string; blocks: CaseStudy['problem'] }) {
   return (
     <section className="border-b border-border px-4 py-6 last:border-b-0 sm:px-6">
       <h2 className="font-mono text-xs uppercase tracking-[0.2em] text-muted">{label}</h2>
-      {paragraphs.map((p, i) => (
-        <p key={i} className="mt-3 text-sm leading-relaxed text-text/85 sm:text-base">
-          {p.map(renderRun)}
-        </p>
-      ))}
+      {renderBlocks(blocks, {
+        paragraphClass: 'mt-3 text-sm leading-relaxed text-text/85 sm:text-base',
+      })}
     </section>
   );
 }
@@ -59,9 +57,9 @@ export function CaseStudyDetail({ project, study }: CaseStudyDetailProps) {
               className="h-auto w-full object-cover"
             />
           )}
-          <ProseSection label="Problem" paragraphs={study.problem} />
-          <ProseSection label="Approach" paragraphs={study.approach} />
-          {study.outcome && <ProseSection label="Outcome" paragraphs={study.outcome} />}
+          <ProseSection label="Problem" blocks={study.problem} />
+          <ProseSection label="Approach" blocks={study.approach} />
+          {study.outcome && <ProseSection label="Outcome" blocks={study.outcome} />}
           {project.metrics && <MetricBar metrics={project.metrics} />}
         </div>
       ) : (

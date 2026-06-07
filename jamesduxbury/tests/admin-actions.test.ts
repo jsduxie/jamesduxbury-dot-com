@@ -40,7 +40,7 @@ const session: Session = {
   expires: '2099-01-01T00:00:00.000Z',
 };
 const marker = `test-admin-${Date.now()}`;
-const aboutMarker = 9000 + Math.floor(Math.random() * 900);
+const archMarker = 9000 + Math.floor(Math.random() * 900);
 const emailMarker = `${marker}@example.com`;
 
 const EMPTY = { message: null, fieldErrors: {} };
@@ -87,7 +87,7 @@ afterAll(async () => {
   await sql`DELETE FROM projects WHERE slug LIKE 'test-admin-%'`;
   await sql`DELETE FROM certifications WHERE name LIKE 'test-admin-%'`;
   await sql`UPDATE site_settings SET profile_image = ${siteSettings.profileImage} WHERE id = 1`;
-  await sql`DELETE FROM about_paragraphs WHERE sort_order >= 9000`;
+  await sql`DELETE FROM architecture_sections WHERE sort_order >= 9000`;
   await sql`DELETE FROM messages WHERE email = ${emailMarker}`;
 });
 
@@ -219,8 +219,11 @@ describe('case studies prose round trip', () => {
       'REDIRECT:/admin/case-studies',
     );
     const [row] = await sql`SELECT * FROM case_studies WHERE project_slug = 'fg-han'`;
-    expect(row.problem).toEqual([['the ', { strong: 'hard' }, ' part'], ['second paragraph']]);
-    expect(row.approach).toEqual([['built with ', { em: 'care' }]]);
+    expect(row.problem).toEqual([
+      { kind: 'p', runs: ['the ', { strong: 'hard' }, ' part'] },
+      { kind: 'p', runs: ['second paragraph'] },
+    ]);
+    expect(row.approach).toEqual([{ kind: 'p', runs: ['built with ', { em: 'care' }] }]);
     expect(row.outcome).toBeNull();
   });
 
@@ -391,43 +394,49 @@ describe('project CRUD round trip', () => {
 describe('sort order shifting', () => {
   it('makes room at a taken position, highest row first', async () => {
     await sql`
-      INSERT INTO about_paragraphs (runs, sort_order)
-      VALUES ('["shift a"]', ${aboutMarker}), ('["shift b"]', ${aboutMarker + 1})
+      INSERT INTO architecture_sections (kind, body, sort_order)
+      VALUES ('decision', '[{"kind":"p","runs":["shift a"]}]', ${archMarker}),
+             ('decision', '[{"kind":"p","runs":["shift b"]}]', ${archMarker + 1})
     `;
     // this table has a unique sort_order constraint
-    await makeRoomAt('about_paragraphs', aboutMarker, null);
+    await makeRoomAt('architecture_sections', archMarker, null);
     const rows = await sql`
-      SELECT runs, sort_order FROM about_paragraphs WHERE sort_order >= 9000 ORDER BY sort_order
+      SELECT body, sort_order FROM architecture_sections WHERE sort_order >= 9000 ORDER BY sort_order
     `;
-    expect(rows.map((r) => [r.runs[0], r.sort_order])).toEqual([
-      ['shift a', aboutMarker + 1],
-      ['shift b', aboutMarker + 2],
+    expect(rows.map((r) => [r.body[0].runs[0], r.sort_order])).toEqual([
+      ['shift a', archMarker + 1],
+      ['shift b', archMarker + 2],
     ]);
   });
 
   it('does nothing when the position is free', async () => {
-    const before = await sql`SELECT id, sort_order FROM about_paragraphs ORDER BY id`;
-    await makeRoomAt('about_paragraphs', 8500, null);
-    const after = await sql`SELECT id, sort_order FROM about_paragraphs ORDER BY id`;
+    const before = await sql`SELECT id, sort_order FROM architecture_sections ORDER BY id`;
+    await makeRoomAt('architecture_sections', 8500, null);
+    const after = await sql`SELECT id, sort_order FROM architecture_sections ORDER BY id`;
     expect(after).toEqual(before);
   });
 
   it('saving into a taken slot shifts the incumbents down', async () => {
     await expect(
       saveItem(
-        'about',
+        'architecture',
         null,
         EMPTY,
-        form({ runs: 'inserted **here**', sort_order: String(aboutMarker + 1) }),
+        form({
+          kind: 'decision',
+          title: 'Inserted',
+          body: 'inserted **here**',
+          sort_order: String(archMarker + 1),
+        }),
       ),
-    ).rejects.toThrow('REDIRECT:/admin/about');
+    ).rejects.toThrow('REDIRECT:/admin/architecture');
     const rows = await sql`
-      SELECT runs, sort_order FROM about_paragraphs WHERE sort_order >= 9000 ORDER BY sort_order
+      SELECT body, sort_order FROM architecture_sections WHERE sort_order >= 9000 ORDER BY sort_order
     `;
-    expect(rows.map((r) => [r.runs, r.sort_order])).toEqual([
-      [['inserted ', { strong: 'here' }], aboutMarker + 1],
-      [['shift a'], aboutMarker + 2],
-      [['shift b'], aboutMarker + 3],
+    expect(rows.map((r) => [r.body, r.sort_order])).toEqual([
+      [[{ kind: 'p', runs: ['inserted ', { strong: 'here' }] }], archMarker + 1],
+      [[{ kind: 'p', runs: ['shift a'] }], archMarker + 2],
+      [[{ kind: 'p', runs: ['shift b'] }], archMarker + 3],
     ]);
   });
 });

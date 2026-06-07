@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { PageShell } from '@/components/PageShell';
 import { ArchitectureDetail } from '@/components/architecture/ArchitectureDetail';
 import { getArchitectureSections, getSiteSettings } from '@/db/queries';
-import { runText } from '@/data/about';
+import { proseText } from '@/admin/blocks';
 
 export const revalidate = 60;
 
@@ -12,7 +12,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: `Architecture · ${s.ownerName}`,
     description: stack
-      ? `How this site is built: ${stack.body.map(runText).join(' ')}.`
+      ? `How this site is built: ${proseText(stack.body)}.`
       : `How this site is built · ${s.ownerName}.`,
   };
 }

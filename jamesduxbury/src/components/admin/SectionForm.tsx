@@ -4,8 +4,8 @@ import { useActionState, useRef, useState } from 'react';
 import { BlobImage } from '@/components/BlobImage';
 import type { FormState } from '@/admin/actions';
 import type { FieldDef, FieldDefault, MetricDraft } from '@/admin/fields';
-import { parseProse } from '@/admin/runs';
-import { renderRun } from '@/components/about/renderRun';
+import { parseBlocks } from '@/admin/blocks';
+import { renderBlocks } from '@/components/about/BlockView';
 
 const INITIAL_STATE: FormState = { message: null, fieldErrors: {} };
 
@@ -163,7 +163,7 @@ function ProseField({ column, initial }: { column: string; initial: string }) {
     });
   };
 
-  const paragraphs = parseProse(text);
+  const blocks = parseBlocks(text);
 
   return (
     <div>
@@ -184,14 +184,12 @@ function ProseField({ column, initial }: { column: string; initial: string }) {
         onChange={(e) => setText(e.target.value)}
         className={`${fieldInput} resize-y`}
       />
-      {paragraphs.length > 0 && (
+      {blocks.length > 0 && (
         <div className="mt-3 border border-border px-4 py-3">
           <p className={fieldLabel}>preview</p>
-          {paragraphs.map((p, i) => (
-            <p key={i} className="mt-2 font-mono text-sm leading-relaxed text-text/85">
-              {p.map(renderRun)}
-            </p>
-          ))}
+          {renderBlocks(blocks, {
+            paragraphClass: 'mt-2 font-mono text-sm leading-relaxed text-text/85',
+          })}
         </div>
       )}
     </div>
@@ -202,12 +200,11 @@ function FieldInput({ field, defaultValue }: { field: FieldDef; defaultValue: Fi
   const text = typeof defaultValue === 'string' ? defaultValue : '';
   switch (field.type) {
     case 'textarea':
-    case 'runs':
       return (
         <textarea
           id={field.column}
           name={field.column}
-          rows={field.type === 'runs' ? 4 : 5}
+          rows={5}
           defaultValue={text}
           className={`${fieldInput} resize-y`}
         />
