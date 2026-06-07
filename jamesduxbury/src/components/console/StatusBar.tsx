@@ -10,6 +10,7 @@ const NAV_LINKS: { href: string; label: string }[] = [
   { href: '/skills', label: 'skills' },
   { href: '/experience', label: 'experience' },
   { href: '/education', label: 'education' },
+  { href: '/architecture', label: 'architecture' },
 ];
 
 const isActive = (pathname: string | null, href: string): boolean => {
