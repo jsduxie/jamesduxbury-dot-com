@@ -444,7 +444,8 @@ describe('sort order shifting', () => {
 describe('messages', () => {
   it('marks a message as read', async () => {
     const [{ id }] = await sql`
-      INSERT INTO messages (name, email, message) VALUES ('Test', ${emailMarker}, 'hi')
+      INSERT INTO messages (name, email, message)
+      VALUES ('Test', ${emailMarker}, '[{"kind":"p","runs":["hi"]}]')
       RETURNING id
     `;
     await markMessageRead(id as number);

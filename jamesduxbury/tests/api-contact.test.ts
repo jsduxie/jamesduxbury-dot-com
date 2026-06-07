@@ -48,7 +48,48 @@ describe('POST /api/contact', () => {
 
     const rows = await sql`SELECT name, message, read FROM messages WHERE email = ${marker}`;
     expect(rows).toHaveLength(1);
-    expect(rows[0]).toMatchObject({ name: 'Vitest', message: 'hello there', read: false });
+    expect(rows[0]).toMatchObject({
+      name: 'Vitest',
+      message: [{ kind: 'p', runs: ['hello there'] }],
+      read: false,
+    });
+  });
+
+  it('parses markup into blocks and keeps a safe link', async () => {
+    const res = await POST(
+      request({ name: 'Vitest', email: marker, message: 'see **this** [doc](https://x.dev)' }),
+    );
+    expect(res.status).toBe(200);
+    const rows = await sql`
+      SELECT message FROM messages WHERE email = ${marker} AND message::text LIKE '%https://x.dev%'
+    `;
+    expect(rows[0].message).toEqual([
+      {
+        kind: 'p',
+        runs: ['see ', { strong: 'this' }, ' ', { link: { text: 'doc', href: 'https://x.dev' } }],
+      },
+    ]);
+  });
+
+  it('stores a list and renders it for the email channel', async () => {
+    const res = await POST(
+      request({ name: 'Vitest', email: marker, message: '- one\n- two\n\nplain *text*' }),
+    );
+    expect(res.status).toBe(200);
+    expect(sendMail).toHaveBeenCalledTimes(1);
+    const rows = await sql`
+      SELECT message FROM messages WHERE email = ${marker} AND message::text LIKE '%"list"%'
+    `;
+    expect(rows[0].message).toEqual([
+      { kind: 'list', items: [['one'], ['two']] },
+      { kind: 'p', runs: ['plain ', { em: 'text' }] },
+    ]);
+  });
+
+  it('rejects a whitespace-only message', async () => {
+    const res = await POST(request({ name: 'Vitest', email: marker, message: '   \n\n  ' }));
+    expect(res.status).toBe(400);
+    expect(sendMail).not.toHaveBeenCalled();
   });
 
   it('succeeds without email when the message is stored', async () => {
@@ -56,7 +97,9 @@ describe('POST /api/contact', () => {
     const res = await POST(request({ name: 'Vitest', email: marker, message: 'survives smtp' }));
     expect(res.status).toBe(200);
 
-    const rows = await sql`SELECT 1 FROM messages WHERE email = ${marker} AND message = 'survives smtp'`;
+    const rows = await sql`
+      SELECT 1 FROM messages WHERE email = ${marker} AND message::text LIKE '%survives smtp%'
+    `;
     expect(rows).toHaveLength(1);
   });
 
@@ -67,7 +110,9 @@ describe('POST /api/contact', () => {
     expect(sendMail).toHaveBeenCalledTimes(1);
     dbDown.value = false;
 
-    const rows = await sql`SELECT 1 FROM messages WHERE email = ${marker} AND message = 'email only'`;
+    const rows = await sql`
+      SELECT 1 FROM messages WHERE email = ${marker} AND message::text LIKE '%email only%'
+    `;
     expect(rows).toHaveLength(0);
   });
 
