@@ -175,7 +175,7 @@ describe('fieldDefault', () => {
 });
 
 describe('section registry', () => {
-  it('exposes the eight content sections', () => {
+  it('exposes the nine content sections', () => {
     expect(SECTIONS.map((s) => s.slug)).toEqual([
       'projects',
       'experience',
@@ -184,6 +184,7 @@ describe('section registry', () => {
       'skills',
       'about',
       'case-studies',
+      'architecture',
       'site',
     ]);
   });
@@ -230,6 +231,12 @@ describe('section registry', () => {
       problem: 'the **problem** statement\n\nsecond paragraph',
       approach: 'how it was built',
     },
+    architecture: {
+      kind: 'decision',
+      title: 'No ORM',
+      body: 'raw **sql** everywhere',
+      sort_order: '1',
+    },
     site: {},
   };
 
@@ -262,6 +269,10 @@ describe('section registry', () => {
     expect(getSection('skills').listLabel({ heading: 'Languages' })).toBe('Languages');
     expect(getSection('site').listLabel({})).toBe('Site settings');
     expect(getSection('case-studies').listLabel({ project_slug: 'fg-han' })).toBe('fg-han');
+    expect(getSection('architecture').listLabel({ kind: 'decision', title: 'No ORM' })).toBe(
+      'No ORM',
+    );
+    expect(getSection('architecture').listLabel({ kind: 'intro', title: null })).toBe('intro');
     expect(getSection('about').listLabel({ runs: ['plain ', { strong: 'bold' }] })).toBe(
       'plain bold',
     );
