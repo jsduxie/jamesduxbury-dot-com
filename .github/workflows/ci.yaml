@@ -55,6 +55,21 @@ jobs:
           GITHUB_SECRET: ci-dummy
           AUTH_SECRET: ci-dummy-secret-for-build-only
 
+      - name: Upload coverage to Codecov
+        if: always()
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: jamesduxbury/coverage/lcov.info
+          fail_ci_if_error: false
+
+      - name: Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: jamesduxbury/coverage/junit.xml
+
       - name: Build
         run: npm run build
         env:

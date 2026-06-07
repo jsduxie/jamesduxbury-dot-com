@@ -1,5 +1,7 @@
 # jamesduxbury-dot-com
 
+[![codecov](https://codecov.io/gh/jsduxie/jamesduxbury-dot-com/graph/badge.svg)](https://codecov.io/gh/jsduxie/jamesduxbury-dot-com)
+
 Source code for my personal portfolio website: [jamesduxbury-dot-com.vercel.app](https://jamesduxbury-dot-com.vercel.app)
 
 The site started as a static portfolio and is now a full-stack application. All content is stored in Postgres and editable through an authenticated admin console, so I can update the site without a code push. Visits are tracked first-party and shown on an analytics dashboard.
