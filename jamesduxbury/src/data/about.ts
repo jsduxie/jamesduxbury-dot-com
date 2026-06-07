@@ -2,12 +2,35 @@
  * Typed inline runs for About content. Avoids interpolating raw HTML strings
  * (and therefore the need for `dangerouslySetInnerHTML` in render code).
  */
-export type AboutRun = string | { strong: string } | { em: string };
+export type AboutRun =
+  | string
+  | { strong: string }
+  | { em: string }
+  | { link: { text: string; href: string } };
 export type AboutParagraph = AboutRun[];
 
-export function runText(paragraph: AboutParagraph): string {
+// rich text storage: a paragraph/heading is runs, a list is rows of runs, an image is a blob
+export type Block =
+  | { kind: 'p'; runs: AboutRun[] }
+  | { kind: 'heading'; runs: AboutRun[] }
+  | { kind: 'list'; items: AboutRun[][] }
+  | { kind: 'image'; url: string; alt: string };
+export type Prose = Block[];
+
+export type Feature = 'bold' | 'italic' | 'link' | 'list' | 'heading' | 'image';
+export type Features = Record<Feature, boolean>;
+
+export function runText(paragraph: AboutRun[]): string {
   return paragraph
-    .map((run) => (typeof run === 'string' ? run : 'strong' in run ? run.strong : run.em))
+    .map((run) =>
+      typeof run === 'string'
+        ? run
+        : 'strong' in run
+          ? run.strong
+          : 'em' in run
+            ? run.em
+            : run.link.text,
+    )
     .join('');
 }
 
