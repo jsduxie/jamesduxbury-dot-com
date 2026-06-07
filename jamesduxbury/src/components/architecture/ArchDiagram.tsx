@@ -20,7 +20,7 @@ function Lane({ label, items }: { label: string; items: string[] }) {
 
 export function ArchDiagram() {
   return (
-    <div aria-label="architecture diagram">
+    <div>
       <Lane label="visitor browser" items={['public pages', 'visit beacon', 'contact form']} />
       <p className={arrow} aria-hidden>
         ↓
