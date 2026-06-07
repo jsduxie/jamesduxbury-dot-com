@@ -92,33 +92,34 @@ export default async function AnalyticsPage() {
         </div>
       </AdminPanel>
 
-      <AdminPanel title="visit flow" meta="last 30 days">
-        <div className="px-4 py-5 sm:px-6">
-          <VisitFlow transitions={transitions} />
-        </div>
-      </AdminPanel>
-
-      <AdminPanel title="entries, exits and drop-off" meta="last 30 days">
-        <div className="divide-y divide-border">
-          {flow.map((page) => (
-            <div
-              key={page.path}
-              className="flex items-baseline justify-between gap-4 px-4 py-3 sm:px-6"
-            >
-              <span className="truncate font-mono text-sm text-text">{page.path}</span>
-              <span className="whitespace-nowrap font-mono text-xs text-muted">
-                {page.steps} steps · {page.entries} in · {page.exits} out ·{' '}
-                {Math.round(page.dropOff * 100)}% drop-off
-              </span>
-            </div>
-          ))}
-          {flow.length === 0 && (
-            <p className="px-4 py-4 font-mono text-xs uppercase tracking-[0.18em] text-muted sm:px-6">
-              {`>`} no data yet
-            </p>
-          )}
-        </div>
-      </AdminPanel>
+      <div className="grid gap-x-6 lg:grid-cols-2">
+        <AdminPanel title="visit flow" meta="last 30 days">
+          <div className="px-4 py-5 sm:px-6">
+            <VisitFlow transitions={transitions} />
+          </div>
+        </AdminPanel>
+        <AdminPanel title="entries, exits and drop-off" meta="last 30 days">
+          <div className="divide-y divide-border">
+            {flow.map((page) => (
+              <div
+                key={page.path}
+                className="flex items-baseline justify-between gap-4 px-4 py-3 sm:px-6"
+              >
+                <span className="truncate font-mono text-sm text-text">{page.path}</span>
+                <span className="whitespace-nowrap font-mono text-xs text-muted">
+                  {page.steps} steps · {page.entries} in · {page.exits} out ·{' '}
+                  {Math.round(page.dropOff * 100)}% drop-off
+                </span>
+              </div>
+            ))}
+            {flow.length === 0 && (
+              <p className="px-4 py-4 font-mono text-xs uppercase tracking-[0.18em] text-muted sm:px-6">
+                {`>`} no data yet
+              </p>
+            )}
+          </div>
+        </AdminPanel>
+      </div>
 
       <div className="grid gap-x-6 lg:grid-cols-2">
         <AdminPanel title="top pages" meta="last 30 days">
