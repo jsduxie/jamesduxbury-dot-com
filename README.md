@@ -94,6 +94,8 @@ All site content (projects, experience, education, certifications, skills, about
 
 Sign-in is GitHub OAuth through next-auth v5 with JWT sessions and no database adapter. Only my GitHub account can sign in: the allowlist is checked by identity at four layers: the signIn callback, the middleware on `/admin/*`, the admin layout, and every server action. Visiting `/admin` while signed out goes straight into the OAuth flow.
 
+The allowed login is stored in `site_settings.admin_login` and editable from the console, so a GitHub username change is a settings edit rather than a deploy. The check reads the value once per request and fails closed when it is missing or empty. A typo in the field locks the console; recovery is one statement in the Neon SQL editor: `UPDATE site_settings SET admin_login = '<login>' WHERE id = 1`.
+
 ### Admin console
 
 Each content section is defined once in a registry (`src/admin/sections.ts`) as field config plus a Zod schema. The list, create, edit and delete pages, the form rendering, and the SQL are all generic, so adding a section is configuration rather than new code. The console also has a messages inbox and the analytics dashboard.

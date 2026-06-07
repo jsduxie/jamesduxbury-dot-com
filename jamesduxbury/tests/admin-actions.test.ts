@@ -256,6 +256,7 @@ function siteForm(): FormData {
   fd.append('entry_education', siteSettings.entryEducation);
   fd.append('entry_status', siteSettings.entryStatus);
   fd.append('entry_years', siteSettings.entryYears);
+  fd.append('admin_login', 'jsduxie');
   return fd;
 }
 
