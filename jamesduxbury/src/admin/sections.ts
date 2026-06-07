@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { runText, type AboutParagraph } from '@/data/about';
 import type { FieldDef } from './fields';
 
 export interface SectionConfig {
@@ -197,15 +198,7 @@ export const SECTIONS: SectionConfig[] = [
     }),
     listLabel: (row) => {
       const runs = row.runs;
-      const text = Array.isArray(runs)
-        ? runs
-            .map((run: unknown) => {
-              if (typeof run === 'string') return run;
-              const obj = run as { strong?: string; em?: string };
-              return obj.strong ?? obj.em ?? '';
-            })
-            .join('')
-        : '';
+      const text = Array.isArray(runs) ? runText(runs as AboutParagraph) : '';
       return text.length > 80 ? `${text.slice(0, 80)}…` : text;
     },
   },
