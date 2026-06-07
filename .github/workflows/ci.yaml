@@ -62,34 +62,3 @@ jobs:
           GITHUB_ID: ci-dummy
           GITHUB_SECRET: ci-dummy
           AUTH_SECRET: ci-dummy-secret-for-build-only
-
-  # One-off prod population, run manually via the Actions tab after merging this PR.
-  # Never triggered by pushes or PRs; the seed is also insert-if-missing as a second guard.
-  populate-production:
-    if: github.event_name == 'workflow_dispatch'
-    needs: check
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: jamesduxbury/package-lock.json
-
-      - name: Cache node_modules
-        id: modules-cache
-        uses: actions/cache@v4
-        with:
-          path: jamesduxbury/node_modules
-          key: ${{ runner.os }}-node20-modules-${{ hashFiles('jamesduxbury/package-lock.json') }}
-
-      - name: Install dependencies
-        if: steps.modules-cache.outputs.cache-hit != 'true'
-        run: npm ci
-
-      - name: Migrate and seed production
-        run: npm run db:migrate && npm run db:seed
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL_MAIN }}
