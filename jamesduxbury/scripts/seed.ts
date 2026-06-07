@@ -1,9 +1,10 @@
 import { neon } from '@neondatabase/serverless';
-import '../src/db/config';
+import { applyNeonProxy } from '../src/db/config';
 import { loadEnvLocal } from '../src/db/env';
 import { seed } from '../src/db/seed';
 
 loadEnvLocal();
+applyNeonProxy();
 const url = process.env.DATABASE_URL;
 if (!url) {
   console.error('DATABASE_URL is not set (env or .env.local).');
