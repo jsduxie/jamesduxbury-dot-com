@@ -6,7 +6,7 @@ import { auth, isAdminSession } from '@/auth';
 import { markRead } from '@/db/messages';
 import { SITE_ROUTES } from '@/lib/site';
 import { parseFields, type FieldDef, type FieldValue } from './fields';
-import { deleteImage, imageFileError, uploadImage } from './images';
+import { deleteImage, documentFileError, imageFileError, uploadImage } from './images';
 import { getSection } from './sections';
 import { deleteRow, getRow, insertRow, makeRoomAt, updateRow } from './sql';
 
@@ -19,8 +19,8 @@ async function requireAdmin(): Promise<void> {
   if (!isAdminSession(await auth())) throw new Error('Unauthorised');
 }
 
-function imageFields(fields: FieldDef[]): FieldDef[] {
-  return fields.filter((f) => f.type === 'image');
+function uploadFields(fields: FieldDef[]): FieldDef[] {
+  return fields.filter((f) => f.type === 'image' || f.type === 'document');
 }
 
 function revalidatePublicPages(): void {
@@ -50,12 +50,12 @@ export async function saveItem(
   const section = getSection(slug);
 
   const values = parseFields(section.fields, formData);
-  const images = imageFields(section.fields);
+  const images = uploadFields(section.fields);
   const files = new Map<string, File>();
   for (const f of images) {
     const raw = formData.get(f.column);
     if (raw instanceof File && raw.size > 0) {
-      const error = imageFileError(raw);
+      const error = f.type === 'document' ? documentFileError(raw) : imageFileError(raw);
       if (error) return { message: 'Validation failed', fieldErrors: { [f.column]: error } };
       files.set(f.column, raw);
     }
@@ -104,7 +104,7 @@ export async function saveItem(
 export async function deleteItem(slug: string, id: number): Promise<void> {
   await requireAdmin();
   const section = getSection(slug);
-  const images = imageFields(section.fields);
+  const images = uploadFields(section.fields);
   const row = images.length > 0 ? await getRow(section.table, id) : null;
   await deleteRow(section.table, id);
   for (const f of images) await deleteImage(row?.[f.column]);

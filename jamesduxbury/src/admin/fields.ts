@@ -15,7 +15,8 @@ export type FieldType =
   | 'metrics'
   | 'runs'
   | 'prose'
-  | 'image';
+  | 'image'
+  | 'document';
 
 export interface FieldDef {
   column: string;
@@ -92,6 +93,7 @@ export function parseFields(fields: FieldDef[], formData: FormData): Record<stri
       }
       // the file is uploaded in the action, which fills the column
       case 'image':
+      case 'document':
         out[f.column] = null;
         break;
     }

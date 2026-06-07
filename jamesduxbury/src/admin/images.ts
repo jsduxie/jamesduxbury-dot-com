@@ -10,6 +10,12 @@ export function imageFileError(file: File): string | null {
   return null;
 }
 
+export function documentFileError(file: File): string | null {
+  if (file.type !== 'application/pdf') return 'Document must be a pdf';
+  if (file.size > MAX_BYTES) return 'Document must be 4MB or smaller';
+  return null;
+}
+
 export function isBlobUrl(url: string): boolean {
   try {
     return new URL(url).hostname.endsWith('.public.blob.vercel-storage.com');

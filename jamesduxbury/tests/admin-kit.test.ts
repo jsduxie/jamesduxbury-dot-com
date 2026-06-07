@@ -237,7 +237,22 @@ describe('section registry', () => {
       body: 'raw **sql** everywhere',
       sort_order: '1',
     },
-    site: {},
+    site: {
+      owner_name: 'James Duxbury',
+      tagline: 'Software Engineer',
+      contact_email: 'me@example.com',
+      github_url: 'https://github.com/jsduxie',
+      linkedin_url: 'https://linkedin.com/in/jamesduxbury03',
+      site_version: 'v2.0',
+      meta_description: 'a description',
+      og_description: 'an og description',
+      og_footer: 'a footer',
+      entry_role: 'Software engineer',
+      entry_credential: 'AfCIIS',
+      entry_education: 'Durham',
+      entry_status: 'FINAL YEAR',
+      entry_years: '2022 - 2026',
+    },
   };
 
   it.each(SECTIONS.map((s) => [s.slug] as const))(
@@ -249,8 +264,7 @@ describe('section registry', () => {
     },
   );
 
-  // site has no required text inputs: its only field is the upload the action fills
-  it.each(SECTIONS.filter((s) => s.slug !== 'site').map((s) => [s.slug] as const))(
+  it.each(SECTIONS.map((s) => [s.slug] as const))(
     '%s: an empty form fails validation',
     (slug) => {
       const section = getSection(slug);

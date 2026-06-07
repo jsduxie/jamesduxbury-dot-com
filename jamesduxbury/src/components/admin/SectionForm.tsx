@@ -267,6 +267,28 @@ function FieldInput({ field, defaultValue }: { field: FieldDef; defaultValue: Fi
           />
         </div>
       );
+    case 'document':
+      return (
+        <div className="mt-2">
+          {text && (
+            <a
+              href={text}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mb-3 inline-block font-mono text-xs uppercase tracking-[0.18em] text-accent transition-colors hover:text-text"
+            >
+              current file ↗
+            </a>
+          )}
+          <input
+            id={field.column}
+            name={field.column}
+            type="file"
+            accept="application/pdf"
+            className={`${fieldInput} mt-0 cursor-pointer file:mr-4 file:cursor-pointer file:border-0 file:bg-transparent file:font-mono file:text-xs file:uppercase file:tracking-[0.18em] file:text-accent`}
+          />
+        </div>
+      );
     case 'url':
       return (
         <input
