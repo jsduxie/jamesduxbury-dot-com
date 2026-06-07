@@ -19,7 +19,19 @@ const isActive = (pathname: string | null, href: string): boolean => {
   return pathname === href || pathname.startsWith(`${href}/`);
 };
 
-export const StatusBar: React.FC = () => {
+interface StatusBarProps {
+  ownerName: string;
+  siteVersion: string;
+  cvHref: string;
+  cvDownload: string;
+}
+
+export const StatusBar: React.FC<StatusBarProps> = ({
+  ownerName,
+  siteVersion,
+  cvHref,
+  cvDownload,
+}) => {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [session, setSession] = useState<string>('');
@@ -49,8 +61,8 @@ export const StatusBar: React.FC = () => {
             LIVE
           </span>
           <span className="text-border">·</span>
-          <span className="hidden text-text sm:inline">JAMES DUXBURY</span>
-          <span className="hidden text-muted sm:inline">v2.0</span>
+          <span className="hidden text-text sm:inline">{ownerName.toUpperCase()}</span>
+          <span className="hidden text-muted sm:inline">{siteVersion}</span>
           <span className="text-border sm:hidden">·</span>
           <span className="text-muted sm:hidden">{session}</span>
         </Link>
@@ -73,8 +85,8 @@ export const StatusBar: React.FC = () => {
             );
           })}
           <Link
-            href="/data/CV.pdf"
-            download="James_Duxbury_CV.pdf"
+            href={cvHref}
+            download={cvDownload}
             className="text-text/75 transition-colors hover:text-accent"
           >
             cv.pdf
@@ -124,8 +136,8 @@ export const StatusBar: React.FC = () => {
             })}
             <li>
               <Link
-                href="/data/CV.pdf"
-                download="James_Duxbury_CV.pdf"
+                href={cvHref}
+                download={cvDownload}
                 onClick={() => setIsMenuOpen(false)}
                 className="text-text/85 hover:text-accent"
               >

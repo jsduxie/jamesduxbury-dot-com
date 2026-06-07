@@ -4,6 +4,8 @@ import { JetBrains_Mono } from 'next/font/google';
 import { StatusBar } from '@/components/console/StatusBar';
 import { VisitBeacon } from '@/components/VisitBeacon';
 import { SITE_URL } from '@/lib/site';
+import { getSiteSettings } from '@/db/queries';
+import { cvDownloadName, cvHref } from '@/lib/cv';
 import './globals.css';
 
 const jetbrainsMono = JetBrains_Mono({
@@ -12,37 +14,44 @@ const jetbrainsMono = JetBrains_Mono({
   display: 'swap',
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
-  title: 'James Duxbury — Software Engineer in AI and Cybersecurity',
-  description:
-    'Final-year MEng Computer Science student at Durham. AI / NLP research, application security, full-stack engineering. Accredited Affiliate Member of the Chartered Institute of Information Security (AfCIIS).',
-  authors: [{ name: 'James Duxbury' }],
-  openGraph: {
-    title: 'James Duxbury — Software Engineer in AI and Cybersecurity',
-    description:
-      'Portfolio of James Duxbury — MEng Computer Science, Durham. AI, NLP, application security, full-stack engineering.',
-    url: SITE_URL,
-    siteName: 'James Duxbury',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'James Duxbury — Software Engineer in AI and Cybersecurity',
-    description:
-      'Portfolio of James Duxbury — MEng Computer Science, Durham. AI, NLP, application security, full-stack engineering.',
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const s = await getSiteSettings();
+  const title = `${s.ownerName} — ${s.tagline}`;
+  return {
+    metadataBase: new URL(SITE_URL),
+    title,
+    description: s.metaDescription,
+    authors: [{ name: s.ownerName }],
+    openGraph: {
+      title,
+      description: s.ogDescription,
+      url: SITE_URL,
+      siteName: s.ownerName,
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description: s.ogDescription,
+    },
+  };
+}
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const settings = await getSiteSettings();
   return (
     <html lang="en" className={`${GeistSans.variable} ${jetbrainsMono.variable}`}>
       <body className="bg-bg bg-dot-grid bg-[length:24px_24px] font-sans text-text antialiased">
-        <StatusBar />
+        <StatusBar
+          ownerName={settings.ownerName}
+          siteVersion={settings.siteVersion}
+          cvHref={cvHref(settings)}
+          cvDownload={cvDownloadName(settings)}
+        />
         <VisitBeacon />
         {children}
       </body>

@@ -1,12 +1,12 @@
 import type { Metadata } from 'next';
 import { PageShell } from '@/components/PageShell';
 import { AboutDetail } from '@/components/about/AboutDetail';
+import { getSiteSettings } from '@/db/queries';
 
-export const metadata: Metadata = {
-  title: 'About · James Duxbury',
-  description:
-    'About James Duxbury — final-year MEng Computer Science student at Durham, specialising in AI and application security.',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const s = await getSiteSettings();
+  return { title: `About · ${s.ownerName}`, description: s.metaDescription };
+}
 
 export const revalidate = 60;
 

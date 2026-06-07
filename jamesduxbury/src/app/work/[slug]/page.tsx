@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { PageShell } from '@/components/PageShell';
 import { CaseStudyDetail } from '@/components/work/CaseStudyDetail';
-import { getCaseStudy, getProjectBySlug, getProjects } from '@/db/queries';
+import { getCaseStudy, getProjectBySlug, getProjects, getSiteSettings } from '@/db/queries';
 
 export const revalidate = 60;
 
@@ -16,10 +16,10 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const project = await getProjectBySlug(slug);
+  const [project, settings] = await Promise.all([getProjectBySlug(slug), getSiteSettings()]);
   if (!project) return {};
   return {
-    title: `${project.title} · James Duxbury`,
+    title: `${project.title} · ${settings.ownerName}`,
     description: project.subtitle,
   };
 }

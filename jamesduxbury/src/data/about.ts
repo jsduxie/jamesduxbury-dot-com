@@ -5,6 +5,12 @@
 export type AboutRun = string | { strong: string } | { em: string };
 export type AboutParagraph = AboutRun[];
 
+export function runText(paragraph: AboutParagraph): string {
+  return paragraph
+    .map((run) => (typeof run === 'string' ? run : 'strong' in run ? run.strong : run.em))
+    .join('');
+}
+
 export const aboutParagraphs: AboutParagraph[] = [
   [
     'Final-year MEng Computer Science student at Durham University, specialising in ',
