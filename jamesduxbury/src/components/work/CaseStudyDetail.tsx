@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import { BlobImage } from '@/components/BlobImage';
 import type { CaseStudy } from '@/data/case-studies';
 import { formatYearRange, type Project } from '@/data/projects';
 import { StatusChip } from '@/components/console/StatusChip';
@@ -50,15 +50,14 @@ export function CaseStudyDetail({ project, study }: CaseStudyDetailProps) {
       {study ? (
         <div className="mt-6 border border-border bg-surface/40 backdrop-blur-sm">
           {study.imagePath && (
-            <div className="border-b border-border">
-              <Image
-                src={study.imagePath}
-                alt={`${project.title} illustration`}
-                width={1200}
-                height={675}
-                className="h-auto w-full object-cover"
-              />
-            </div>
+            <BlobImage
+              wrapperClassName="border-b border-border"
+              src={study.imagePath}
+              alt={`${project.title} illustration`}
+              width={1200}
+              height={675}
+              className="h-auto w-full object-cover"
+            />
           )}
           <ProseSection label="Problem" paragraphs={study.problem} />
           <ProseSection label="Approach" paragraphs={study.approach} />
