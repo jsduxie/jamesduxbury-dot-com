@@ -4,8 +4,8 @@ import type { NextRequest } from 'next/server';
 
 type AuthedRequest = NextRequest & { auth: Session | null };
 
-export function requireAdmin(req: AuthedRequest): Response | undefined {
-  if (isAdminSession(req.auth)) return undefined;
+export async function requireAdmin(req: AuthedRequest): Promise<Response | undefined> {
+  if (await isAdminSession(req.auth)) return undefined;
   const url = new URL('/signin', req.nextUrl.origin);
   url.searchParams.set('callbackUrl', req.nextUrl.href);
   return Response.redirect(url);

@@ -17,7 +17,7 @@ export async function POST(req: Request) {
     return new Response(null, { status: 204 });
   }
   // skips the signed-in admin's visits
-  if (isAdminSession(await auth())) {
+  if (await isAdminSession(await auth())) {
     return new Response(null, { status: 204 });
   }
 

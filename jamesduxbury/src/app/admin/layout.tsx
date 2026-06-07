@@ -17,7 +17,7 @@ const navLink =
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
-  if (!isAdminSession(session)) redirect('/signin');
+  if (!(await isAdminSession(session))) redirect('/signin');
 
   return (
     <div className="mx-auto max-w-5xl px-4 pb-10 pt-28 sm:px-6 sm:pt-32">

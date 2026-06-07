@@ -117,6 +117,7 @@ CREATE TABLE IF NOT EXISTS site_settings (
   entry_education text NOT NULL DEFAULT 'Durham University · Integrated MEng Computer Science',
   entry_status text NOT NULL DEFAULT 'FINAL YEAR',
   entry_years text NOT NULL DEFAULT '2022 — 2026',
+  admin_login text NOT NULL DEFAULT 'jsduxie',
   -- blob URL; public CV links fall back to /data/CV.pdf while NULL
   cv text,
   sort_order integer NOT NULL DEFAULT 0,

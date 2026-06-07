@@ -16,7 +16,7 @@ export interface FormState {
 }
 
 async function requireAdmin(): Promise<void> {
-  if (!isAdminSession(await auth())) throw new Error('Unauthorised');
+  if (!(await isAdminSession(await auth()))) throw new Error('Unauthorised');
 }
 
 function uploadFields(fields: FieldDef[]): FieldDef[] {

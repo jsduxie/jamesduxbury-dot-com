@@ -158,6 +158,15 @@ interface SiteSettingsRow {
   cv: string | null;
 }
 
+// auth-owned read with no fallback: a missing or empty value must fail closed
+export const getAdminLogin = cache(async (): Promise<string | null> => {
+  const rows = (await getSql()`SELECT admin_login FROM site_settings WHERE id = 1`) as {
+    admin_login: string;
+  }[];
+  const login = rows[0]?.admin_login.trim();
+  return login ? login : null;
+});
+
 // cache() shares the single settings row across every reader in one request
 export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
   const rows = (await getSql()`SELECT * FROM site_settings WHERE id = 1`) as SiteSettingsRow[];
