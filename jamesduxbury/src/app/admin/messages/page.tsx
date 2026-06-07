@@ -1,22 +1,9 @@
 import { markMessageRead } from '@/admin/actions';
-import { getSql } from '@/db';
+import { getMessages } from '@/db/messages';
 import { AdminPanel } from '@/components/admin/AdminPanel';
 
-interface MessageRow {
-  id: number;
-  name: string;
-  email: string;
-  message: string;
-  read: boolean;
-  received_at: string;
-}
-
 export default async function MessagesPage() {
-  const rows = (await getSql()`
-    SELECT id, name, email, message, read,
-      to_char(created_at, 'YYYY-MM-DD HH24:MI') AS received_at
-    FROM messages ORDER BY created_at DESC
-  `) as MessageRow[];
+  const rows = await getMessages();
 
   const unread = rows.filter((row) => !row.read).length;
 
@@ -34,7 +21,7 @@ export default async function MessagesPage() {
                 {row.email}
               </a>
               <span className="ml-auto font-mono text-[0.65rem] text-muted/70">
-                {row.received_at}
+                {row.receivedAt}
               </span>
             </div>
             <p className="mt-3 whitespace-pre-wrap font-mono text-sm text-text/90">{row.message}</p>

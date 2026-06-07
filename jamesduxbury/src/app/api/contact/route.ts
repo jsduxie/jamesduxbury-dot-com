@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import nodemailer from 'nodemailer';
-import { getSql } from '@/db';
+import { insertMessage } from '@/db/messages';
 
 interface ContactPayload {
   name: string;
@@ -69,7 +69,7 @@ export async function POST(req: Request) {
   // Two delivery channels; the request only fails if both do
   let stored = false;
   try {
-    await getSql()`INSERT INTO messages (name, email, message) VALUES (${name}, ${email}, ${message})`;
+    await insertMessage(name, email, message);
     stored = true;
   } catch (error) {
     console.error(`[contact:${correlationId}] message insert failed`, error);
