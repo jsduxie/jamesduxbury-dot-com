@@ -24,6 +24,18 @@ interface SectionFormProps {
   submitLabel: string;
 }
 
+function UploadInput({ column, accept }: { column: string; accept: string }) {
+  return (
+    <input
+      id={column}
+      name={column}
+      type="file"
+      accept={accept}
+      className={`${fieldInput} mt-0 cursor-pointer file:mr-4 file:cursor-pointer file:border-0 file:bg-transparent file:font-mono file:text-xs file:uppercase file:tracking-[0.18em] file:text-accent`}
+    />
+  );
+}
+
 function BulletsField({ column, initial }: { column: string; initial: string[] }) {
   const [bullets, setBullets] = useState<string[]>(initial.length ? initial : ['']);
 
@@ -258,13 +270,7 @@ function FieldInput({ field, defaultValue }: { field: FieldDef; defaultValue: Fi
               className="mb-3 border border-border object-cover"
             />
           )}
-          <input
-            id={field.column}
-            name={field.column}
-            type="file"
-            accept="image/png,image/jpeg,image/webp"
-            className={`${fieldInput} mt-0 cursor-pointer file:mr-4 file:cursor-pointer file:border-0 file:bg-transparent file:font-mono file:text-xs file:uppercase file:tracking-[0.18em] file:text-accent`}
-          />
+          <UploadInput column={field.column} accept="image/png,image/jpeg,image/webp" />
         </div>
       );
     case 'document':
@@ -280,13 +286,7 @@ function FieldInput({ field, defaultValue }: { field: FieldDef; defaultValue: Fi
               current file ↗
             </a>
           )}
-          <input
-            id={field.column}
-            name={field.column}
-            type="file"
-            accept="application/pdf"
-            className={`${fieldInput} mt-0 cursor-pointer file:mr-4 file:cursor-pointer file:border-0 file:bg-transparent file:font-mono file:text-xs file:uppercase file:tracking-[0.18em] file:text-accent`}
-          />
+          <UploadInput column={field.column} accept="application/pdf" />
         </div>
       );
     case 'url':

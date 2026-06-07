@@ -5,9 +5,12 @@ import { getSiteSettings, getSkillGroups } from '@/db/queries';
 
 export async function generateMetadata(): Promise<Metadata> {
   const [s, groups] = await Promise.all([getSiteSettings(), getSkillGroups()]);
+  const headings = groups.map((g) => g.heading).join(', ');
   return {
     title: `Skills · ${s.ownerName}`,
-    description: `Technical skills of ${s.ownerName} — ${groups.map((g) => g.heading).join(', ')}.`,
+    description: headings
+      ? `Technical skills of ${s.ownerName} — ${headings}.`
+      : `Technical skills of ${s.ownerName}.`,
   };
 }
 

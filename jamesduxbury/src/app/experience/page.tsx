@@ -5,10 +5,12 @@ import { getRoles, getSiteSettings } from '@/db/queries';
 
 export async function generateMetadata(): Promise<Metadata> {
   const [s, roles] = await Promise.all([getSiteSettings(), getRoles()]);
-  const organisations = [...new Set(roles.map((r) => r.organisation))];
+  const organisations = [...new Set(roles.map((r) => r.organisation))].join(', ');
   return {
     title: `Experience · ${s.ownerName}`,
-    description: `Professional experience of ${s.ownerName} — ${organisations.join(', ')}.`,
+    description: organisations
+      ? `Professional experience of ${s.ownerName} — ${organisations}.`
+      : `Professional experience of ${s.ownerName}.`,
   };
 }
 

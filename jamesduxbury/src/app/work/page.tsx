@@ -6,9 +6,10 @@ import { getProjects, getSiteSettings } from '@/db/queries';
 // derived from the same rows the page renders, so it can never go stale
 export async function generateMetadata(): Promise<Metadata> {
   const [s, projects] = await Promise.all([getSiteSettings(), getProjects()]);
+  const titles = projects.map((p) => p.title).join(', ');
   return {
     title: `Work · ${s.ownerName}`,
-    description: `Projects by ${s.ownerName} — ${projects.map((p) => p.title).join(', ')}.`,
+    description: titles ? `Projects by ${s.ownerName} — ${titles}.` : `Projects by ${s.ownerName}.`,
   };
 }
 
