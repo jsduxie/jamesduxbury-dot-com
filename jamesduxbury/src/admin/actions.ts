@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 import { auth, isAdminSession } from '@/auth';
 import { markRead } from '@/db/messages';
 import { SITE_ROUTES } from '@/lib/site';
-import { parseFields, type FieldDef, type FieldValue } from './fields';
+import { isUploadField, parseFields, type FieldDef, type FieldValue } from './fields';
 import { deleteImage, documentFileError, imageFileError, uploadImage } from './images';
 import { runBlobMaintenance, type MaintenanceReport } from './maintenance';
 import { getSection } from './sections';
@@ -21,7 +21,7 @@ async function requireAdmin(): Promise<void> {
 }
 
 function uploadFields(fields: FieldDef[]): FieldDef[] {
-  return fields.filter((f) => f.type === 'image' || f.type === 'document');
+  return fields.filter(isUploadField);
 }
 
 // stand-in so a non-nullable upload column validates before its file is uploaded

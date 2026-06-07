@@ -26,6 +26,10 @@ export interface FieldDef {
   help?: string;
 }
 
+export function isUploadField(field: FieldDef): boolean {
+  return field.type === 'image' || field.type === 'document';
+}
+
 export interface MetricDraft {
   label: string;
   value: string;

@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { getSql } from '@/db';
+import { isUploadField } from './fields';
 import { SECTIONS } from './sections';
 import { blobIsAlive, deleteImage, isBlobUrl, listEnvBlobs } from './images';
 
@@ -18,7 +19,7 @@ function uploadRefs(): UploadRef[] {
       z.ZodType
     >;
     for (const field of section.fields) {
-      if (field.type !== 'image' && field.type !== 'document') continue;
+      if (!isUploadField(field)) continue;
       refs.push({
         table: section.table,
         column: field.column,
@@ -56,7 +57,8 @@ export interface MaintenanceReport {
 export async function runBlobMaintenance(): Promise<MaintenanceReport> {
   const report: MaintenanceReport = { healed: [], dangling: [], purged: 0 };
 
-  for (const [url, pointers] of await referencedUrls()) {
+  const referenced = await referencedUrls();
+  for (const [url, pointers] of referenced) {
     if (await blobIsAlive(url)) continue;
     for (const ref of pointers) {
       if (ref.nullable) {
@@ -71,7 +73,8 @@ export async function runBlobMaintenance(): Promise<MaintenanceReport> {
     }
   }
 
-  const referenced = new Set((await referencedUrls()).keys());
+  // healing only nulls references to dead blobs, which are not in the store, so the
+  // referenced keys above are already the correct keep-set for the purge
   for (const url of await listEnvBlobs()) {
     if (referenced.has(url)) continue;
     await deleteImage(url);
