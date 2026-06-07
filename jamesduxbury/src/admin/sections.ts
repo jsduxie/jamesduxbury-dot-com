@@ -282,6 +282,12 @@ export const SECTIONS: SectionConfig[] = [
       { column: 'entry_status', label: 'Entry status', type: 'text' },
       { column: 'entry_years', label: 'Entry years', type: 'text' },
       {
+        column: 'admin_login',
+        label: 'Admin login',
+        type: 'text',
+        help: 'github account allowed into this console; a typo locks you out until fixed in the neon sql editor',
+      },
+      {
         column: 'cv',
         label: 'CV',
         type: 'document',
@@ -304,6 +310,9 @@ export const SECTIONS: SectionConfig[] = [
       entry_education: z.string().min(1),
       entry_status: z.string().min(1),
       entry_years: z.string().min(1),
+      admin_login: z
+        .string()
+        .regex(/^[a-zA-Z0-9-]{1,39}$/, 'github usernames are alphanumeric with hyphens'),
       cv: z.string().min(1).nullable(),
     }),
     listLabel: () => 'Site settings',

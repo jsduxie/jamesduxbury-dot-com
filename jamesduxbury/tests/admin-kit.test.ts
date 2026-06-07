@@ -252,6 +252,7 @@ describe('section registry', () => {
       entry_education: 'Durham',
       entry_status: 'FINAL YEAR',
       entry_years: '2022 - 2026',
+      admin_login: 'jsduxie',
     },
   };
 
