@@ -312,7 +312,10 @@ export const SECTIONS: SectionConfig[] = [
       entry_years: z.string().min(1),
       admin_login: z
         .string()
-        .regex(/^[a-zA-Z0-9-]{1,39}$/, 'github usernames are alphanumeric with hyphens'),
+        .regex(
+          /^[a-zA-Z0-9](?:[a-zA-Z0-9]|-(?=[a-zA-Z0-9])){0,38}$/,
+          'github usernames are alphanumeric; single hyphens only, none leading or trailing',
+        ),
       cv: z.string().min(1).nullable(),
     }),
     listLabel: () => 'Site settings',
