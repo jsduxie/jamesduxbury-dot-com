@@ -1,5 +1,7 @@
 import {
   getAvgDurations,
+  getFlowPages,
+  getPageTransitions,
   getRecentSessions,
   getTopCountries,
   getTopPaths,
@@ -8,6 +10,7 @@ import {
   getVisitTotals,
 } from '@/db/analytics';
 import { AdminPanel } from '@/components/admin/AdminPanel';
+import { VisitFlow } from '@/components/admin/VisitFlow';
 
 function formatDuration(ms: number): string {
   const seconds = Math.round(ms / 1000);
@@ -41,15 +44,18 @@ function CountList({ rows }: { rows: { label: string; views: number }[] }) {
 }
 
 export default async function AnalyticsPage() {
-  const [totals, perDay, topPaths, referrers, countries, durations, sessions] = await Promise.all([
-    getVisitTotals(),
-    getViewsPerDay(30),
-    getTopPaths(30),
-    getTopReferrers(30),
-    getTopCountries(30),
-    getAvgDurations(30),
-    getRecentSessions(12),
-  ]);
+  const [totals, perDay, topPaths, referrers, countries, durations, sessions, transitions, flow] =
+    await Promise.all([
+      getVisitTotals(),
+      getViewsPerDay(30),
+      getTopPaths(30),
+      getTopReferrers(30),
+      getTopCountries(30),
+      getAvgDurations(30),
+      getRecentSessions(12),
+      getPageTransitions(30),
+      getFlowPages(30),
+    ]);
 
   const maxDay = Math.max(...perDay.map((d) => d.views), 1);
   const totalCards = [
@@ -83,6 +89,34 @@ export default async function AnalyticsPage() {
               style={{ height: `${Math.max((day.views / maxDay) * 100, day.views > 0 ? 4 : 1)}%` }}
             />
           ))}
+        </div>
+      </AdminPanel>
+
+      <AdminPanel title="visit flow" meta="last 30 days">
+        <div className="px-4 py-5 sm:px-6">
+          <VisitFlow transitions={transitions} />
+        </div>
+      </AdminPanel>
+
+      <AdminPanel title="entries, exits and drop-off" meta="last 30 days">
+        <div className="divide-y divide-border">
+          {flow.map((page) => (
+            <div
+              key={page.path}
+              className="flex items-baseline justify-between gap-4 px-4 py-3 sm:px-6"
+            >
+              <span className="truncate font-mono text-sm text-text">{page.path}</span>
+              <span className="whitespace-nowrap font-mono text-xs text-muted">
+                {page.views} views · {page.entries} in · {page.exits} out ·{' '}
+                {Math.round(page.dropOff * 100)}% drop-off
+              </span>
+            </div>
+          ))}
+          {flow.length === 0 && (
+            <p className="px-4 py-4 font-mono text-xs uppercase tracking-[0.18em] text-muted sm:px-6">
+              {`>`} no data yet
+            </p>
+          )}
         </div>
       </AdminPanel>
 
