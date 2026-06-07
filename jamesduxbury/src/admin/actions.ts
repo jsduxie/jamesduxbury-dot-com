@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { auth, isAdminSession } from '@/auth';
-import { getSql } from '@/db';
+import { markRead } from '@/db/messages';
 import { SITE_ROUTES } from '@/lib/site';
 import { parseFields, type FieldDef, type FieldValue } from './fields';
 import { deleteImage, imageFileError, uploadImage } from './images';
@@ -114,6 +114,6 @@ export async function deleteItem(slug: string, id: number): Promise<void> {
 
 export async function markMessageRead(id: number): Promise<void> {
   await requireAdmin();
-  await getSql()`UPDATE messages SET read = true WHERE id = ${id}`;
+  await markRead(id);
   revalidatePath('/admin/messages');
 }
