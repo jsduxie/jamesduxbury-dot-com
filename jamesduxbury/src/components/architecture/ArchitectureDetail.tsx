@@ -4,7 +4,7 @@ import { ArchDiagram } from './ArchDiagram';
 const DECISIONS: { title: string; body: string }[] = [
   {
     title: 'no ORM',
-    body: 'The schema is ten tables and the queries are straightforward. The Neon driver parameterises every tagged-template value, so the usual injection argument for an ORM does not apply, and the whole data layer stays readable in two files.',
+    body: 'The schema is ten tables and the queries are straightforward. The Neon driver parameterises every tagged-template value, so the usual injection argument for an ORM does not apply, and the whole data layer stays readable in two files. Working directly with SQL was also part of the point of the project.',
   },
   {
     title: 'a single-user allowlist instead of roles',
@@ -24,11 +24,11 @@ const DECISIONS: { title: string; body: string }[] = [
   },
   {
     title: 'images in Vercel Blob',
-    body: 'Site images are uploaded from the admin console and served from the CDN. Old blobs are deleted when an image is replaced or its row is deleted, so storage stays flat.',
+    body: 'The images are a few megabytes in total, so almost anything would work. I evaluated Cloudflare R2 and Postgres bytea behind a cached route handler; Blob won because it needs no extra account or dependency and serves straight from the CDN. Old blobs are deleted when an image is replaced, so storage stays flat.',
   },
   {
     title: 'no chart library',
-    body: 'The analytics dashboard is server-rendered: a div bar chart and an SVG flow diagram. That keeps chart dependencies out and renders without client-side JavaScript.',
+    body: 'The dashboard chart is a server-rendered bar chart built from divs. It is one dependency fewer and renders without client-side JavaScript.',
   },
 ];
 
@@ -48,20 +48,20 @@ export function ArchitectureDetail() {
       </div>
 
       <div className="border-t border-border px-4 py-6 sm:px-6">
-        <h2 className="font-mono text-xs uppercase tracking-[0.2em] text-muted">system</h2>
+        <h3 className="font-mono text-xs uppercase tracking-[0.2em] text-muted">system</h3>
         <div className="mt-4">
           <ArchDiagram />
         </div>
       </div>
 
       <div className="border-t border-border px-4 py-6 sm:px-6">
-        <h2 className="font-mono text-xs uppercase tracking-[0.2em] text-muted">
+        <h3 className="font-mono text-xs uppercase tracking-[0.2em] text-muted">
           design decisions
-        </h2>
+        </h3>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           {DECISIONS.map((d) => (
             <div key={d.title} className="border border-border bg-bg/40 px-4 py-4">
-              <h3 className="font-mono text-sm text-accent">{d.title}</h3>
+              <h4 className="font-mono text-sm text-accent">{d.title}</h4>
               <p className="mt-2 text-sm leading-relaxed text-text/85">{d.body}</p>
             </div>
           ))}
@@ -69,9 +69,9 @@ export function ArchitectureDetail() {
       </div>
 
       <div className="border-t border-border px-4 py-6 sm:px-6">
-        <h2 className="font-mono text-xs uppercase tracking-[0.2em] text-muted">
+        <h3 className="font-mono text-xs uppercase tracking-[0.2em] text-muted">
           how it was built
-        </h2>
+        </h3>
         <p className="mt-3 text-sm leading-relaxed text-text/85 sm:text-base">
           The rebuild was planned as GitHub issues grouped into milestones and shipped as small,
           reviewed pull requests. Every change passes the same gate: formatting, lint, typecheck, a
