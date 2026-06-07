@@ -260,7 +260,12 @@ describe('section registry', () => {
     '%s: a filled form parses and validates',
     (slug) => {
       const section = getSection(slug);
-      const parsed = section.schema.safeParse(parseFields(section.fields, form(samples[slug])));
+      const values = parseFields(section.fields, form(samples[slug]));
+      // the action fills upload columns from the file or prior row; mimic that here
+      for (const f of section.fields) {
+        if (f.type === 'image' || f.type === 'document') values[f.column] = 'https://example/x';
+      }
+      const parsed = section.schema.safeParse(values);
       expect(parsed.success).toBe(true);
     },
   );

@@ -102,7 +102,9 @@ Each content section is defined once in a registry (`src/admin/sections.ts`) as 
 
 ### Images
 
-Site images (the profile picture, certification badges, project images) live in Vercel Blob and are served from its CDN. The admin form kit has an upload field type: saving uploads the file, writes its URL to the row, and deletes the blob it replaced; deleting a row deletes its blobs, so the store never accumulates unused files. Each environment uploads its own copies, which keeps a replacement in one environment from breaking the other.
+Site images (the profile picture, certification badges, project images) live in Vercel Blob and are served from its CDN. The admin form kit has upload field types for images and the CV: saving uploads the file, writes its URL to the row, and deletes the blob it replaced; deleting a row deletes its blobs, and a remove checkbox clears an optional image. Each environment uploads under its own prefix in the shared store, so a replacement or purge in one never touches the other.
+
+If a blob is deleted out of band the public pages hide the missing image rather than render a broken frame. A maintenance page in the console reconciles the store: it clears references whose blob has vanished and deletes blobs no row points at, scoped to the current environment's prefix.
 
 ### Analytics
 

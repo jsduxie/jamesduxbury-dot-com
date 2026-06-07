@@ -59,7 +59,7 @@ describe('uploadImage', () => {
     putMock.mockResolvedValue({ url: BLOB_URL });
     const file = makeFile('profile.png', 'image/png');
     await expect(uploadImage(file)).resolves.toBe(BLOB_URL);
-    expect(putMock).toHaveBeenCalledWith('profile.png', file, {
+    expect(putMock).toHaveBeenCalledWith('dev/profile.png', file, {
       access: 'public',
       addRandomSuffix: true,
     });
