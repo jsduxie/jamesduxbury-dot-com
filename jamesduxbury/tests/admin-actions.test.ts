@@ -240,11 +240,30 @@ describe('case studies prose round trip', () => {
   });
 });
 
+function siteForm(): FormData {
+  const fd = new FormData();
+  fd.append('owner_name', siteSettings.ownerName);
+  fd.append('tagline', siteSettings.tagline);
+  fd.append('contact_email', siteSettings.contactEmail);
+  fd.append('github_url', siteSettings.githubUrl);
+  fd.append('linkedin_url', siteSettings.linkedinUrl);
+  fd.append('site_version', siteSettings.siteVersion);
+  fd.append('meta_description', siteSettings.metaDescription);
+  fd.append('og_description', siteSettings.ogDescription);
+  fd.append('og_footer', siteSettings.ogFooter);
+  fd.append('entry_role', siteSettings.entryRole);
+  fd.append('entry_credential', siteSettings.entryCredential);
+  fd.append('entry_education', siteSettings.entryEducation);
+  fd.append('entry_status', siteSettings.entryStatus);
+  fd.append('entry_years', siteSettings.entryYears);
+  return fd;
+}
+
 describe('site settings singleton', () => {
   it('updates the profile image in place', async () => {
     const url = 'https://abc.public.blob.vercel-storage.com/profile.png';
     uploadMock.mockResolvedValue(url);
-    const fd = new FormData();
+    const fd = siteForm();
     fd.append('profile_image', new File([new Uint8Array(8)], 'profile.png', { type: 'image/png' }));
     await expect(saveItem('site', 1, EMPTY, fd)).rejects.toThrow('REDIRECT:/admin/site');
     const [row] = await sql`SELECT profile_image FROM site_settings WHERE id = 1`;
@@ -252,8 +271,31 @@ describe('site settings singleton', () => {
     expect(deleteImageMock).toHaveBeenCalledWith(siteSettings.profileImage);
   });
 
+  it('uploads a pdf into the cv column and keeps it on a later save', async () => {
+    const url = 'https://abc.public.blob.vercel-storage.com/cv.pdf';
+    uploadMock.mockResolvedValue(url);
+    const fd = siteForm();
+    fd.append('cv', new File([new Uint8Array(8)], 'cv.pdf', { type: 'application/pdf' }));
+    await expect(saveItem('site', 1, EMPTY, fd)).rejects.toThrow('REDIRECT:/admin/site');
+    const [row] = await sql`SELECT cv FROM site_settings WHERE id = 1`;
+    expect(row.cv).toBe(url);
+
+    // empty file input keeps the stored document
+    await expect(saveItem('site', 1, EMPTY, siteForm())).rejects.toThrow('REDIRECT:/admin/site');
+    const [kept] = await sql`SELECT cv FROM site_settings WHERE id = 1`;
+    expect(kept.cv).toBe(url);
+    await sql`UPDATE site_settings SET cv = NULL WHERE id = 1`;
+  });
+
+  it('rejects a non-pdf cv upload', async () => {
+    const fd = siteForm();
+    fd.append('cv', new File([new Uint8Array(8)], 'cv.png', { type: 'image/png' }));
+    const state = await saveItem('site', 1, EMPTY, fd);
+    expect(state.fieldErrors.cv).toBe('Document must be a pdf');
+  });
+
   it('rejects a second settings row', async () => {
-    const fd = new FormData();
+    const fd = siteForm();
     fd.append('profile_image', new File([new Uint8Array(8)], 'extra.png', { type: 'image/png' }));
     uploadMock.mockResolvedValue('https://abc.public.blob.vercel-storage.com/extra.png');
     const state = await saveItem('site', null, EMPTY, fd);
