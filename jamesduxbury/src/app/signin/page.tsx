@@ -15,7 +15,7 @@ export default async function SignInPage({
   searchParams: Promise<{ callbackUrl?: string; error?: string }>;
 }) {
   const session = await auth();
-  if (isAdminSession(session)) redirect('/admin');
+  if (await isAdminSession(session)) redirect('/admin');
   const { callbackUrl, error } = await searchParams;
 
   return (

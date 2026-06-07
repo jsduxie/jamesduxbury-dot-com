@@ -1,6 +1,7 @@
 import NextAuth, { type Profile, type Session } from 'next-auth';
 import type { JWT } from 'next-auth/jwt';
 import GitHub from 'next-auth/providers/github';
+import { getAdminLogin } from '@/db/queries';
 
 declare module 'next-auth' {
   interface User {
@@ -8,14 +9,13 @@ declare module 'next-auth' {
   }
 }
 
-// github account allowed to sign in
-export const ALLOWED_LOGIN = 'jsduxie';
-
-export function isAllowedLogin(login: unknown): boolean {
-  return login === ALLOWED_LOGIN;
+// the login lives in site_settings, so a rename invalidates old sessions at once
+export async function isAllowedLogin(login: unknown): Promise<boolean> {
+  if (typeof login !== 'string' || login === '') return false;
+  return login === (await getAdminLogin());
 }
 
-export function isAdminSession(session: Session | null): boolean {
+export async function isAdminSession(session: Session | null): Promise<boolean> {
   return isAllowedLogin(session?.user?.login);
 }
 

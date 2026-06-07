@@ -1,9 +1,9 @@
-import { describe, expect, it } from 'vitest';
+import { neon } from '@neondatabase/serverless';
+import { afterEach, describe, expect, it } from 'vitest';
 import type { Session } from 'next-auth';
 import type { NextRequest } from 'next/server';
 import type { JWT } from 'next-auth/jwt';
 import {
-  ALLOWED_LOGIN,
   auth,
   authCallbacks,
   handlers,
@@ -17,6 +17,8 @@ import { GET, POST } from '../src/app/api/auth/[...nextauth]/route';
 
 type AuthedRequest = Parameters<typeof requireAdmin>[0];
 
+const sql = neon(process.env.DATABASE_URL!);
+
 function request(href: string, session: Session | null): AuthedRequest {
   const url = new URL(href);
   return { auth: session, nextUrl: url } as NextRequest & { auth: Session | null };
@@ -26,26 +28,42 @@ function sessionFor(login?: string): Session {
   return { user: { name: 'James', login }, expires: '2099-01-01T00:00:00.000Z' };
 }
 
+// the allowlist lives in the dev DB now; every mutation restores it
+afterEach(async () => {
+  await sql`UPDATE site_settings SET admin_login = 'jsduxie' WHERE id = 1`;
+});
+
 describe('allowlist', () => {
-  it('allows exactly the jsduxie login', () => {
-    expect(ALLOWED_LOGIN).toBe('jsduxie');
-    expect(isAllowedLogin('jsduxie')).toBe(true);
+  it('allows exactly the stored login', async () => {
+    expect(await isAllowedLogin('jsduxie')).toBe(true);
   });
 
   it.each(['JSDuxie', 'jsduxie2', 'octocat', '', undefined, null, 42])(
     'rejects %j',
-    (login) => {
-      expect(isAllowedLogin(login)).toBe(false);
+    async (login) => {
+      expect(await isAllowedLogin(login)).toBe(false);
     },
   );
+
+  it('follows a rename: the old login is rejected and the new one accepted', async () => {
+    await sql`UPDATE site_settings SET admin_login = 'renamed-user' WHERE id = 1`;
+    expect(await isAllowedLogin('jsduxie')).toBe(false);
+    expect(await isAllowedLogin('renamed-user')).toBe(true);
+  });
+
+  it('fails closed on an empty stored value', async () => {
+    await sql`UPDATE site_settings SET admin_login = '' WHERE id = 1`;
+    expect(await isAllowedLogin('jsduxie')).toBe(false);
+    expect(await isAllowedLogin('')).toBe(false);
+  });
 });
 
 describe('isAdminSession', () => {
-  it('accepts only a session carrying the allowed login', () => {
-    expect(isAdminSession(sessionFor('jsduxie'))).toBe(true);
-    expect(isAdminSession(sessionFor('octocat'))).toBe(false);
-    expect(isAdminSession(sessionFor(undefined))).toBe(false);
-    expect(isAdminSession(null)).toBe(false);
+  it('accepts only a session carrying the allowed login', async () => {
+    expect(await isAdminSession(sessionFor('jsduxie'))).toBe(true);
+    expect(await isAdminSession(sessionFor('octocat'))).toBe(false);
+    expect(await isAdminSession(sessionFor(undefined))).toBe(false);
+    expect(await isAdminSession(null)).toBe(false);
   });
 });
 
@@ -58,10 +76,10 @@ describe('NextAuth wiring', () => {
     expect(typeof signOut).toBe('function');
   });
 
-  it('signIn admits only the allowed GitHub profile', () => {
-    expect(authCallbacks.signIn({ profile: { login: 'jsduxie' } })).toBe(true);
-    expect(authCallbacks.signIn({ profile: { login: 'octocat' } })).toBe(false);
-    expect(authCallbacks.signIn({})).toBe(false);
+  it('signIn admits only the allowed GitHub profile', async () => {
+    expect(await authCallbacks.signIn({ profile: { login: 'jsduxie' } })).toBe(true);
+    expect(await authCallbacks.signIn({ profile: { login: 'octocat' } })).toBe(false);
+    expect(await authCallbacks.signIn({})).toBe(false);
   });
 
   it('jwt stores the login at sign-in and keeps it afterwards', () => {
@@ -85,9 +103,9 @@ describe('admin middleware', () => {
     expect(config.matcher).toEqual(['/admin/:path*']);
   });
 
-  it('lets the allowed account through', () => {
+  it('lets the allowed account through', async () => {
     expect(
-      requireAdmin(request('http://localhost:3000/admin/projects', sessionFor('jsduxie'))),
+      await requireAdmin(request('http://localhost:3000/admin/projects', sessionFor('jsduxie'))),
     ).toBeUndefined();
   });
 
@@ -95,8 +113,8 @@ describe('admin middleware', () => {
     ['anonymous', null],
     ['wrong account', sessionFor('octocat')],
     ['session without a login claim', sessionFor(undefined)],
-  ])('redirects a %s request to signin with a callback', (_name, session) => {
-    const res = requireAdmin(request('http://localhost:3000/admin/projects', session));
+  ])('redirects a %s request to signin with a callback', async (_name, session) => {
+    const res = await requireAdmin(request('http://localhost:3000/admin/projects', session));
     expect(res).toBeInstanceOf(Response);
     const location = new URL(res!.headers.get('location')!);
     expect(location.pathname).toBe('/signin');
