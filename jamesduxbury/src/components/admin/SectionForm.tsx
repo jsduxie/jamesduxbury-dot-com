@@ -1,7 +1,7 @@
 'use client';
 
-import Image from 'next/image';
 import { useActionState, useRef, useState } from 'react';
+import { BlobImage } from '@/components/BlobImage';
 import type { FormState } from '@/admin/actions';
 import type { FieldDef, FieldDefault, MetricDraft } from '@/admin/fields';
 import { parseProse } from '@/admin/runs';
@@ -33,6 +33,15 @@ function UploadInput({ column, accept }: { column: string; accept: string }) {
       accept={accept}
       className={`${fieldInput} mt-0 cursor-pointer file:mr-4 file:cursor-pointer file:border-0 file:bg-transparent file:font-mono file:text-xs file:uppercase file:tracking-[0.18em] file:text-accent`}
     />
+  );
+}
+
+function RemoveControl({ column }: { column: string }) {
+  return (
+    <label className="mb-3 flex items-center gap-2 font-mono text-xs uppercase tracking-[0.18em] text-muted">
+      <input type="checkbox" name={`${column}.remove`} className="accent-accent" />
+      remove current file
+    </label>
   );
 }
 
@@ -261,7 +270,7 @@ function FieldInput({ field, defaultValue }: { field: FieldDef; defaultValue: Fi
       return (
         <div className="mt-2">
           {text && (
-            <Image
+            <BlobImage
               src={text}
               alt="current image"
               width={80}
@@ -270,6 +279,7 @@ function FieldInput({ field, defaultValue }: { field: FieldDef; defaultValue: Fi
               className="mb-3 border border-border object-cover"
             />
           )}
+          {text && <RemoveControl column={field.column} />}
           <UploadInput column={field.column} accept="image/png,image/jpeg,image/webp" />
         </div>
       );
@@ -286,6 +296,7 @@ function FieldInput({ field, defaultValue }: { field: FieldDef; defaultValue: Fi
               current file ↗
             </a>
           )}
+          {text && <RemoveControl column={field.column} />}
           <UploadInput column={field.column} accept="application/pdf" />
         </div>
       );

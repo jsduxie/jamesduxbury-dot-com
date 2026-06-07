@@ -295,7 +295,8 @@ export const SECTIONS: SectionConfig[] = [
       },
     ],
     schema: z.object({
-      profile_image: z.string().min(1).nullable(),
+      // non-nullable: clearing the profile image fails validation rather than the DB
+      profile_image: z.string().min(1),
       owner_name: z.string().min(1),
       tagline: z.string().min(1),
       contact_email: z.email(),
