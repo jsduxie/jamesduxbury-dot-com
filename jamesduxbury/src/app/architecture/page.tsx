@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { PageShell } from '@/components/PageShell';
 import { ArchitectureDetail } from '@/components/architecture/ArchitectureDetail';
 
+export const revalidate = 60;
+
 export const metadata: Metadata = {
   title: 'Architecture · James Duxbury',
   description:
