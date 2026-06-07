@@ -1,5 +1,7 @@
 import { PageShell } from '@/components/PageShell';
+import { FooterContent } from '@/components/Footer';
 import { WidgetFrame } from '@/components/console/WidgetFrame';
+import { siteSettings } from '@/data/site';
 
 interface SkeletonShellProps {
   channel: string;
@@ -17,7 +19,11 @@ export function SkeletonShell({
   children,
 }: SkeletonShellProps) {
   return (
-    <PageShell widthClass={widthClass} loadingLabel={ariaLabel}>
+    <PageShell
+      widthClass={widthClass}
+      loadingLabel={ariaLabel}
+      footer={<FooterContent settings={siteSettings} />}
+    >
       <section>
         <WidgetFrame channel={channel} label={label}>
           {children}

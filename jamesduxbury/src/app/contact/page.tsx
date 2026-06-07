@@ -3,12 +3,15 @@ import { PageShell } from '@/components/PageShell';
 import { Widget } from '@/components/console/Widget';
 import { ContactForm } from '@/components/contact/ContactForm';
 import { ContactChannels } from '@/components/contact/ContactChannels';
+import { getSiteSettings } from '@/db/queries';
 
-export const metadata: Metadata = {
-  title: 'Contact · James Duxbury',
-  description:
-    'Get in touch with James Duxbury — software engineer in AI and application security.',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const s = await getSiteSettings();
+  return {
+    title: `Contact · ${s.ownerName}`,
+    description: `Get in touch with ${s.ownerName} — ${s.tagline}.`,
+  };
+}
 
 export default function ContactPage() {
   return (

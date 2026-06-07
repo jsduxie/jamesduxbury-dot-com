@@ -4,10 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { ArchitectureDetail } from '../src/components/architecture/ArchitectureDetail';
 import { ArchDiagram } from '../src/components/architecture/ArchDiagram';
 import { architectureSections } from '../src/data/architecture';
-import type { AboutParagraph } from '../src/data/about';
-
-const plain = (p: AboutParagraph) =>
-  p.map((run) => (typeof run === 'string' ? run : 'strong' in run ? run.strong : run.em)).join('');
+import { runText as plain } from '../src/data/about';
 
 const byKind = (kind: string) => architectureSections.filter((s) => s.kind === kind);
 

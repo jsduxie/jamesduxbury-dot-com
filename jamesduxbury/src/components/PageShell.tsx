@@ -6,6 +6,7 @@ interface PageShellProps {
   loadingLabel?: string;
   backHref?: string;
   backLabel?: string;
+  footer?: React.ReactNode;
   children: React.ReactNode;
 }
 
@@ -15,6 +16,7 @@ export function PageShell({
   loadingLabel,
   backHref = '/',
   backLabel = '/ home',
+  footer = <Footer />,
   children,
 }: PageShellProps) {
   return (
@@ -32,7 +34,7 @@ export function PageShell({
         </Link>
         {children}
       </main>
-      <Footer />
+      {footer}
     </>
   );
 }

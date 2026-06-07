@@ -1,12 +1,15 @@
 import type { Metadata } from 'next';
 import { PageShell } from '@/components/PageShell';
 import { SkillsDetail } from '@/components/skills/SkillsDetail';
+import { getSiteSettings, getSkillGroups } from '@/db/queries';
 
-export const metadata: Metadata = {
-  title: 'Skills · James Duxbury',
-  description:
-    'Technical skills of James Duxbury — languages, AI/ML, cloud, infrastructure, and development practices.',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const [s, groups] = await Promise.all([getSiteSettings(), getSkillGroups()]);
+  return {
+    title: `Skills · ${s.ownerName}`,
+    description: `Technical skills of ${s.ownerName} — ${groups.map((g) => g.heading).join(', ')}.`,
+  };
+}
 
 export const revalidate = 60;
 

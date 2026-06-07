@@ -14,6 +14,7 @@ import { DegreeCard } from '../src/components/education/DegreeCard';
 import { DegreeList } from '../src/components/education/DegreeList';
 import { ContactForm } from '../src/components/contact/ContactForm';
 import { ContactChannels } from '../src/components/contact/ContactChannels';
+import { siteSettings } from '../src/data/site';
 import { WorkSummary } from '../src/components/work/WorkSummary';
 import { ExperienceSummary } from '../src/components/experience/ExperienceSummary';
 import { SkillsSummary } from '../src/components/skills/SkillsSummary';
@@ -49,24 +50,37 @@ describe('summary components render DB content', () => {
   });
 });
 
+const statusBarProps = {
+  ownerName: siteSettings.ownerName,
+  siteVersion: siteSettings.siteVersion,
+  cvHref: '/data/CV.pdf',
+  cvDownload: 'James_Duxbury_CV.pdf',
+};
+
 describe('Entry', () => {
-  it('renders the entry channel header', () => {
-    render(<Entry profileImage="/images/profile-picture.png" />);
+  it('renders the entry channel header and settings facts', () => {
+    render(<Entry settings={siteSettings} />);
     expect(screen.getByText(/CHANNEL 00/)).toBeInTheDocument();
+    expect(screen.getByText(siteSettings.ownerName)).toBeInTheDocument();
+    expect(screen.getByText(siteSettings.entryRole)).toBeInTheDocument();
   });
 });
 
 describe('Footer', () => {
-  it('renders the contact links', () => {
-    render(<Footer />);
+  it('renders the contact links from settings', async () => {
+    render(await Footer());
     expect(screen.getByText('contact form ↗')).toBeInTheDocument();
     expect(screen.getByText('email ↗')).toBeInTheDocument();
+    expect(screen.getByText('email ↗').closest('a')).toHaveAttribute(
+      'href',
+      `mailto:${siteSettings.contactEmail}`,
+    );
   });
 });
 
 describe('StatusBar', () => {
   it('marks the current route as active', () => {
-    render(<StatusBar />);
+    render(<StatusBar {...statusBarProps} />);
     const active = screen
       .getAllByRole('link', { name: 'work' })
       .find((l) => l.getAttribute('aria-current') === 'page');
@@ -74,7 +88,7 @@ describe('StatusBar', () => {
   });
 
   it('opens and closes the mobile menu', () => {
-    render(<StatusBar />);
+    render(<StatusBar {...statusBarProps} />);
     const button = screen.getByRole('button', { name: 'Open menu' });
     fireEvent.click(button);
     expect(screen.getAllByRole('link', { name: 'about' }).length).toBeGreaterThan(1);
@@ -84,7 +98,7 @@ describe('StatusBar', () => {
   });
 
   it('closes the mobile menu when resized to desktop', () => {
-    render(<StatusBar />);
+    render(<StatusBar {...statusBarProps} />);
     fireEvent.click(screen.getByRole('button', { name: 'Open menu' }));
     window.innerWidth = 1280;
     fireEvent(window, new Event('resize'));
@@ -143,8 +157,8 @@ describe('ContactForm', () => {
 });
 
 describe('ContactChannels', () => {
-  it('renders all channels, external ones in a new tab', () => {
-    render(<ContactChannels />);
+  it('renders all channels, external ones in a new tab', async () => {
+    render(await ContactChannels());
     expect(screen.getByText('@jsduxie').nextElementSibling).toHaveAttribute('target', '_blank');
     expect(screen.getByText('secure mailto channel')).toBeInTheDocument();
     expect(screen.getByText('in/jamesduxbury03')).toBeInTheDocument();
