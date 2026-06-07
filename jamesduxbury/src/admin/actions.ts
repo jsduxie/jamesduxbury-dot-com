@@ -7,6 +7,7 @@ import { markRead } from '@/db/messages';
 import { SITE_ROUTES } from '@/lib/site';
 import { parseFields, type FieldDef, type FieldValue } from './fields';
 import { deleteImage, documentFileError, imageFileError, uploadImage } from './images';
+import { runBlobMaintenance, type MaintenanceReport } from './maintenance';
 import { getSection } from './sections';
 import { deleteRow, getRow, insertRow, makeRoomAt, updateRow } from './sql';
 
@@ -22,6 +23,9 @@ async function requireAdmin(): Promise<void> {
 function uploadFields(fields: FieldDef[]): FieldDef[] {
   return fields.filter((f) => f.type === 'image' || f.type === 'document');
 }
+
+// stand-in so a non-nullable upload column validates before its file is uploaded
+const PENDING_UPLOAD = '(pending upload)';
 
 function revalidatePublicPages(): void {
   for (const route of SITE_ROUTES) revalidatePath(route);
@@ -68,8 +72,10 @@ export async function saveItem(
   );
   const prior = id !== null && images.length > 0 ? await getRow(section.table, id) : null;
   for (const f of images) {
-    if (files.has(f.column)) continue;
-    values[f.column] = removed.has(f.column) ? null : ((prior?.[f.column] as FieldValue) ?? null);
+    // a pending upload validates as present; the real URL replaces this after upload
+    if (files.has(f.column)) values[f.column] = PENDING_UPLOAD;
+    else
+      values[f.column] = removed.has(f.column) ? null : ((prior?.[f.column] as FieldValue) ?? null);
   }
 
   const parsed = section.schema.safeParse(values);
@@ -125,4 +131,14 @@ export async function markMessageRead(id: number): Promise<void> {
   await requireAdmin();
   await markRead(id);
   revalidatePath('/admin/messages');
+}
+
+export async function runMaintenance(
+  _prev: MaintenanceReport | null,
+  _formData: FormData,
+): Promise<MaintenanceReport> {
+  await requireAdmin();
+  const report = await runBlobMaintenance();
+  if (report.healed.length > 0) revalidatePublicPages();
+  return report;
 }
