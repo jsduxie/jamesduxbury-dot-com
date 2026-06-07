@@ -1,8 +1,6 @@
 name: Seed production
 
-# One-off: seeds the /architecture content into the production database on merge.
-# The seed is insert-if-missing, so re-runs on later main pushes cannot overwrite
-# console edits. A follow-up PR removes this workflow once the run is green.
+# One-off insert-if-missing prod seed on merge; a follow-up PR removes it once green.
 
 on:
   push:
@@ -14,6 +12,10 @@ defaults:
 
 jobs:
   seed:
+    # serialise runs so back-to-back merges never migrate prod concurrently
+    concurrency:
+      group: seed-production
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
