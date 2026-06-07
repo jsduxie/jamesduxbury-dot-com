@@ -3,7 +3,9 @@ import { neon } from '@neondatabase/serverless';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import {
   getAvgDurations,
+  getFlowPages,
   getMessageCounts,
+  getPageTransitions,
   getRecentSessions,
   getTopCountries,
   getTopPaths,
@@ -14,6 +16,7 @@ import {
 
 const sql = neon(process.env.DATABASE_URL!);
 const sessionId = randomUUID();
+const bounceSessionId = randomUUID();
 const pathA = `/test-analytics-a-${Date.now()}`;
 const pathB = `/test-analytics-b-${Date.now()}`;
 
@@ -33,10 +36,15 @@ beforeAll(async () => {
         ${row.duration}, now() - make_interval(mins => ${row.minutesAgo}))
     `;
   }
+  // a single-view session: entry and exit on pathB
+  await sql`
+    INSERT INTO page_views (session_id, path, created_at)
+    VALUES (${bounceSessionId}, ${pathB}, now() - make_interval(mins => 6))
+  `;
 });
 
 afterAll(async () => {
-  await sql`DELETE FROM page_views WHERE session_id = ${sessionId}`;
+  await sql`DELETE FROM page_views WHERE session_id IN (${sessionId}, ${bounceSessionId})`;
 });
 
 describe('analytics queries', () => {
@@ -88,6 +96,32 @@ describe('analytics queries', () => {
     expect(ours?.country).toBe('ZZ');
     expect(ours?.totalMs).toBe(60_000);
     expect(ours?.startedAt).toMatch(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/);
+  });
+
+  it('derives transitions between pages', async () => {
+    const transitions = await getPageTransitions(30, 500);
+    const ab = transitions.find((t) => t.from === pathA && t.to === pathB);
+    const ba = transitions.find((t) => t.from === pathB && t.to === pathA);
+    expect(ab?.count).toBe(1);
+    expect(ba?.count).toBe(1);
+  });
+
+  it('derives entries, exits and drop-off per page', async () => {
+    const pages = await getFlowPages(30, 500);
+    expect(pages.find((p) => p.path === pathA)).toEqual({
+      path: pathA,
+      views: 4,
+      entries: 1,
+      exits: 1,
+      dropOff: 0.25,
+    });
+    expect(pages.find((p) => p.path === pathB)).toEqual({
+      path: pathB,
+      views: 2,
+      entries: 1,
+      exits: 1,
+      dropOff: 0.5,
+    });
   });
 
   it('counts messages without negative or impossible values', async () => {
