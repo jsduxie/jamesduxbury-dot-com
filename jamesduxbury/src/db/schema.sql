@@ -103,6 +103,22 @@ CREATE TABLE IF NOT EXISTS case_studies (
 CREATE TABLE IF NOT EXISTS site_settings (
   id integer PRIMARY KEY DEFAULT 1 CHECK (id = 1),
   profile_image text NOT NULL,
+  contact_email text NOT NULL DEFAULT 'jduxbury848@gmail.com',
+  github_url text NOT NULL DEFAULT 'https://github.com/jsduxie',
+  linkedin_url text NOT NULL DEFAULT 'https://linkedin.com/in/jamesduxbury03',
+  site_version text NOT NULL DEFAULT 'v2.0',
+  owner_name text NOT NULL DEFAULT 'James Duxbury',
+  tagline text NOT NULL DEFAULT 'Software Engineer in AI and Cybersecurity',
+  meta_description text NOT NULL DEFAULT 'Final-year MEng Computer Science student at Durham. AI / NLP research, application security, full-stack engineering. Accredited Affiliate Member of the Chartered Institute of Information Security (AfCIIS).',
+  og_description text NOT NULL DEFAULT 'Portfolio of James Duxbury — MEng Computer Science, Durham. AI, NLP, application security, full-stack engineering.',
+  og_footer text NOT NULL DEFAULT 'MEng Computer Science · Durham',
+  entry_role text NOT NULL DEFAULT 'Software engineer · AI & application security',
+  entry_credential text NOT NULL DEFAULT 'AfCIIS',
+  entry_education text NOT NULL DEFAULT 'Durham University · Integrated MEng Computer Science',
+  entry_status text NOT NULL DEFAULT 'FINAL YEAR',
+  entry_years text NOT NULL DEFAULT '2022 — 2026',
+  -- blob URL; public CV links fall back to /data/CV.pdf while NULL
+  cv text,
   sort_order integer NOT NULL DEFAULT 0,
   created_at timestamptz NOT NULL DEFAULT now(),
   updated_at timestamptz NOT NULL DEFAULT now()

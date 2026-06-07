@@ -169,7 +169,7 @@ The dashboard chart is a server-rendered bar chart built from divs. It is one de
 | `projects`, `experience`, `education`, `certifications`, `skill_groups`, `about_paragraphs` | Site content, one table per section, ordered by an integer `sort_order` |
 | `case_studies` | One optional case study per project, keyed by project slug |
 | `architecture_sections` | Content for the /architecture page (intro, stack line, decision cards, build notes) |
-| `site_settings` | Single row of site-wide settings (currently the profile picture) |
+| `site_settings` | Single row of site-wide content: profile picture, CV, identity and contact details, metadata text |
 | `messages` | Contact form submissions |
 | `page_views` | Analytics events |
 

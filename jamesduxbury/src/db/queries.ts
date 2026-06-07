@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import { getSql } from '@/db';
 import type { Project, ProjectMetric, ProjectStatus } from '@/data/projects';
 import type { Role } from '@/data/experience';
@@ -138,12 +139,49 @@ export async function getCaseStudy(slug: string): Promise<CaseStudy | null> {
   };
 }
 
-export async function getSiteSettings(): Promise<SiteSettings> {
-  const rows = (await getSql()`SELECT profile_image FROM site_settings WHERE id = 1`) as {
-    profile_image: string;
-  }[];
-  return { profileImage: rows[0]?.profile_image ?? siteSettings.profileImage };
+interface SiteSettingsRow {
+  profile_image: string;
+  contact_email: string;
+  github_url: string;
+  linkedin_url: string;
+  site_version: string;
+  owner_name: string;
+  tagline: string;
+  meta_description: string;
+  og_description: string;
+  og_footer: string;
+  entry_role: string;
+  entry_credential: string;
+  entry_education: string;
+  entry_status: string;
+  entry_years: string;
+  cv: string | null;
 }
+
+// cache() shares the single settings row across every reader in one request
+export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
+  const rows = (await getSql()`SELECT * FROM site_settings WHERE id = 1`) as SiteSettingsRow[];
+  const r = rows[0];
+  if (!r) return siteSettings;
+  return {
+    profileImage: r.profile_image,
+    contactEmail: r.contact_email,
+    githubUrl: r.github_url,
+    linkedinUrl: r.linkedin_url,
+    siteVersion: r.site_version,
+    ownerName: r.owner_name,
+    tagline: r.tagline,
+    metaDescription: r.meta_description,
+    ogDescription: r.og_description,
+    ogFooter: r.og_footer,
+    entryRole: r.entry_role,
+    entryCredential: r.entry_credential,
+    entryEducation: r.entry_education,
+    entryStatus: r.entry_status,
+    entryYears: r.entry_years,
+    cv: r.cv,
+  };
+});
 
 export async function getAboutParagraphs(): Promise<AboutParagraph[]> {
   const rows = (await getSql()`SELECT runs FROM about_paragraphs ORDER BY sort_order`) as {
