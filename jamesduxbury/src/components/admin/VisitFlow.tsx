@@ -1,7 +1,8 @@
 import type { PageTransition } from '@/db/analytics';
 
 const WIDTH = 640;
-const LABEL_W = 150;
+// fits 20 truncated characters of 14px mono plus the 8px gap to the node
+const LABEL_W = 180;
 const NODE_W = 6;
 const GAP = 10;
 const MIN_H = 14;
@@ -101,10 +102,10 @@ export function VisitFlow({ transitions }: { transitions: PageTransition[] }) {
           <rect x={LABEL_W} y={n.y} width={NODE_W} height={n.h} className="fill-accent" />
           <text
             x={LABEL_W - 8}
-            y={n.y + n.h / 2 + 4}
+            y={n.y + n.h / 2 + 5}
             textAnchor="end"
-            fontSize={11}
-            className="fill-muted font-mono"
+            fontSize={14}
+            className="fill-text font-mono"
           >
             {truncate(n.path)}
           </text>
@@ -121,9 +122,9 @@ export function VisitFlow({ transitions }: { transitions: PageTransition[] }) {
           />
           <text
             x={WIDTH - LABEL_W + 8}
-            y={n.y + n.h / 2 + 4}
-            fontSize={11}
-            className="fill-muted font-mono"
+            y={n.y + n.h / 2 + 5}
+            fontSize={14}
+            className="fill-text font-mono"
           >
             {truncate(n.path)}
           </text>
