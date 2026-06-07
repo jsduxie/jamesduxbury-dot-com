@@ -98,7 +98,7 @@ The allowed login is stored in `site_settings.admin_login` and editable from the
 
 ### Admin console
 
-Each content section is defined once in a registry (`src/admin/sections.ts`) as field config plus a Zod schema. The list, create, edit and delete pages, the form rendering, and the SQL are all generic, so adding a section is configuration rather than new code. The console also has a messages inbox and the analytics dashboard.
+Each content section is defined once in a registry (`src/admin/sections.ts`) as field config plus a Zod schema. The list, create, edit and delete pages, the form rendering, and the SQL are all generic, so adding a section is configuration rather than new code. Prose fields use a block editor that previews each block as it will appear on the site. The console also has a messages inbox and the analytics dashboard.
 
 ### Images
 
@@ -112,7 +112,7 @@ The site records page views first-party: a per-tab session id, path, referrer (f
 
 ### Contact
 
-Contact form submissions are written to the `messages` table and emailed to me. The request only fails if both channels fail, so a mail outage does not lose messages.
+Contact form submissions are written to the `messages` table and emailed to me. The request only fails if both channels fail, so a mail outage does not lose messages. Submissions are stored as the same blocks the editor produces, and any link in a received message renders as plain text rather than a clickable anchor.
 
 ## Screenshots
 
@@ -142,6 +142,12 @@ The admin console:
 
 The schema is eleven tables and the queries are straightforward. The Neon driver parameterises every tagged-template value, so the usual injection argument for an ORM does not apply, and the whole data layer stays readable in two files. Working directly with SQL was also part of the point of the project.
 
+### Rich text as blocks
+
+Editable prose lives in the database as a typed array of blocks: paragraphs, headings, lists and inline images, with bold, italic and links inside them. Storing the structure rather than a markdown string or raw HTML means the content renders the same way on the site, in the admin editor and in the contact inbox, and never needs HTML sanitising on output.
+
+The editor is one self-previewing surface. Each block renders the way it will on the site and turns into a markdown input when clicked, so there is no separate preview pane, no editor dependency, and no contenteditable. The contact form reuses the same editor with a smaller toolbar: formatting and links, but no headings and no image uploads.
+
 ### A single-user allowlist instead of roles
 
 The site has exactly one editor. Checking my GitHub login by identity at every layer is simpler and stricter than a role system, and there is no user table to manage because sessions are JWTs.
@@ -170,7 +176,8 @@ The dashboard chart is a server-rendered bar chart built from divs. It is one de
 
 | Table | Contents |
 |---|---|
-| `projects`, `experience`, `education`, `certifications`, `skill_groups`, `about_paragraphs` | Site content, one table per section, ordered by an integer `sort_order` |
+| `projects`, `experience`, `education`, `certifications`, `skill_groups` | Site content, one table per section, ordered by an integer `sort_order` |
+| `about` | The about section as a single rich-text document |
 | `case_studies` | One optional case study per project, keyed by project slug |
 | `architecture_sections` | Content for the /architecture page (intro, stack line, decision cards, build notes) |
 | `site_settings` | Single row of site-wide content: profile picture, CV, identity and contact details, metadata text |
