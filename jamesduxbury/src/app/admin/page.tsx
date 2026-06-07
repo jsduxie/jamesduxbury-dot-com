@@ -26,6 +26,11 @@ export default async function AdminPage() {
       title: 'Analytics',
       meta: `${visits.last7Days} views / 7d · ${visits.allTime} all-time`,
     },
+    {
+      href: '/admin/maintenance',
+      title: 'Maintenance',
+      meta: 'heal and purge stored blobs',
+    },
   ];
 
   return (
