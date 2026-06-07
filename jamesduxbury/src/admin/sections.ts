@@ -38,7 +38,7 @@ const runSchema = z.union([
   z.object({ strong: z.string().min(1) }),
   z.object({ em: z.string().min(1) }),
   z.object({
-    link: z.object({ text: z.string(), href: z.string().regex(/^(https?:|mailto:)/) }),
+    link: z.object({ text: z.string(), href: z.string().regex(/^(https?:|mailto:)/i) }),
   }),
 ]);
 const runsSchema = z.array(runSchema).min(1);
