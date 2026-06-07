@@ -14,5 +14,6 @@ export const SITE_ROUTES = [
   '/skills',
   '/experience',
   '/education',
+  '/architecture',
   '/contact',
 ] as const;
