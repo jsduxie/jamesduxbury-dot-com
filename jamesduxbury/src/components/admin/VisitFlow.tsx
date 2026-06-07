@@ -87,7 +87,7 @@ export function VisitFlow({ transitions }: { transitions: PageTransition[] }) {
     >
       {ribbons.map((r) => (
         <path
-          key={`${r.from}-${r.to}`}
+          key={`${r.from} → ${r.to}`}
           d={r.d}
           fill="none"
           strokeWidth={r.thickness}
