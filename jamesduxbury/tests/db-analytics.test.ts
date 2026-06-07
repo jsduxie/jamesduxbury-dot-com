@@ -106,18 +106,19 @@ describe('analytics queries', () => {
     expect(ba?.count).toBe(1);
   });
 
-  it('derives entries, exits and drop-off per page', async () => {
+  it('derives entries, exits and drop-off per page with duplicates collapsed', async () => {
     const pages = await getFlowPages(30, 500);
+    // session A,B,A,A,A collapses to A,B,A
     expect(pages.find((p) => p.path === pathA)).toEqual({
       path: pathA,
-      views: 4,
+      steps: 2,
       entries: 1,
       exits: 1,
-      dropOff: 0.25,
+      dropOff: 0.5,
     });
     expect(pages.find((p) => p.path === pathB)).toEqual({
       path: pathB,
-      views: 2,
+      steps: 2,
       entries: 1,
       exits: 1,
       dropOff: 0.5,

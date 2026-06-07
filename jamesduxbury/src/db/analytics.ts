@@ -145,7 +145,7 @@ export interface PageTransition {
 
 export interface FlowPage {
   path: string;
-  views: number;
+  steps: number;
   entries: number;
   exits: number;
   dropOff: number;
@@ -169,25 +169,35 @@ export async function getPageTransitions(days: number, limit = 12): Promise<Page
   return rows.map((r) => ({ from: r.from_path, to: r.to_path, count: r.count }));
 }
 
+// consecutive duplicate paths collapse to one step, matching the transitions query
 export async function getFlowPages(days: number, limit = 10): Promise<FlowPage[]> {
   const rows = (await getSql()`
     WITH ordered AS (
+      SELECT session_id, path, created_at, id,
+        lag(path) OVER (PARTITION BY session_id ORDER BY created_at, id) AS prev_raw
+      FROM page_views
+      WHERE created_at > now() - make_interval(days => ${days})
+    ),
+    deduped AS (
+      SELECT session_id, path, created_at, id FROM ordered
+      WHERE prev_raw IS NULL OR prev_raw <> path
+    ),
+    flow AS (
       SELECT path,
         lag(path) OVER (PARTITION BY session_id ORDER BY created_at, id) AS prev_path,
         lead(path) OVER (PARTITION BY session_id ORDER BY created_at, id) AS next_path
-      FROM page_views
-      WHERE created_at > now() - make_interval(days => ${days})
+      FROM deduped
     )
     SELECT path,
-      count(*)::int AS views,
+      count(*)::int AS steps,
       count(*) FILTER (WHERE prev_path IS NULL)::int AS entries,
       count(*) FILTER (WHERE next_path IS NULL)::int AS exits
-    FROM ordered
+    FROM flow
     GROUP BY path
-    ORDER BY views DESC, path
+    ORDER BY steps DESC, path
     LIMIT ${limit}
-  `) as { path: string; views: number; entries: number; exits: number }[];
-  return rows.map((r) => ({ ...r, dropOff: r.views > 0 ? r.exits / r.views : 0 }));
+  `) as { path: string; steps: number; entries: number; exits: number }[];
+  return rows.map((r) => ({ ...r, dropOff: r.steps > 0 ? r.exits / r.steps : 0 }));
 }
 
 export interface MessageCounts {

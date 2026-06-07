@@ -107,7 +107,7 @@ export default async function AnalyticsPage() {
             >
               <span className="truncate font-mono text-sm text-text">{page.path}</span>
               <span className="whitespace-nowrap font-mono text-xs text-muted">
-                {page.views} views · {page.entries} in · {page.exits} out ·{' '}
+                {page.steps} steps · {page.entries} in · {page.exits} out ·{' '}
                 {Math.round(page.dropOff * 100)}% drop-off
               </span>
             </div>

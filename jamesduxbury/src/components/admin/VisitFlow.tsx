@@ -9,20 +9,24 @@ const COLUMN_H = 200;
 
 interface Node {
   path: string;
-  total: number;
   y: number;
   h: number;
 }
 
-function stack(totals: Map<string, number>, scale: number): Map<string, Node> {
+// node heights sum their ribbons' floored widths so ribbons always fit inside
+function stack(heights: Map<string, number>): Map<string, Node> {
   const nodes = new Map<string, Node>();
   let y = 0;
-  for (const [path, total] of [...totals.entries()].sort((a, b) => b[1] - a[1])) {
-    const h = Math.max(total * scale, MIN_H);
-    nodes.set(path, { path, total, y, h });
+  for (const [path, sum] of [...heights.entries()].sort((a, b) => b[1] - a[1])) {
+    const h = Math.max(sum, MIN_H);
+    nodes.set(path, { path, y, h });
     y += h + GAP;
   }
   return nodes;
+}
+
+function truncate(path: string): string {
+  return path.length > 20 ? `${path.slice(0, 19)}…` : path;
 }
 
 function columnHeight(nodes: Map<string, Node>): number {
@@ -40,20 +44,19 @@ export function VisitFlow({ transitions }: { transitions: PageTransition[] }) {
     );
   }
 
-  const fromTotals = new Map<string, number>();
-  const toTotals = new Map<string, number>();
-  for (const t of transitions) {
-    fromTotals.set(t.from, (fromTotals.get(t.from) ?? 0) + t.count);
-    toTotals.set(t.to, (toTotals.get(t.to) ?? 0) + t.count);
-  }
-  const maxColumn = Math.max(
-    [...fromTotals.values()].reduce((a, b) => a + b, 0),
-    [...toTotals.values()].reduce((a, b) => a + b, 0),
-  );
-  const scale = COLUMN_H / maxColumn;
+  const totalCount = transitions.reduce((a, t) => a + t.count, 0);
+  const scale = COLUMN_H / totalCount;
+  const thicknessOf = (count: number) => Math.max(count * scale, 2);
 
-  const left = stack(fromTotals, scale);
-  const right = stack(toTotals, scale);
+  const fromHeights = new Map<string, number>();
+  const toHeights = new Map<string, number>();
+  for (const t of transitions) {
+    fromHeights.set(t.from, (fromHeights.get(t.from) ?? 0) + thicknessOf(t.count));
+    toHeights.set(t.to, (toHeights.get(t.to) ?? 0) + thicknessOf(t.count));
+  }
+
+  const left = stack(fromHeights);
+  const right = stack(toHeights);
   const height = Math.max(columnHeight(left), columnHeight(right));
 
   // ribbons leave each node in descending count order, tracked by running offsets
@@ -67,7 +70,7 @@ export function VisitFlow({ transitions }: { transitions: PageTransition[] }) {
     .map((t) => {
       const from = left.get(t.from)!;
       const to = right.get(t.to)!;
-      const thickness = Math.max(t.count * scale, 2);
+      const thickness = thicknessOf(t.count);
       const y1 = from.y + (leftOffset.get(t.from) ?? 0) + thickness / 2;
       const y2 = to.y + (rightOffset.get(t.to) ?? 0) + thickness / 2;
       leftOffset.set(t.from, (leftOffset.get(t.from) ?? 0) + thickness);
@@ -103,7 +106,7 @@ export function VisitFlow({ transitions }: { transitions: PageTransition[] }) {
             fontSize={11}
             className="fill-muted font-mono"
           >
-            {n.path}
+            {truncate(n.path)}
           </text>
         </g>
       ))}
@@ -122,7 +125,7 @@ export function VisitFlow({ transitions }: { transitions: PageTransition[] }) {
             fontSize={11}
             className="fill-muted font-mono"
           >
-            {n.path}
+            {truncate(n.path)}
           </text>
         </g>
       ))}
