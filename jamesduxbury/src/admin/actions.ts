@@ -127,6 +127,22 @@ export async function deleteItem(slug: string, id: number): Promise<void> {
   revalidatePath(`/admin/${slug}`);
 }
 
+// uploads a single prose image and returns its url; authz-checked because it is network-reachable
+export async function uploadProseImage(
+  formData: FormData,
+): Promise<{ url?: string; error?: string }> {
+  if (!(await isAdminSession(await auth()))) return { error: 'Unauthorised' };
+  const file = formData.get('file');
+  if (!(file instanceof File) || file.size === 0) return { error: 'No file selected' };
+  const error = imageFileError(file);
+  if (error) return { error };
+  try {
+    return { url: await uploadImage(file) };
+  } catch {
+    return { error: 'Upload failed' };
+  }
+}
+
 export async function markMessageRead(id: number): Promise<void> {
   await requireAdmin();
   await markRead(id);
