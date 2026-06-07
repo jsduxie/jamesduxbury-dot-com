@@ -38,9 +38,20 @@ function UploadInput({ column, accept }: { column: string; accept: string }) {
 
 function RemoveControl({ column }: { column: string }) {
   return (
-    <label className="mb-3 flex items-center gap-2 font-mono text-xs uppercase tracking-[0.18em] text-muted">
-      <input type="checkbox" name={`${column}.remove`} className="accent-accent" />
-      remove current file
+    <label className="mb-3 flex w-fit cursor-pointer items-center gap-3">
+      <span className="relative flex h-4 w-4 items-center justify-center">
+        <input
+          type="checkbox"
+          name={`${column}.remove`}
+          className="peer h-4 w-4 cursor-pointer appearance-none border border-border bg-bg transition-colors checked:border-accent checked:bg-accent focus:outline-none focus:ring-1 focus:ring-accent"
+        />
+        <span className="pointer-events-none absolute hidden font-mono text-[0.65rem] leading-none text-bg peer-checked:block">
+          ✓
+        </span>
+      </span>
+      <span className="font-mono text-xs uppercase tracking-[0.18em] text-muted">
+        remove current file
+      </span>
     </label>
   );
 }
