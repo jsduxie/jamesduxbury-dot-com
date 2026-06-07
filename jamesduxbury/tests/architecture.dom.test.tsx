@@ -1,7 +1,8 @@
 // @vitest-environment jsdom
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { ArchitectureDetail } from '../src/components/architecture/ArchitectureDetail';
+import { ArchDiagram } from '../src/components/architecture/ArchDiagram';
 import { architectureSections } from '../src/data/architecture';
 import type { AboutParagraph } from '../src/data/about';
 
@@ -33,5 +34,31 @@ describe('ArchitectureDetail renders seeded DB content', () => {
     for (const heading of ['system', 'design decisions', 'how it was built']) {
       expect(screen.getByRole('heading', { name: heading })).toBeInTheDocument();
     }
+  });
+});
+
+describe('ArchDiagram', () => {
+  it('renders lanes, nodes and edges', () => {
+    const { container } = render(<ArchDiagram />);
+    for (const label of ['visitor browser', 'next.js on vercel', 'neon postgres', 'external']) {
+      expect(screen.getByText(label)).toBeInTheDocument();
+    }
+    for (const node of ['public pages', '/api/visit', 'server actions', 'content tables']) {
+      expect(screen.getByText(node)).toBeInTheDocument();
+    }
+    expect(container.querySelectorAll('path[marker-end]').length).toBeGreaterThan(0);
+  });
+
+  it('describes a hovered node and dims unconnected ones', () => {
+    render(<ArchDiagram />);
+    expect(screen.getByText(/hover a component/)).toBeInTheDocument();
+    const visit = screen.getByText('/api/visit').closest('g')!;
+    fireEvent.mouseEnter(visit);
+    expect(screen.getByText(/^> \/api\/visit: records anonymous views/)).toBeInTheDocument();
+    expect(screen.getByText('content tables').closest('g')!.getAttribute('class')).toContain(
+      'opacity-25',
+    );
+    fireEvent.mouseLeave(visit);
+    expect(screen.getByText(/hover a component/)).toBeInTheDocument();
   });
 });
