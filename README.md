@@ -134,7 +134,7 @@ The admin console:
 
 ### No ORM
 
-The schema is ten tables and the queries are straightforward. The Neon driver parameterises every tagged-template value, so the usual injection argument for an ORM does not apply, and the whole data layer stays readable in two files. Working directly with SQL was also part of the point of the project.
+The schema is eleven tables and the queries are straightforward. The Neon driver parameterises every tagged-template value, so the usual injection argument for an ORM does not apply, and the whole data layer stays readable in two files. Working directly with SQL was also part of the point of the project.
 
 ### A single-user allowlist instead of roles
 
@@ -166,6 +166,7 @@ The dashboard chart is a server-rendered bar chart built from divs. It is one de
 |---|---|
 | `projects`, `experience`, `education`, `certifications`, `skill_groups`, `about_paragraphs` | Site content, one table per section, ordered by an integer `sort_order` |
 | `case_studies` | One optional case study per project, keyed by project slug |
+| `architecture_sections` | Content for the /architecture page (intro, stack line, decision cards, build notes) |
 | `site_settings` | Single row of site-wide settings (currently the profile picture) |
 | `messages` | Contact form submissions |
 | `page_views` | Analytics events |
