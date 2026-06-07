@@ -235,6 +235,30 @@ export const SECTIONS: SectionConfig[] = [
     listLabel: (row) => String(row.project_slug),
   },
   {
+    slug: 'architecture',
+    table: 'architecture_sections',
+    title: 'Architecture',
+    fields: [
+      {
+        column: 'kind',
+        label: 'Kind',
+        type: 'select',
+        options: ['intro', 'stack', 'decision', 'build'],
+        help: 'where on the page the section renders',
+      },
+      { column: 'title', label: 'Title', type: 'text', help: 'shown on decision cards only' },
+      { column: 'body', label: 'Body', type: 'prose', help: proseHelp },
+      { column: 'sort_order', label: 'Sort order', type: 'sort_order' },
+    ],
+    schema: z.object({
+      kind: z.enum(['intro', 'stack', 'decision', 'build']),
+      title: z.string().min(1).nullable(),
+      body: proseSchema,
+      sort_order: sortOrder,
+    }),
+    listLabel: (row) => (row.title ? String(row.title) : String(row.kind)),
+  },
+  {
     slug: 'site',
     table: 'site_settings',
     title: 'Site',
