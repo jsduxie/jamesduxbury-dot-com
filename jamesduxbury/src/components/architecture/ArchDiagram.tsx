@@ -153,8 +153,7 @@ const LANES = [
 
 const H = 404;
 
-// long cross-column edges travel the corridor between lanes instead of sweeping diagonals;
-// xOff staggers an arrowhead so merged targets keep both edges visible
+// corridor-routed edges avoid diagonal sweeps; xOff keeps merged arrowheads apart
 const VIA: Record<string, { y: number; xOff?: number }> = {
   'actions-content': { y: 230, xOff: 12 },
   'contact-email': { y: 222 },
