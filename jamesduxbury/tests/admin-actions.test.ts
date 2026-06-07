@@ -441,6 +441,53 @@ describe('sort order shifting', () => {
   });
 });
 
+describe('prose image cleanup', () => {
+  const blobUrl = 'https://x.public.blob.vercel-storage.com/dev/prose-cleanup.png';
+
+  afterAll(async () => {
+    await sql`DELETE FROM architecture_sections WHERE sort_order >= 9700 AND sort_order < 9800`;
+  });
+
+  it('deletes a prose image the edit removed', async () => {
+    await expect(
+      saveItem(
+        'architecture',
+        null,
+        EMPTY,
+        form({ kind: 'build', title: 'Cleanup', body: `intro\n\n![d](${blobUrl})`, sort_order: '9701' }),
+      ),
+    ).rejects.toThrow('REDIRECT:/admin/architecture');
+    const [{ id }] = await sql`SELECT id FROM architecture_sections WHERE sort_order = 9701`;
+
+    deleteImageMock.mockClear();
+    await expect(
+      saveItem(
+        'architecture',
+        id as number,
+        EMPTY,
+        form({ kind: 'build', title: 'Cleanup', body: 'intro only', sort_order: '9701' }),
+      ),
+    ).rejects.toThrow('REDIRECT:/admin/architecture');
+    expect(deleteImageMock).toHaveBeenCalledWith(blobUrl);
+  });
+
+  it('deletes prose images when the row is deleted', async () => {
+    await expect(
+      saveItem(
+        'architecture',
+        null,
+        EMPTY,
+        form({ kind: 'build', title: 'Del', body: `x\n\n![d](${blobUrl})`, sort_order: '9702' }),
+      ),
+    ).rejects.toThrow('REDIRECT:/admin/architecture');
+    const [{ id }] = await sql`SELECT id FROM architecture_sections WHERE sort_order = 9702`;
+
+    deleteImageMock.mockClear();
+    await deleteItem('architecture', id as number);
+    expect(deleteImageMock).toHaveBeenCalledWith(blobUrl);
+  });
+});
+
 describe('messages', () => {
   it('marks a message as read', async () => {
     const [{ id }] = await sql`

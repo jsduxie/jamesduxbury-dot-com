@@ -4,7 +4,9 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { auth, isAdminSession } from '@/auth';
 import { markRead } from '@/db/messages';
+import type { Block } from '@/data/about';
 import { SITE_ROUTES } from '@/lib/site';
+import { blockImageUrls } from './blocks';
 import { isUploadField, parseFields, type FieldDef, type FieldValue } from './fields';
 import { deleteImage, documentFileError, imageFileError, uploadImage } from './images';
 import { runBlobMaintenance, type MaintenanceReport } from './maintenance';
@@ -22,6 +24,18 @@ async function requireAdmin(): Promise<void> {
 
 function uploadFields(fields: FieldDef[]): FieldDef[] {
   return fields.filter(isUploadField);
+}
+
+function proseFields(fields: FieldDef[]): FieldDef[] {
+  return fields.filter((f) => f.type === 'prose');
+}
+
+// blob urls embedded in a row's prose columns
+function proseBlobs(fields: FieldDef[], row: Record<string, unknown> | null): string[] {
+  if (!row) return [];
+  return proseFields(fields).flatMap((f) =>
+    Array.isArray(row[f.column]) ? blockImageUrls(row[f.column] as Block[]) : [],
+  );
 }
 
 // stand-in so a non-nullable upload column validates before its file is uploaded
@@ -70,7 +84,8 @@ export async function saveItem(
       .filter((f) => !files.has(f.column) && formData.get(`${f.column}.remove`) === 'on')
       .map((f) => f.column),
   );
-  const prior = id !== null && images.length > 0 ? await getRow(section.table, id) : null;
+  const needsPrior = images.length > 0 || proseFields(section.fields).length > 0;
+  const prior = id !== null && needsPrior ? await getRow(section.table, id) : null;
   for (const f of images) {
     // a pending upload validates as present; the real URL replaces this after upload
     if (files.has(f.column)) values[f.column] = PENDING_UPLOAD;
@@ -109,6 +124,11 @@ export async function saveItem(
   if (prior !== null) {
     for (const column of files.keys()) await deleteImage(prior[column]);
     for (const column of removed) await deleteImage(prior[column]);
+    // delete prose images this save no longer references
+    const kept = new Set(proseBlobs(section.fields, parsed.data));
+    for (const url of proseBlobs(section.fields, prior)) {
+      if (!kept.has(url)) await deleteImage(url);
+    }
   }
 
   revalidatePublicPages();
@@ -120,9 +140,11 @@ export async function deleteItem(slug: string, id: number): Promise<void> {
   await requireAdmin();
   const section = getSection(slug);
   const images = uploadFields(section.fields);
-  const row = images.length > 0 ? await getRow(section.table, id) : null;
+  const needsRow = images.length > 0 || proseFields(section.fields).length > 0;
+  const row = needsRow ? await getRow(section.table, id) : null;
   await deleteRow(section.table, id);
   for (const f of images) await deleteImage(row?.[f.column]);
+  for (const url of proseBlobs(section.fields, row)) await deleteImage(url);
   revalidatePublicPages();
   revalidatePath(`/admin/${slug}`);
 }

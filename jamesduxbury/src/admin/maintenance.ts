@@ -1,5 +1,7 @@
 import { z } from 'zod';
 import { getSql } from '@/db';
+import type { Block } from '@/data/about';
+import { blockImageUrls } from './blocks';
 import { isUploadField } from './fields';
 import { SECTIONS } from './sections';
 import { blobIsAlive, deleteImage, isBlobUrl, listEnvBlobs } from './images';
@@ -47,6 +49,23 @@ async function referencedUrls(): Promise<Map<string, UploadRef[]>> {
   return map;
 }
 
+// prose columns hold image urls inside jsonb; these are kept but never healed (BlobImage hides dead ones)
+async function proseImageUrls(): Promise<Set<string>> {
+  const urls = new Set<string>();
+  for (const section of SECTIONS) {
+    for (const field of section.fields) {
+      if (field.type !== 'prose') continue;
+      const rows = (await getSql().query(
+        `SELECT ${field.column} AS blocks FROM ${section.table} WHERE ${field.column} IS NOT NULL`,
+      )) as { blocks: Block[] }[];
+      for (const row of rows) {
+        for (const url of blockImageUrls(row.blocks)) if (isBlobUrl(url)) urls.add(url);
+      }
+    }
+  }
+  return urls;
+}
+
 export interface MaintenanceReport {
   healed: { table: string; column: string }[];
   dangling: { table: string; column: string; url: string }[];
@@ -73,10 +92,10 @@ export async function runBlobMaintenance(): Promise<MaintenanceReport> {
     }
   }
 
-  // healing only nulls references to dead blobs, which are not in the store, so the
-  // referenced keys above are already the correct keep-set for the purge
+  // keep both column references and blobs embedded inside prose, so an inline image is never purged
+  const inProse = await proseImageUrls();
   for (const url of await listEnvBlobs()) {
-    if (referenced.has(url)) continue;
+    if (referenced.has(url) || inProse.has(url)) continue;
     await deleteImage(url);
     report.purged += 1;
   }

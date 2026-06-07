@@ -98,6 +98,11 @@ export function serialiseBlocks(blocks: Block[]): string {
   return blocks.map(serialiseBlock).join('\n\n');
 }
 
+// every image url embedded in a block document, used to track inline blob references
+export function blockImageUrls(blocks: Block[]): string[] {
+  return blocks.flatMap((block) => (block.kind === 'image' ? [block.url] : []));
+}
+
 // flattens a block document to plain text for metadata descriptions
 export function proseText(blocks: Block[]): string {
   return blocks
