@@ -1,5 +1,5 @@
-import Image from 'next/image';
 import Link from 'next/link';
+import { BlobImage } from '@/components/BlobImage';
 import type { Certification } from '@/data/certifications';
 import { getCertifications } from '@/db/queries';
 
@@ -7,7 +7,7 @@ const Card: React.FC<Certification> = ({ name, year, imgPath, certificationLink 
   const inner = (
     <div className="flex items-center gap-3 border border-border bg-bg/40 p-3 transition-colors hover:border-accent">
       {imgPath ? (
-        <Image
+        <BlobImage
           src={imgPath}
           alt={name}
           width={48}

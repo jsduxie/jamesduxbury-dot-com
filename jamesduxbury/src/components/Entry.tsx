@@ -1,7 +1,7 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
+import { BlobImage } from '@/components/BlobImage';
 import type { SiteSettings } from '@/data/site';
 import { cvDownloadName, cvHref } from '@/lib/cv';
 import { SectionHeader } from './console/SectionHeader';
@@ -16,7 +16,7 @@ export const Entry: React.FC<{ settings: SiteSettings }> = ({ settings }) => {
 
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-[auto_1fr] sm:items-start sm:gap-12">
           <div className="relative h-36 w-36 overflow-hidden border border-border sm:h-40 sm:w-40 lg:h-44 lg:w-44">
-            <Image
+            <BlobImage
               src={settings.profileImage}
               alt={settings.ownerName}
               fill
