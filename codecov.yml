@@ -1,6 +1,10 @@
 codecov:
   require_ci_to_pass: true
 
+# vitest reports paths relative to jamesduxbury/; map them onto the repo tree
+fixes:
+  - '::jamesduxbury/'
+
 coverage:
   precision: 2
   round: down
