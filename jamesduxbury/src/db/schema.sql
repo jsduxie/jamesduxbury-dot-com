@@ -82,7 +82,8 @@ CREATE TABLE IF NOT EXISTS messages (
   id serial PRIMARY KEY,
   name text NOT NULL,
   email text NOT NULL,
-  message text NOT NULL,
+  -- Block[] from src/data/about.ts
+  message jsonb NOT NULL,
   read boolean NOT NULL DEFAULT false,
   created_at timestamptz NOT NULL DEFAULT now()
 );

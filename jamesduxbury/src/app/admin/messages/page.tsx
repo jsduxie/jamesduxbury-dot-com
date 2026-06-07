@@ -1,6 +1,7 @@
 import { markMessageRead } from '@/admin/actions';
 import { getMessages } from '@/db/messages';
 import { AdminPanel } from '@/components/admin/AdminPanel';
+import { renderBlocks } from '@/components/about/BlockView';
 
 export default async function MessagesPage() {
   const rows = await getMessages();
@@ -24,7 +25,9 @@ export default async function MessagesPage() {
                 {row.receivedAt}
               </span>
             </div>
-            <p className="mt-3 whitespace-pre-wrap font-mono text-sm text-text/90">{row.message}</p>
+            <div className="mt-3 space-y-2 font-mono text-sm text-text/90">
+              {renderBlocks(row.message, { linkMode: 'text', paragraphClass: '' })}
+            </div>
             {!row.read && (
               <form action={markMessageRead.bind(null, row.id)} className="mt-3">
                 <button

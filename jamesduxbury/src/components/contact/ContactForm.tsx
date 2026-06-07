@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, type FormEvent } from 'react';
+import { CONTACT_FEATURES } from '@/admin/blocks';
+import { BlockEditor } from '@/components/admin/BlockEditor';
 
 type SubmitState =
   | { kind: 'idle' }
@@ -11,12 +13,19 @@ type SubmitState =
 export const ContactForm: React.FC = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
   const [state, setState] = useState<SubmitState>({ kind: 'idle' });
+  // remounting the editor clears it after a successful send
+  const [editorKey, setEditorKey] = useState(0);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (state.kind === 'sending') return;
+
+    const message = String(new FormData(e.currentTarget).get('message') ?? '').trim();
+    if (!message) {
+      setState({ kind: 'error', message: 'Message cannot be empty.' });
+      return;
+    }
 
     setState({ kind: 'sending' });
     try {
@@ -30,7 +39,7 @@ export const ContactForm: React.FC = () => {
         setState({ kind: 'success' });
         setName('');
         setEmail('');
-        setMessage('');
+        setEditorKey((k) => k + 1);
       } else {
         const data = (await res.json().catch(() => ({}))) as { error?: string };
         setState({
@@ -87,19 +96,8 @@ export const ContactForm: React.FC = () => {
       </div>
 
       <div className="px-4 py-5 sm:px-6">
-        <label htmlFor="contact-message" className={fieldLabel}>
-          Message
-        </label>
-        <textarea
-          id="contact-message"
-          name="message"
-          required
-          rows={5}
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          className={`${fieldInput} resize-y`}
-          placeholder="What can I help with?"
-        />
+        <span className={fieldLabel}>Message</span>
+        <BlockEditor key={editorKey} column="message" initial="" features={CONTACT_FEATURES} />
       </div>
 
       <div className="flex flex-col items-stretch gap-3 px-4 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6">

@@ -10,6 +10,16 @@ export const ALL_FEATURES: Features = {
   image: true,
 };
 
+// the public contact form gets formatting and links but never headings or image uploads
+export const CONTACT_FEATURES: Features = {
+  bold: true,
+  italic: true,
+  link: true,
+  list: true,
+  heading: false,
+  image: false,
+};
+
 const IMAGE_LINE = /^!\[([^\]]*)\]\(([^)]+)\)$/;
 const HEADING_LINE = /^###(?:\s+(.*))?$/;
 // an empty item (- with nothing after it) is allowed so trimming a "- " line still reads as a list

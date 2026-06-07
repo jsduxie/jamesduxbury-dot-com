@@ -11,12 +11,13 @@ afterAll(async () => {
 
 describe('messages module', () => {
   it('round-trips a message through insert, list and markRead', async () => {
-    await insertMessage('Test', emailMarker, 'hello from db-messages test');
+    const blocks = [{ kind: 'p' as const, runs: ['hello from db-messages test'] }];
+    await insertMessage('Test', emailMarker, blocks);
 
     const inserted = (await getMessages()).find((m) => m.email === emailMarker);
     expect(inserted).toBeDefined();
     expect(inserted!.name).toBe('Test');
-    expect(inserted!.message).toBe('hello from db-messages test');
+    expect(inserted!.message).toEqual(blocks);
     expect(inserted!.read).toBe(false);
     expect(inserted!.receivedAt).toMatch(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/);
 

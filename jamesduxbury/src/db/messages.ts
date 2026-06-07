@@ -1,10 +1,11 @@
 import { getSql } from '@/db';
+import type { Block } from '@/data/about';
 
 export interface Message {
   id: number;
   name: string;
   email: string;
-  message: string;
+  message: Block[];
   read: boolean;
   receivedAt: string;
 }
@@ -13,7 +14,7 @@ interface MessageRow {
   id: number;
   name: string;
   email: string;
-  message: string;
+  message: Block[];
   read: boolean;
   received_at: string;
 }
@@ -34,8 +35,11 @@ export async function getMessages(): Promise<Message[]> {
   }));
 }
 
-export async function insertMessage(name: string, email: string, message: string): Promise<void> {
-  await getSql()`INSERT INTO messages (name, email, message) VALUES (${name}, ${email}, ${message})`;
+export async function insertMessage(name: string, email: string, message: Block[]): Promise<void> {
+  await getSql()`
+    INSERT INTO messages (name, email, message)
+    VALUES (${name}, ${email}, ${JSON.stringify(message)})
+  `;
 }
 
 export async function markRead(id: number): Promise<void> {

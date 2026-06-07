@@ -116,7 +116,8 @@ describe('ContactForm', () => {
   function fill() {
     fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'A' } });
     fireEvent.change(screen.getByLabelText(/Email/), { target: { value: 'a@b.co' } });
-    fireEvent.change(screen.getByLabelText(/Message/), { target: { value: 'hi' } });
+    fireEvent.click(screen.getByText('+ start writing'));
+    fireEvent.change(screen.getByLabelText('block editor'), { target: { value: 'hi' } });
   }
 
   it('shows success and clears fields', async () => {
