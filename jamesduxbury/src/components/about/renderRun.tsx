@@ -14,6 +14,16 @@ export function renderRun(run: AboutRun, key: number, linkMode: LinkMode = 'anch
       </strong>
     );
   }
+  if ('code' in run) {
+    return (
+      <code
+        key={key}
+        className="rounded border border-border bg-surface px-1 py-0.5 font-mono text-[0.85em] text-text"
+      >
+        {run.code}
+      </code>
+    );
+  }
   if ('link' in run) {
     const { text, href } = run.link;
     const label = text || href;

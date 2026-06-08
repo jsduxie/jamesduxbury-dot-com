@@ -6,6 +6,7 @@ import type { Block, Features } from '@/data/about';
 const restricted: Features = {
   bold: true,
   italic: true,
+  code: false,
   link: true,
   list: true,
   heading: false,
@@ -15,6 +16,15 @@ const restricted: Features = {
 describe('parseRuns', () => {
   it('parses plain, bold, and italic runs', () => {
     expect(parseRuns('a **b** c *d*')).toEqual(['a ', { strong: 'b' }, ' c ', { em: 'd' }]);
+  });
+
+  it('parses an inline code run and round-trips it', () => {
+    expect(parseRuns('run `npm test` now')).toEqual(['run ', { code: 'npm test' }, ' now']);
+    expect(serialiseRuns(parseRuns('`a` and `b`'))).toBe('`a` and `b`');
+  });
+
+  it('keeps markup characters literal inside a code run', () => {
+    expect(parseRuns('`a ** b *c*`')).toEqual([{ code: 'a ** b *c*' }]);
   });
 
   it('parses an http link and a mailto link', () => {
@@ -48,9 +58,10 @@ describe('parseBlocks grammar', () => {
     expect(parseBlocks('   \n\n  ')).toEqual([]);
   });
 
-  it('splits paragraphs on blank lines and joins soft newlines', () => {
+  it('makes a new paragraph block on every newline, soft or blank', () => {
     expect(parseBlocks('one\ntwo\n\nthree')).toEqual([
-      { kind: 'p', runs: ['one two'] },
+      { kind: 'p', runs: ['one'] },
+      { kind: 'p', runs: ['two'] },
       { kind: 'p', runs: ['three'] },
     ]);
   });
@@ -97,6 +108,11 @@ describe('applyFeatures', () => {
     ]);
   });
 
+  it('unwraps code runs when code is disabled', () => {
+    const blocks: Block[] = [{ kind: 'p', runs: ['use ', { code: 'npm' }, ' here'] }];
+    expect(applyFeatures(blocks, restricted)).toEqual([{ kind: 'p', runs: ['use npm here'] }]);
+  });
+
   it('is applied by parseBlocks for a restricted surface', () => {
     expect(parseBlocks('### H\n\n![a](https://i.dev/x.png)\n\ntext', restricted)).toEqual([
       { kind: 'p', runs: ['H'] },
@@ -107,7 +123,7 @@ describe('applyFeatures', () => {
 
 describe('idempotency', () => {
   it('reaches a fixed point after one parse', () => {
-    const text = '### Title\n\nbody **bold** [l](https://x.dev)\n\n- a\n- b';
+    const text = '### Title\n\nbody **bold** `code` [l](https://x.dev)\n\n- a\n- b';
     const once = serialiseBlocks(parseBlocks(text));
     const twice = serialiseBlocks(parseBlocks(once));
     expect(twice).toBe(once);

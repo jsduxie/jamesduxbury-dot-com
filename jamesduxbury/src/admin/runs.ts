@@ -6,7 +6,8 @@ import { LINK_SCHEME } from '@/lib/href';
 const LINK = `\\[[^\\]\\n]*\\]\\((?:${LINK_SCHEME})[^)\\s]*\\)`;
 const STRONG = /\*\*[^*\n]+\*\*/.source;
 const EM = /\*[^*\n]+\*/.source;
-const MARKUP = new RegExp(`(${LINK}|${STRONG}|${EM})`, 'g');
+const CODE = /`[^`\n]+`/.source;
+const MARKUP = new RegExp(`(${LINK}|${STRONG}|${EM}|${CODE})`, 'g');
 const LINK_EXACT = /^\[([^\]\n]*)\]\(([^)\s]+)\)$/;
 
 export function parseRuns(text: string): AboutParagraph {
@@ -17,6 +18,7 @@ export function parseRuns(text: string): AboutParagraph {
       if (part.startsWith('**') && part.endsWith('**')) return { strong: part.slice(2, -2) };
       const link = LINK_EXACT.exec(part);
       if (link) return { link: { text: link[1], href: link[2] } };
+      if (part.startsWith('`') && part.endsWith('`')) return { code: part.slice(1, -1) };
       if (part.startsWith('*') && part.endsWith('*')) return { em: part.slice(1, -1) };
       return part;
     });
@@ -28,6 +30,7 @@ export function serialiseRuns(runs: AboutParagraph): string {
       if (typeof run === 'string') return run;
       if ('strong' in run) return `**${run.strong}**`;
       if ('link' in run) return `[${run.link.text}](${run.link.href})`;
+      if ('code' in run) return `\`${run.code}\``;
       return `*${run.em}*`;
     })
     .join('');

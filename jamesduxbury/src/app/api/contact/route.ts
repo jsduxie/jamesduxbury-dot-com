@@ -53,6 +53,7 @@ function runsToHtml(runs: AboutRun[]): string {
       if (typeof run === 'string') return escapeHtml(run);
       if ('strong' in run) return `<strong>${escapeHtml(run.strong)}</strong>`;
       if ('em' in run) return `<em>${escapeHtml(run.em)}</em>`;
+      if ('code' in run) return `<code>${escapeHtml(run.code)}</code>`;
       return escapeHtml(run.link.text || run.link.href);
     })
     .join('');

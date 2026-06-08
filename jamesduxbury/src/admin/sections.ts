@@ -38,6 +38,7 @@ const runSchema = z.union([
   z.string().min(1),
   z.object({ strong: z.string().min(1) }),
   z.object({ em: z.string().min(1) }),
+  z.object({ code: z.string().min(1) }),
   z.object({
     link: z.object({ text: z.string(), href: z.string().regex(SAFE_HREF) }),
   }),
