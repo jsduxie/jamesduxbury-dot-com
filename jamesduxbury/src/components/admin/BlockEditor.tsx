@@ -248,44 +248,41 @@ export function BlockEditor({
     return editing && !!wrap && selectionWrapped(draft, sel[0], sel[1], wrap);
   }
 
-  // the empty gutter cell keeps the textarea aligned with the handle column of the view rows
   function textarea(key: string) {
     return (
-      <div key={key} className="flex items-start gap-2">
-        <span aria-hidden="true" className="w-4 shrink-0" />
-        <textarea
-          ref={areaRef}
-          rows={1}
-          value={draft}
-          aria-label="block editor"
-          onChange={(e) => {
-            setDraft(e.target.value);
-            setSel([e.target.selectionStart, e.target.selectionEnd]);
-            autosize(e.target);
-          }}
-          onSelect={(e) => setSel([e.currentTarget.selectionStart, e.currentTarget.selectionEnd])}
-          onFocus={() => {
-            pickingRef.current = false;
-          }}
-          onBlur={handleBlur}
-          onKeyUp={(e) => setSel([e.currentTarget.selectionStart, e.currentTarget.selectionEnd])}
-          onClick={(e) => setSel([e.currentTarget.selectionStart, e.currentTarget.selectionEnd])}
-          onKeyDown={(e) => {
-            if (e.key === 'Escape') {
-              e.preventDefault();
-              areaRef.current?.blur();
-            }
-          }}
-          className={`${fieldInput} block flex-1 resize-none overflow-hidden`}
-        />
-      </div>
+      <textarea
+        key={key}
+        ref={areaRef}
+        rows={1}
+        value={draft}
+        aria-label="block editor"
+        onChange={(e) => {
+          setDraft(e.target.value);
+          setSel([e.target.selectionStart, e.target.selectionEnd]);
+          autosize(e.target);
+        }}
+        onSelect={(e) => setSel([e.currentTarget.selectionStart, e.currentTarget.selectionEnd])}
+        onFocus={() => {
+          pickingRef.current = false;
+        }}
+        onBlur={handleBlur}
+        onKeyUp={(e) => setSel([e.currentTarget.selectionStart, e.currentTarget.selectionEnd])}
+        onClick={(e) => setSel([e.currentTarget.selectionStart, e.currentTarget.selectionEnd])}
+        onKeyDown={(e) => {
+          if (e.key === 'Escape') {
+            e.preventDefault();
+            areaRef.current?.blur();
+          }
+        }}
+        className={`${fieldInput} block resize-none overflow-hidden`}
+      />
     );
   }
 
   function dropLine(gap: number) {
     if (dragOver !== gap) return null;
     // click-through so the line never becomes the drop target (it would swallow a top-edge drop)
-    return <div className="pointer-events-none ml-6 h-0.5 bg-accent" />;
+    return <div className="pointer-events-none h-0.5 bg-accent" />;
   }
 
   function insertSlot(index: number) {
@@ -296,17 +293,18 @@ export function BlockEditor({
         aria-label="insert block"
         onMouseDown={(e) => e.preventDefault()}
         onClick={() => openAt(index, true)}
-        className="group/ins relative ml-6 block h-2"
+        className="group/ins relative block h-2 w-full"
       >
         <span className="pointer-events-none absolute inset-x-0 top-1/2 hidden -translate-y-1/2 border-t border-dashed border-accent group-hover/ins:block" />
       </button>
     );
   }
 
+  // the handle floats in the left padding on hover so the text keeps symmetric margins;
   // the view box mirrors the textarea's border and padding so clicking to edit causes no shift
   function blockRow(block: Block, i: number) {
     return (
-      <div className="group/row flex items-start gap-2" onDragOver={(e) => markDragGap(e, i)}>
+      <div className="group/row relative" onDragOver={(e) => markDragGap(e, i)}>
         <span
           aria-label="reorder block"
           role="button"
@@ -319,7 +317,7 @@ export function BlockEditor({
             }
           }}
           onDragEnd={clearDrag}
-          className="mt-2.5 shrink-0 cursor-grab text-muted opacity-0 transition-opacity active:cursor-grabbing group-hover/row:opacity-100"
+          className="absolute -left-1 top-2.5 cursor-grab text-muted opacity-0 transition-opacity active:cursor-grabbing group-hover/row:opacity-100"
         >
           <DragHandle />
         </span>
@@ -329,7 +327,7 @@ export function BlockEditor({
           onMouseDown={(e) => e.preventDefault()}
           onClick={() => openBlock(block)}
           onKeyDown={(e) => e.key === 'Enter' && openBlock(block)}
-          className="flex-1 cursor-text border border-transparent px-3 py-2.5 font-mono text-sm leading-relaxed text-text/85"
+          className="cursor-text border border-transparent px-3 py-2.5 font-mono text-sm leading-relaxed text-text/85"
         >
           <BlockView block={block} linkMode="text" paragraphClass="" />
         </div>
@@ -383,7 +381,7 @@ export function BlockEditor({
             type="button"
             onMouseDown={(e) => e.preventDefault()}
             onClick={() => openAt(blocks.length, false)}
-            className="ml-6 block text-left font-mono text-xs uppercase tracking-[0.18em] text-muted transition-colors hover:text-accent"
+            className="block w-full pl-3 text-left font-mono text-xs uppercase tracking-[0.18em] text-muted transition-colors hover:text-accent"
           >
             {blocks.length === 0 ? '+ start writing' : '+ block'}
           </button>
