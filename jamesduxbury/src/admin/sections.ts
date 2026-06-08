@@ -53,8 +53,7 @@ const blockSchema = z.discriminatedUnion('kind', [
 ]);
 
 const proseSchema = z.array(blockSchema).min(1);
-const proseHelp =
-  'blank line between blocks; **bold** *italic* [text](url), ### heading, - list, ![alt](url)';
+const proseHelp = 'Standard markdown formatting accepted';
 
 export const SECTIONS: SectionConfig[] = [
   {
