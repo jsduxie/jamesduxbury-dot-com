@@ -274,7 +274,7 @@ export function BlockEditor({
             areaRef.current?.blur();
           }
         }}
-        className={`${fieldInput} block resize-none overflow-hidden`}
+        className={`${fieldInput} block animate-fade-in resize-none overflow-hidden motion-reduce:animate-none`}
       />
     );
   }
@@ -282,7 +282,9 @@ export function BlockEditor({
   function dropLine(gap: number) {
     if (dragOver !== gap) return null;
     // click-through so the line never becomes the drop target (it would swallow a top-edge drop)
-    return <div className="pointer-events-none h-0.5 bg-accent" />;
+    return (
+      <div className="pointer-events-none h-0.5 animate-fade-in bg-accent motion-reduce:animate-none" />
+    );
   }
 
   // overlays the gap above a block (no reserved height) and reveals a line on hover
@@ -305,7 +307,10 @@ export function BlockEditor({
   // the view box mirrors the textarea's border and padding so clicking to edit causes no shift
   function blockRow(block: Block, i: number) {
     return (
-      <div className="group/row relative" onDragOver={(e) => markDragGap(e, i)}>
+      <div
+        className="group/row relative animate-fade-in motion-reduce:animate-none"
+        onDragOver={(e) => markDragGap(e, i)}
+      >
         <span
           aria-label="reorder block"
           role="button"
@@ -389,7 +394,9 @@ export function BlockEditor({
         )}
       </div>
 
-      {error && <p className="mt-2 font-mono text-xs text-danger">{`> ${error}`}</p>}
+      {error && (
+        <p className="mt-2 animate-fade-in font-mono text-xs text-danger motion-reduce:animate-none">{`> ${error}`}</p>
+      )}
       <input type="hidden" id={column} name={column} value={serialised} readOnly />
       {features.image && (
         <input
