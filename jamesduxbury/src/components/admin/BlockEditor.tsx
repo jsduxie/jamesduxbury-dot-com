@@ -1,6 +1,6 @@
 'use client';
 
-import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { ALL_FEATURES, parseBlocks, serialiseBlock, serialiseBlocks } from '@/admin/blocks';
 import { selectionWrapped, toggleWrap } from '@/admin/markup';
 import { uploadProseImage } from '@/admin/actions';
@@ -19,7 +19,7 @@ interface BlockEditorProps {
 
 // flat 1px accent border on focus, no ring glow, to match the site's terminal styling
 const fieldInput =
-  'w-full border border-border bg-bg px-3 py-2.5 font-mono text-sm text-text placeholder:text-muted/60 transition-colors selection:bg-accent/30 selection:text-text focus:border-accent focus:outline-none';
+  'w-full border border-border bg-bg px-3 py-1.5 font-mono text-sm text-text placeholder:text-muted/60 transition-colors selection:bg-accent/30 selection:text-text focus:border-accent focus:outline-none';
 // idle and active colours are mutually exclusive so the active state is not lost to a class clash;
 // the active state mirrors the site's accent idiom (status chips, the status-bar CTA)
 const toolButton =
@@ -285,6 +285,7 @@ export function BlockEditor({
     return <div className="pointer-events-none h-0.5 bg-accent" />;
   }
 
+  // overlays the gap above a block (no reserved height) and reveals a line on hover
   function insertSlot(index: number) {
     if (editingIndex !== null) return null;
     return (
@@ -293,9 +294,9 @@ export function BlockEditor({
         aria-label="insert block"
         onMouseDown={(e) => e.preventDefault()}
         onClick={() => openAt(index, true)}
-        className="group/ins relative block h-2 w-full"
+        className="absolute inset-x-0 -top-1.5 z-10 flex h-3 items-center opacity-0 transition-opacity hover:opacity-100"
       >
-        <span className="pointer-events-none absolute inset-x-0 top-1/2 hidden -translate-y-1/2 border-t border-dashed border-accent group-hover/ins:block" />
+        <span className="pointer-events-none h-px w-full bg-accent/60" />
       </button>
     );
   }
@@ -317,7 +318,7 @@ export function BlockEditor({
             }
           }}
           onDragEnd={clearDrag}
-          className="absolute -left-1 top-2.5 cursor-grab text-muted opacity-0 transition-opacity active:cursor-grabbing group-hover/row:opacity-100"
+          className="absolute -left-1 top-1.5 cursor-grab text-muted opacity-0 transition-opacity active:cursor-grabbing group-hover/row:opacity-100"
         >
           <DragHandle />
         </span>
@@ -327,7 +328,7 @@ export function BlockEditor({
           onMouseDown={(e) => e.preventDefault()}
           onClick={() => openBlock(block)}
           onKeyDown={(e) => e.key === 'Enter' && openBlock(block)}
-          className="cursor-text border border-transparent px-3 py-2.5 font-mono text-sm leading-relaxed text-text/85"
+          className="cursor-text border border-transparent px-3 py-1.5 font-mono text-sm leading-relaxed text-text/85"
         >
           <BlockView block={block} linkMode="text" paragraphClass="" />
         </div>
@@ -358,7 +359,7 @@ export function BlockEditor({
       </div>
 
       <div
-        className="space-y-1 border border-border px-3 py-3"
+        className="space-y-0.5 border border-border px-3 py-2"
         onDragOver={(e) => e.preventDefault()}
         onDrop={(e) => {
           e.preventDefault();
@@ -366,12 +367,12 @@ export function BlockEditor({
         }}
       >
         {blocks.map((block, i) => (
-          <Fragment key={i}>
+          <div key={i} className="relative">
             {dropLine(i)}
             {insertSlot(i)}
             {editingIndex === i && inserting && textarea(`ins-${i}`)}
             {editingIndex === i && !inserting ? textarea(`edit-${i}`) : blockRow(block, i)}
-          </Fragment>
+          </div>
         ))}
         {dropLine(blocks.length)}
         {editingIndex === blocks.length ? (
