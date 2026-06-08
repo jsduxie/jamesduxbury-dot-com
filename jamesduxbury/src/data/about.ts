@@ -6,6 +6,7 @@ export type AboutRun =
   | string
   | { strong: string }
   | { em: string }
+  | { code: string }
   | { link: { text: string; href: string } };
 export type AboutParagraph = AboutRun[];
 
@@ -17,20 +18,18 @@ export type Block =
   | { kind: 'image'; url: string; alt: string };
 export type Prose = Block[];
 
-export type Feature = 'bold' | 'italic' | 'link' | 'list' | 'heading' | 'image';
+export type Feature = 'bold' | 'italic' | 'code' | 'link' | 'list' | 'heading' | 'image';
 export type Features = Record<Feature, boolean>;
 
 export function runText(paragraph: AboutRun[]): string {
   return paragraph
-    .map((run) =>
-      typeof run === 'string'
-        ? run
-        : 'strong' in run
-          ? run.strong
-          : 'em' in run
-            ? run.em
-            : run.link.text,
-    )
+    .map((run) => {
+      if (typeof run === 'string') return run;
+      if ('strong' in run) return run.strong;
+      if ('em' in run) return run.em;
+      if ('code' in run) return run.code;
+      return run.link.text;
+    })
     .join('');
 }
 
