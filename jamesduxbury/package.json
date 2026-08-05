@@ -24,7 +24,7 @@
     "autoprefixer": "^10.4.20",
     "framer-motion": "^12.38.0",
     "geist": "^1.7.0",
-    "next": "^15.5.18",
+    "next": "^15.5.22",
     "next-auth": "^5.0.0-beta.31",
     "nodemailer": "^8.0.7",
     "react": "^19.0.0",
@@ -36,6 +36,7 @@
     "next-auth": {
       "nodemailer": "$nodemailer"
     },
+    "sharp": "^0.35.3",
     "postcss": "$postcss"
   },
   "devDependencies": {
@@ -50,7 +51,7 @@
     "@vitejs/plugin-react": "^6.0.2",
     "@vitest/coverage-v8": "^4.1.8",
     "eslint": "^9",
-    "eslint-config-next": "^15.5.18",
+    "eslint-config-next": "^15.5.22",
     "jsdom": "^29.1.1",
     "postcss": "^8.5.10",
     "postcss-import": "^16.1.0",
