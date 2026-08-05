@@ -252,9 +252,10 @@ Vitest with React Testing Library. `npm test` runs everything with coverage, and
 
 ## CI/CD
 
-One workflow, `.github/workflows/ci.yaml`, with two jobs:
+Two workflows, both running on pushes to `main`, on pull requests, and on manual dispatch.
 
-- `check` runs on pushes to main, pull requests, and manual dispatch: format check, lint, typecheck, the full test suite against the Neon dev branch, and a production build.
-- `populate-production` is manual dispatch only. It is a one-off job that migrated and seeded the production database when the site first moved to Postgres, and it is deliberately not automatic.
+`.github/workflows/ci.yaml` has one job, `check`: format check, lint, typecheck, the full test suite against the Neon dev branch, and a production build. Runs are serialised on a concurrency group so two suites never share the dev branch at once. Coverage and JUnit results upload to Codecov, which posts the per-file comment on pull requests and backs the badge at the top of this README. The upload never fails the run.
+
+`.github/workflows/audit.yaml` has one job, `audit`: `npm audit --audit-level=high` against the lockfile, with no install step. It also runs on a weekly cron (Monday 07:00 UTC), which is the part that matters, since advisories are published against dependencies that have not changed and would otherwise go unnoticed until the next push.
 
 Vercel deploys `main` to production. Because the build command runs the migrator first, every deployment migrates its target database before building.
