@@ -1,6 +1,8 @@
 # jamesduxbury-dot-com
 
+[![CI](https://github.com/jsduxie/jamesduxbury-dot-com/actions/workflows/ci.yaml/badge.svg)](https://github.com/jsduxie/jamesduxbury-dot-com/actions/workflows/ci.yaml)
 [![codecov](https://codecov.io/gh/jsduxie/jamesduxbury-dot-com/graph/badge.svg)](https://codecov.io/gh/jsduxie/jamesduxbury-dot-com)
+[![Licence: MIT](https://img.shields.io/badge/licence-MIT-green.svg)](LICENSE)
 
 Source code for my personal portfolio website: [jamesduxbury-dot-com.vercel.app](https://jamesduxbury-dot-com.vercel.app)
 
@@ -248,7 +250,7 @@ The build needs `DATABASE_URL` because `next build` prerenders the DB-backed pag
 
 ## Testing
 
-Vitest with React Testing Library. `npm test` runs everything with coverage, and the thresholds (90% statements, 85% branches, 90% functions, 85% lines) are enforced, so the suite fails below them. There are three kinds of test: unit, DOM (jsdom), and integration tests that run against the real Neon dev branch and clean up after themselves. Test files run serially because the integration tests share that database.
+Vitest with React Testing Library. `npm test` runs everything with coverage, and the thresholds (90% statements, 90% functions, 90% lines, 85% branches) are enforced, so the suite fails below them. There are three kinds of test: unit, DOM (jsdom), and integration tests that run against the real Neon dev branch and clean up after themselves. Test files run serially because the integration tests share that database.
 
 ## CI/CD
 
@@ -258,3 +260,11 @@ One workflow, `.github/workflows/ci.yaml`, with two jobs:
 - `populate-production` is manual dispatch only. It is a one-off job that migrated and seeded the production database when the site first moved to Postgres, and it is deliberately not automatic.
 
 Vercel deploys `main` to production. Because the build command runs the migrator first, every deployment migrates its target database before building.
+
+## Contributing
+
+Setup, the full gate and the branch and commit conventions are in [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Licence
+
+[MIT](LICENSE). The code is MIT; the written content, images and CV are mine and are not covered by it.

@@ -1,0 +1,42 @@
+version: 2
+
+updates:
+  # the app lives in a subdirectory; the workflows set the same working directory
+  - package-ecosystem: npm
+    directory: /jamesduxbury
+    schedule:
+      interval: weekly
+      day: monday
+      time: '07:00'
+      timezone: Etc/UTC
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: chore(deps)
+      prefix-development: chore(deps-dev)
+    groups:
+      # one PR for routine drift; security updates still arrive on their own
+      minor-and-patch:
+        applies-to: version-updates
+        update-types:
+          - minor
+          - patch
+    ignore:
+      # next-auth is pinned to an exact pre-release on purpose, see #53
+      - dependency-name: next-auth
+        update-types:
+          - version-update:semver-major
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: '07:00'
+      timezone: Etc/UTC
+    commit-message:
+      prefix: chore(ci)
+    groups:
+      actions:
+        applies-to: version-updates
+        patterns:
+          - '*'

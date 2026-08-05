@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Setup and contributing guide
+    url: https://github.com/jsduxie/jamesduxbury-dot-com/blob/main/CONTRIBUTING.md
+    about: How to get set up locally, what the gate is, and how to open a pull request.
+  - name: The live site
+    url: https://jamesduxbury-dot-com.vercel.app
+    about: What this repository deploys.
