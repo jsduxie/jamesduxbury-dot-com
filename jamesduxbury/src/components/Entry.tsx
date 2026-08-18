@@ -34,7 +34,9 @@ export const Entry: React.FC<{ settings: SiteSettings }> = ({ settings }) => {
           {/* spec rows */}
           <div className="divide-y divide-border border-y border-border">
             <SpecRow label="Name" trailing={<StatusChip kind="live" label="ACTIVE" />}>
-              <span className="font-mono text-base text-text sm:text-lg">{settings.ownerName}</span>
+              <h1 className="inline font-mono text-base font-normal text-text sm:text-lg">
+                {settings.ownerName}
+              </h1>
               <span className="ml-3 font-mono text-xs uppercase tracking-[0.2em] text-accent">
                 {settings.entryCredential}
               </span>

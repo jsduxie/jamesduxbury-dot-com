@@ -11,7 +11,7 @@ export const SpecRow: React.FC<SpecRowProps> = ({ label, children, trailing }) =
     <span className="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-muted sm:text-xs">
       {label}
     </span>
-    <span className="text-sm text-text sm:text-base">{children}</span>
+    <div className="text-sm text-text sm:text-base">{children}</div>
     {trailing && <span className="sm:justify-self-end">{trailing}</span>}
   </div>
 );

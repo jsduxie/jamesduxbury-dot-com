@@ -64,6 +64,12 @@ describe('Entry', () => {
     expect(screen.getByText(siteSettings.ownerName)).toBeInTheDocument();
     expect(screen.getByText(siteSettings.entryRole)).toBeInTheDocument();
   });
+
+  it('uses the owner name as the homepage top-level heading', () => {
+    render(<Entry settings={siteSettings} />);
+    expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(siteSettings.ownerName);
+  });
 });
 
 describe('Footer', () => {
