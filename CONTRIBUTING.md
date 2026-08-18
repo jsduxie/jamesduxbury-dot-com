@@ -1,14 +1,14 @@
 # Contributing
 
-Thanks for taking an interest. This is my personal portfolio site, so the feature set is deliberately mine, but it is a real full-stack application with a test suite and it is public for a reason. Bug reports, accessibility findings and documentation fixes are all welcome, and so is a pull request if you would rather send one than open an issue.
+Thanks for taking an interest. This is my personal portfolio site, so the feature set is mine. It is also a real full-stack application with a test suite, and it is public deliberately. Bug reports, accessibility findings and documentation fixes are welcome. So is a pull request if you would rather send one than open an issue.
 
-This guide covers how to get set up, what the gate is, and the conventions the repo follows.
+This guide covers local setup, the checks a pull request has to pass, and the conventions the repo follows.
 
 ## Ways to contribute
 
-- **Bugs and accessibility findings**: open an issue. For a rendering or behaviour bug, the browser and the page you were on save a round trip.
-- **Good first issues**: anything labelled [`good first issue`](https://github.com/jsduxie/jamesduxbury-dot-com/labels/good%20first%20issue) is scoped as a sensible entry point.
-- **Code and docs**: fork, branch, and open a pull request against `main`. One change per PR gets reviewed faster than several bundled together.
+- For a bug or an accessibility finding, open an issue. Name the page or route, and the browser if the problem looks browser-specific.
+- Anything labelled [`good first issue`](https://github.com/jsduxie/jamesduxbury-dot-com/labels/good%20first%20issue) is scoped as an entry point.
+- For code or docs, fork, branch and open a pull request against `main`. One change per pull request is reviewed faster than several bundled together.
 
 ## Local setup
 
@@ -30,11 +30,11 @@ npm run dev
 
 All commands run from the `jamesduxbury/` subdirectory, not the repository root. The workflows set that as their working directory too.
 
-You do need a database. Content lives in Postgres rather than in code, so most pages fail to render without one. A free Neon project takes a couple of minutes to create, and `docker compose up` is the alternative if you would rather not sign up for anything.
+You do need a database. Content lives in Postgres rather than in code, so most pages fail to render without one. A free Neon project takes a couple of minutes to create. Use `docker compose up` instead if you would rather not sign up for anything.
 
-## The gate
+## Checks
 
-CI runs these five in order, and a pull request will not pass until all five do. Run them locally first:
+CI runs these five in order. A pull request will not pass until all five do, so run them locally first:
 
 ```bash
 npm run format:check
@@ -50,17 +50,13 @@ npm run build
 
 ## Tests
 
-Vitest with React Testing Library, under `jamesduxbury/tests/`. Three kinds:
+Vitest with React Testing Library, under `jamesduxbury/tests/`. Unit tests cover pure logic and need no environment. DOM tests (`*.dom.test.tsx`) render components in jsdom. Integration tests run against the real Neon dev branch and clean up after themselves.
 
-- **Unit** tests for pure logic, no environment needed.
-- **DOM** tests (`*.dom.test.tsx`) render components in jsdom.
-- **Integration** tests run against the real Neon dev branch and clean up after themselves.
-
-Test files run serially, because the integration tests share one database. That is also why CI serialises whole runs on a concurrency group. If you are adding an integration test, make sure it removes its own rows, and do not assume the database is empty when it starts.
+Test files run serially, because the integration tests share one database. That is also why CI serialises whole runs on a concurrency group. If you are adding an integration test, make sure it removes its own rows. Do not assume the database is empty when it starts.
 
 ## Database changes
 
-Schema changes are numbered migration files applied by `src/db/migrate.ts`, and they run on every build, including the production deploy. Two rules follow from that:
+Schema changes are numbered migration files applied by `src/db/migrate.ts`. They run on every build, including the production deploy. Two rules follow from that:
 
 - A migration must be idempotent and safe to re-run, since it will be.
 - A migration must be safe against the currently deployed code, because it runs before the new build is live.
@@ -69,21 +65,21 @@ Schema changes are numbered migration files applied by `src/db/migrate.ts`, and 
 
 ## Code style and conventions
 
-- **British English** in code, comments, commits and docs (summarise, behaviour, colour). The one exception is CSS, where `color` is the property name.
-- **Formatting and linting** are Prettier and ESLint. `npm run format` writes in place. There is a pre-commit hook config in the repo if you want it to run automatically.
-- **Comments explain the non-obvious why**, not the what. Match the density of the surrounding code, which is low.
-- **Commits** follow [Conventional Commits](https://www.conventionalcommits.org/), as do PR titles, for example `fix(a11y): add a top-level h1 to the homepage` or `chore(deps): raise the postcss floor`.
+- British English in code, comments, commits and docs (summarise, behaviour, colour). The one exception is CSS, where `color` is the property name.
+- Prettier and ESLint handle formatting and linting. `npm run format` writes in place. There is a pre-commit hook config in the repo if you want it to run automatically.
+- Comments explain the non-obvious why, not the what. Match the density of the surrounding code, which is low.
+- Commits follow [Conventional Commits](https://www.conventionalcommits.org/), as do pull request titles, for example `fix(a11y): add a top-level h1 to the homepage` or `chore(deps): raise the postcss floor`.
 
 ## Pull request workflow
 
 1. Branch from `main` as `<issue>-<type>-<description>`, for example `50-fix-homepage-h1` or `62-chore-repo-meta`. The issue number first makes the branch and the discussion easy to line up.
-2. Keep the PR focused on one change. If you spot something unrelated, a separate PR is easier to review and merge.
-3. Run the full gate locally. The same five commands are listed above.
-4. Open the PR against `main` with a short description of what changed and why. Link the issue it closes with `Closes #NN`.
+2. Keep the pull request focused on one change. If you spot something unrelated, a separate pull request is easier to review and merge.
+3. Run all five checks locally. They are listed above.
+4. Open the pull request against `main` with a short description of what changed and why. Link the issue it closes with `Closes #NN`.
 
 Codecov posts a per-file coverage comment on every pull request. A drop below the project or patch target shows up there rather than in the test output.
 
-I review pull requests as soon as I can and will leave clear feedback if anything needs adjusting before merge.
+I review pull requests as soon as I can.
 
 ## Licence
 

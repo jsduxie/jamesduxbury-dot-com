@@ -14,4 +14,4 @@ Closes #
 - [ ] New behaviour is covered by tests
 - [ ] Any schema change is an idempotent migration, safe against the currently deployed code
 
-Thanks for contributing. Keeping a PR focused on one change makes it quicker to review.
+A pull request focused on one change is quicker to review.

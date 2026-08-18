@@ -94,7 +94,7 @@ All site content (projects, experience, education, certifications, skills, about
 
 ### Auth
 
-Sign-in is GitHub OAuth through next-auth v5 with JWT sessions and no database adapter. Only my GitHub account can sign in: the allowlist is checked by identity at four layers: the signIn callback, the middleware on `/admin/*`, the admin layout, and every server action. Visiting `/admin` while signed out goes straight into the OAuth flow.
+Sign-in is GitHub OAuth through next-auth v5 with JWT sessions and no database adapter. Only my GitHub account can sign in. The allowlist is checked by identity at four layers: the signIn callback, the middleware on `/admin/*`, the admin layout, and every server action. Visiting `/admin` while signed out goes straight into the OAuth flow.
 
 The allowed login is stored in `site_settings.admin_login` and editable from the console, so a GitHub username change is a settings edit rather than a deploy. The check reads the value once per request and fails closed when it is missing or empty. A typo in the field locks the console until the value is corrected directly in the database.
 
@@ -104,9 +104,9 @@ Each content section is defined once in a registry (`src/admin/sections.ts`) as 
 
 ### Images
 
-Site images (the profile picture, certification badges, project images) live in Vercel Blob and are served from its CDN. The admin form kit has upload field types for images and the CV: saving uploads the file, writes its URL to the row, and deletes the blob it replaced; deleting a row deletes its blobs, and a remove checkbox clears an optional image. Each environment uploads under its own prefix in the shared store, so a replacement or purge in one never touches the other.
+Site images (the profile picture, certification badges, project images) live in Vercel Blob and are served from its CDN. The admin form kit has upload field types for images and the CV. Saving uploads the file, writes its URL to the row and deletes the blob it replaced. Deleting a row deletes its blobs, and a remove checkbox clears an optional image. Each environment uploads under its own prefix in the shared store, so a replacement or purge in one never touches the other.
 
-If a blob is deleted out of band the public pages hide the missing image rather than render a broken frame. A maintenance page in the console reconciles the store: it clears references whose blob has vanished and deletes blobs no row points at, scoped to the current environment's prefix.
+If a blob is deleted out of band the public pages hide the missing image rather than render a broken frame. A maintenance page in the console reconciles the store, scoped to the current environment's prefix. It clears references whose blob has vanished and deletes blobs no row points at.
 
 ### Analytics
 
@@ -142,13 +142,13 @@ The admin console:
 
 ### No ORM
 
-The schema is eleven tables and the queries are straightforward. The Neon driver parameterises every tagged-template value, so the usual injection argument for an ORM does not apply, and the whole data layer stays readable in two files. Working directly with SQL was also part of the point of the project.
+The schema is eleven tables and the queries are straightforward. The Neon driver parameterises every tagged-template value, so the usual injection argument for an ORM does not apply. The whole data layer stays readable in two files. Working directly with SQL was also part of the point of the project.
 
 ### Rich text as blocks
 
-Editable prose lives in the database as a typed array of blocks: paragraphs, headings, lists and inline images, with bold, italic and links inside them. Storing the structure rather than a markdown string or raw HTML means the content renders the same way on the site, in the admin editor and in the contact inbox, and never needs HTML sanitising on output.
+Editable prose lives in the database as a typed array of blocks: paragraphs, headings, lists and inline images, with bold, italic and links inside them. Storing the structure rather than a markdown string or raw HTML means the content renders the same way on the site, in the admin editor and in the contact inbox. It also never needs HTML sanitising on output.
 
-The editor is one self-previewing surface. Each block renders the way it will on the site and turns into a markdown input when clicked, so there is no separate preview pane, no editor dependency, and no contenteditable. The contact form reuses the same editor with a smaller toolbar: formatting and links, but no headings and no image uploads.
+The editor is one self-previewing surface. Each block renders the way it will on the site and turns into a markdown input when clicked. That leaves no separate preview pane, no editor dependency and no contenteditable. The contact form reuses the same editor with a smaller toolbar: formatting and links, but no headings and no image uploads.
 
 ### A single-user allowlist instead of roles
 
@@ -160,7 +160,7 @@ The seed exists to boot an empty database and nothing else. It inserts with `ON 
 
 ### ISR with revalidation on save
 
-Visitors get statically cached pages; the database is not touched per request. Saving in the admin console revalidates every public route, so edits appear immediately. This gets CDN speed without stale content.
+Visitors get statically cached pages, and the database is not touched per request. Saving in the admin console revalidates every public route, so edits appear immediately. That gives CDN speed without serving stale content.
 
 ### First-party analytics
 
@@ -194,7 +194,7 @@ Seeding (`npm run db:seed`) loads the first-boot content from `src/data/*.ts` an
 
 ## Local setup
 
-You need Node, npm, and a [Neon](https://neon.tech) Postgres project. I use one project with two branches: `main` for production and `dev` for local work and CI, which gives two connection strings. The app itself only ever reads one variable, `DATABASE_URL`.
+You need Node, npm, and a [Neon](https://neon.tech) Postgres project. I use one project with two branches, `main` for production and `dev` for local work and CI. That gives two connection strings. The app itself only ever reads one variable, `DATABASE_URL`.
 
 Auth needs two GitHub OAuth apps, because each app allows a single callback URL: one for the production domain and one for `http://localhost:3000` (callback path `/api/auth/callback/github`). The local app's client id and secret go in `.env.local`; the production app's live in Vercel.
 
@@ -231,7 +231,7 @@ docker compose --env-file jamesduxbury/.env.local build   # image build prerende
 docker compose up
 ```
 
-The build needs `DATABASE_URL` because `next build` prerenders the DB-backed pages; at runtime the containers use the compose Postgres instead. OAuth sign-in works only if you pass the localhost GitHub app credentials through the environment.
+The build needs `DATABASE_URL` because `next build` prerenders the DB-backed pages. At runtime the containers use the compose Postgres instead. OAuth sign-in works only if you pass the localhost GitHub app credentials through the environment.
 
 ### Scripts
 
@@ -254,16 +254,17 @@ Vitest with React Testing Library. `npm test` runs everything with coverage, and
 
 ## CI/CD
 
-One workflow, `.github/workflows/ci.yaml`, with two jobs:
+Two workflows, both running on pushes to `main`, on pull requests and on manual dispatch.
 
-- `check` runs on pushes to main, pull requests, and manual dispatch: format check, lint, typecheck, the full test suite against the Neon dev branch, and a production build.
-- `populate-production` is manual dispatch only. It is a one-off job that migrated and seeded the production database when the site first moved to Postgres, and it is deliberately not automatic.
+`.github/workflows/ci.yaml` has one job, `check`: format check, lint, typecheck, the full test suite against the Neon dev branch, and a production build. Runs are serialised on a concurrency group so two suites never share the dev branch at once. Coverage and JUnit results upload to Codecov, which posts the per-file comment on pull requests and backs the badge at the top of this README. The upload never fails the run.
+
+`.github/workflows/audit.yaml` has one job, `audit`: `npm audit --audit-level=high` against the lockfile, with no install step. It also runs on a weekly cron (Monday 07:00 UTC). That is the part that matters, since advisories get published against dependencies that have not changed and would otherwise go unnoticed until the next push.
 
 Vercel deploys `main` to production. Because the build command runs the migrator first, every deployment migrates its target database before building.
 
 ## Contributing
 
-Setup, the full gate and the branch and commit conventions are in [CONTRIBUTING.md](CONTRIBUTING.md).
+Setup, the five checks and the branch and commit conventions are in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Licence
 

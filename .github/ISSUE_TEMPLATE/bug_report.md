@@ -25,4 +25,4 @@ Optional. Leave it out if you are reporting rather than proposing.
 ## Acceptance criteria
 
 - [ ]
-- [ ] Full gate passes: format, lint, typecheck, test, build
+- [ ] All five checks pass: format, lint, typecheck, test, build

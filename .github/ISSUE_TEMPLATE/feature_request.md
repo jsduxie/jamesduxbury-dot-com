@@ -17,4 +17,4 @@ The change you have in mind. Note anything it would touch: a new table or column
 
 - [ ]
 - [ ] New behaviour is covered by tests
-- [ ] Full gate passes: format, lint, typecheck, test, build
+- [ ] All five checks pass: format, lint, typecheck, test, build

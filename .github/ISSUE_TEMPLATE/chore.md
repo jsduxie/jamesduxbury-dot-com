@@ -16,4 +16,4 @@ The change, and the version or configuration it lands on.
 ## Acceptance criteria
 
 - [ ]
-- [ ] Full gate passes: format, lint, typecheck, test, build
+- [ ] All five checks pass: format, lint, typecheck, test, build
